@@ -1,0 +1,26 @@
+{
+  "exit_code": 0,
+  "server_version": "29.8.1",
+  "checked_at": "2026-10-15T18:15:16.5476644+05:00",
+  "command": "docker build -t tynys .",
+  "image_id": "sha256:e7aa2e2b36c4c774fe6e54132150d16cf0c502234bc393aef6979af1a70ed766",
+  "image_size_bytes": 3281444328,
+  "image_size_gib": 3.0560831800103188,
+  "image_architecture": "amd64",
+  "image_os": "linux",
+  "user": "tynys",
+  "cmd": [
+    "uvicorn",
+    "app:app",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "7860"
+  ],
+  "exposed_ports": [
+    "7860/tcp"
+  ],
+  "dockerfile_sha256": "997017fce66a1fef6806a1c68da75b8012ef239e26f831516e6bec4aa9a1eed1",
+  "requirements_sha256": "1680a178221ad11e37432015beac8797e85ec34bba548e00368a8094e922f4e2",
+  "dockerfile_changed": false
+}
