@@ -19,6 +19,7 @@ Train 3801, validation 952, test 618. 5856 жарамды сурет, тазал
 
 CNN: шек 0.475, accuracy 71.52%, precision 70.81%, recall 92.76%, specificity 35.93%, F1 0.8031, ROC-AUC 0.8211; TN 83, FP 148, FN 28, TP 359.
 MobileNetV2: шек 0.745, accuracy 89.16%, precision 87.74%, recall 96.12%, specificity 77.49%, F1 0.9174, ROC-AUC 0.9581; TN 179, FP 52, FN 15, TP 372.
+Ensemble: шек 0.745, accuracy 89.16%, precision 87.74%, recall 96.12%, specificity 77.49%, F1 0.9174, ROC-AUC 0.9583; TN 179, FP 52, FN 15, TP 372.
 
 MobileNetV2: T=0.97995943, validation NLL 0.08822560 → 0.08820212.
 CNN: T=0.68202770, validation NLL 0.29725222 → 0.27995523.
@@ -28,7 +29,9 @@ Test fitting үшін қолданылған жоқ. MobileNetV2 90% accuracy м
 ## Қазіргі сыртқы метрикалар
 
 OpenI Indiana NLM API, 200 сурет (160 NORMAL, 40 PNEUMONIA), seed 42.
+CNN: шек 0.475, accuracy 21.50%, precision 20.30%, recall 100.00%, specificity 1.88%, F1 0.3376, ROC-AUC 0.4706; TN 3, FP 157, FN 0, TP 40.
 MobileNetV2: шек 0.745, accuracy 55.00%, precision 23.96%, recall 57.50%, specificity 54.37%, F1 0.3382, ROC-AUC 0.5442; TN 87, FP 73, FN 17, TP 23.
+Ensemble: шек 0.745, accuracy 55.00%, precision 23.96%, recall 57.50%, specificity 54.37%, F1 0.3382, ROC-AUC 0.5441; TN 87, FP 73, FN 17, TP 23.
 Таңдау бұрынғы cohort-пен бірдей, сыртқы шек өзгертілмеді. SHA-256 қиылысы жоқ.
 Бір есеп UID-іне бір сурет. Longitudinal patient identity толық расталмаған.
 MeSH белгілері клиникалық gold standard емес, проекцияны PA деп кепілдемейміз.
@@ -44,7 +47,7 @@ Grad-CAM 7×7 картадан жуық аймақты көрсетеді, за�
 
 CNN-only correct 19, MobileNetV2-only correct 128,
 exact two-sided p=4.8323820233e-21. Пациент суреттерінің тәуелсіздігі толық расталмаған.
-Ensemble әлі қосылған жоқ, бұл келесі кезең.
+Ensemble: validation-да таңдалған салмақтар {"CNN": 0.001005948939264576, "MobileNetV2": 0.9989940510607355}, шек 0.745. Сыртқы белгілер таңдау үшін қолданылған жоқ.
 
 ## Кіріс, қолдану шектеулері және лицензия
 

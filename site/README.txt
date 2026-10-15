@@ -7,7 +7,7 @@ TYNYS — ҚАЗІРГІ ЕСЕПТЕЛГЕН НҰСҚА
 
 МҮМКІНДІКТЕР
 JPG/PNG және CR/DX DICOM. Әр файл ≤12 МБ, бір топта ≤10 файл.
-CNN және MobileNetV2 салыстыруы, Grad-CAM, PNG/мәтін/PDF жүктеу.
+CNN, MobileNetV2 және Ensemble салыстыруы, Grad-CAM, PNG/мәтін/PDF жүктеу.
 Тарих соңғы 20 талдауды тек бет жадында сақтайды. Жаңартқанда жойылады.
 Суреттер серверге файл болып, localStorage/IndexedDB/cookie-ге сақталмайды.
 Multipart қабылдау жадта шектелген. Тек оқу прототипі, медициналық диагноз емес.
@@ -22,6 +22,7 @@ DICOM: CR/DX, бір MONOCHROME кадр, Modality LUT, 1–99 проценти�
 ІШКІ TEST, 618 СУРЕТ — ҚАЗІРГІ КАЛИБРЛЕНГЕН НӘТИЖЕ
 CNN: шек 0.475, accuracy 71.52%, precision 70.81%, recall 92.76%, specificity 35.93%, F1 0.8031, ROC-AUC 0.8211; TN 83, FP 148, FN 28, TP 359.
 MobileNetV2: шек 0.745, accuracy 89.16%, precision 87.74%, recall 96.12%, specificity 77.49%, F1 0.9174, ROC-AUC 0.9581; TN 179, FP 52, FN 15, TP 372.
+Ensemble: шек 0.745, accuracy 89.16%, precision 87.74%, recall 96.12%, specificity 77.49%, F1 0.9174, ROC-AUC 0.9583; TN 179, FP 52, FN 15, TP 372.
 90% accuracy мақсаты: жетпеді.
 Бірдей accuracy қайта есептегенде өзгермеуі мүмкін. Бұл сандар қазіргі конфигурациямен есептелген.
 
@@ -42,7 +43,9 @@ Non-X-ray деректерінде арнайы валидация жасалғ�
 
 СЫРТҚЫ OPENI, 200 СУРЕТ — ҚАЗІРГІ КОНФИГУРАЦИЯ
 160 NORMAL, 40 PNEUMONIA, seed 42. Бұрынғы таңдау сақталды, шекті сыртқы деректе өзгертпедік.
+CNN: шек 0.475, accuracy 21.50%, precision 20.30%, recall 100.00%, specificity 1.88%, F1 0.3376, ROC-AUC 0.4706; TN 3, FP 157, FN 0, TP 40.
 MobileNetV2: шек 0.745, accuracy 55.00%, precision 23.96%, recall 57.50%, specificity 54.37%, F1 0.3382, ROC-AUC 0.5442; TN 87, FP 73, FN 17, TP 23.
+Ensemble: шек 0.745, accuracy 55.00%, precision 23.96%, recall 57.50%, specificity 54.37%, F1 0.3382, ROC-AUC 0.5441; TN 87, FP 73, FN 17, TP 23.
 SHA-256 ішкі train/validation/test қиылысы: 0. Бір report UID-інен бір сурет.
 Report UID — surrogate топ, longitudinal patient ID толық расталмаған. MeSH gold standard емес.
 Проекция PA деп кепілденбейді. Нәтиже тек осы таңдалған жиынға қатысты.
@@ -50,12 +53,13 @@ Report UID — surrogate топ, longitudinal patient ID толық растал
 СТАТИСТИКА ЖӘНЕ ENSEMBLE
 Exact paired McNemar: CNN-only 19, MobileNetV2-only 128,
 p=4.8323820233e-21, alpha=0.05. Бұл ішкі test-ке қатысты.
-Ensemble әлі қосылған жоқ, бұл келесі кезең.
+Ensemble: validation-да таңдалған салмақтар {"CNN": 0.001005948939264576, "MobileNetV2": 0.9989940510607355}, шек 0.745. Сыртқы белгілер таңдау үшін қолданылған жоқ.
 
 ҚАЙТА ЕСЕПТЕУ — ЖОБА ТҮБІРІНЕН
 site/.venv/Scripts/python -m pip install -r training/requirements-training.txt
 site/.venv/Scripts/python training/resume_validation.py
 site/.venv/Scripts/python training/prepare_validation_artifacts.py
+site/.venv/Scripts/python training/ensemble_fit.py
 site/.venv/Scripts/python training/external_validation.py --openi --count 200
 site/.venv/Scripts/python training/refresh_documentation.py
 Кэш толық болса жүктеу желісіз өтеді. Assert бұзылса тоқтап, сәйкессіздікті тексер.

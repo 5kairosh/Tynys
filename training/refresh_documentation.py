@@ -35,7 +35,7 @@ def main():
 
 МҮМКІНДІКТЕР
 JPG/PNG және CR/DX DICOM. Әр файл ≤12 МБ, бір топта ≤10 файл.
-CNN және MobileNetV2 салыстыруы, Grad-CAM, PNG/мәтін/PDF жүктеу.
+CNN, MobileNetV2 және Ensemble салыстыруы, Grad-CAM, PNG/мәтін/PDF жүктеу.
 Тарих соңғы 20 талдауды тек бет жадында сақтайды. Жаңартқанда жойылады.
 Суреттер серверге файл болып, localStorage/IndexedDB/cookie-ге сақталмайды.
 Multipart қабылдау жадта шектелген. Тек оқу прототипі, медициналық диагноз емес.
@@ -82,6 +82,7 @@ p={paired['p_value']:.12g}, alpha=0.05. Бұл ішкі test-ке қатысты
 site/.venv/Scripts/python -m pip install -r training/requirements-training.txt
 site/.venv/Scripts/python training/resume_validation.py
 site/.venv/Scripts/python training/prepare_validation_artifacts.py
+site/.venv/Scripts/python training/ensemble_fit.py
 site/.venv/Scripts/python training/external_validation.py --openi --count 200
 site/.venv/Scripts/python training/refresh_documentation.py
 Кэш толық болса жүктеу желісіз өтеді. Assert бұзылса тоқтап, сәйкессіздікті тексер.

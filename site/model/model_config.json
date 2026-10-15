@@ -27,5 +27,18 @@
       "method": "temperature",
       "T": 0.6820277027003551
     }
+  },
+  "ensemble": {
+    "weights": {
+      "CNN": 0.001005948939264576,
+      "MobileNetV2": 0.9989940510607355
+    },
+    "threshold": 0.745,
+    "validation_count": 952,
+    "selection": "validation NLL, weights bounded [0.001,0.999]; recall>=0.90 then specificity then F1",
+    "model_ids": {
+      "CNN": "19f707027db4",
+      "MobileNetV2": "ea584b998a45"
+    }
   }
 }

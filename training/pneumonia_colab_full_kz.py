@@ -349,6 +349,20 @@ except Exception as exc:
     print('OOD қолжетімсіз:',exc)
 
 
+# Ensemble: салмақ тек validation NLL бойынша таңдалады.
+ensemble_config = None
+if 'CNN' in models:
+    ensemble_val = {name:temperature_probabilities(model.predict(val_ds,verbose=0).ravel(),calibrations[name]['T']) for name,model in models.items()}
+    def ensemble_nll(a):
+        p=np.clip(a*ensemble_val['CNN']+(1-a)*ensemble_val['MobileNetV2'],1e-7,1-1e-7)
+        return float(-np.mean(val_y*np.log(p)+(1-val_y)*np.log1p(-p)))
+    ensemble_fit = minimize_scalar(ensemble_nll,bounds=(.001,.999),method='bounded')
+    assert ensemble_fit.success
+    a=float(ensemble_fit.x)
+    ensemble_threshold,_=choose_threshold(val_y,a*ensemble_val['CNN']+(1-a)*ensemble_val['MobileNetV2'])
+    thresholds['Ensemble']=ensemble_threshold
+    ensemble_config={'weights':{'CNN':a,'MobileNetV2':1-a},'threshold':ensemble_threshold,'validation_count':len(val_y)}
+
 test_y = test_df.label.to_numpy()
 results, test_probabilities = [], {}
 for name,model in models.items():
@@ -374,6 +388,13 @@ for name,model in models.items():
     PrecisionRecallDisplay.from_predictions(test_y,prob,ax=axes[2])
     fig.suptitle(name); plt.tight_layout()
     plt.savefig(OUT/f'{name}_test_metrics.png',dpi=150); plt.show()
+if ensemble_config is not None:
+    a=ensemble_config['weights']['CNN']
+    prob=a*test_probabilities['CNN']+(1-a)*test_probabilities['MobileNetV2']
+    test_probabilities['Ensemble']=prob
+    pred=(prob>=thresholds['Ensemble']).astype(int)
+    tn,fp,fn,tp=confusion_matrix(test_y,pred,labels=[0,1]).ravel()
+    results.append({'model':'Ensemble','threshold':thresholds['Ensemble'],'accuracy':accuracy_score(test_y,pred),'precision':precision_score(test_y,pred,zero_division=0),'recall':recall_score(test_y,pred,zero_division=0),'specificity':tn/(tn+fp),'f1':f1_score(test_y,pred,zero_division=0),'roc_auc':roc_auc_score(test_y,prob),'average_precision':average_precision_score(test_y,prob),'TN':int(tn),'FP':int(fp),'FN':int(fn),'TP':int(tp)})
 metrics = pd.DataFrame(results)
 metrics.to_csv(OUT/'test_metrics.csv',index=False)
 display(metrics.round(4))
@@ -411,6 +432,9 @@ config = {'classes':CLASS_NAMES,'image_size':list(IMG_SIZE),
     'tensorflow_version':tf.__version__,'dataset':'paultimothymooney/chest-xray-pneumonia',
     'use':'educational prototype; not clinical diagnosis',
     'grouping':'filename-derived surrogate IDs, not verified patient metadata'}
+if ensemble_config is not None:
+    ensemble_config['model_ids']={name:hashlib.sha256((OUT/file).read_bytes()).hexdigest()[:12] for name,file in [('CNN','cnn_best.keras'),('MobileNetV2','pneumonia_mobilenetv2.keras')]}
+    config['ensemble']=ensemble_config
 (OUT/'model_config.json').write_text(json.dumps(config,ensure_ascii=False,indent=2),encoding='utf-8')
 reloaded = tf.keras.models.load_model(MODEL_PATH)
 first_batch = next(iter(test_ds))[0]

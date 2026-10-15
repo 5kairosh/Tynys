@@ -115,7 +115,7 @@ def make_report(items):
         top = paragraph(c, reason, margin, top-9, usable, size=9)
         comparison = r.get('comparison', {})
         if comparison.get('available'):
-            top = paragraph(c, 'Осы суреттегі екі модель', margin, top-11, usable, size=10, bold=True)
+            top = paragraph(c, 'Осы суреттегі модельдер', margin, top-11, usable, size=10, bold=True)
             for model in comparison['models']:
                 text = f'{model["name"]}: {model["model_class"]} / балл: {decimal(model["pneumonia_score"])} / шек: {decimal(model["threshold"])}'
                 top = paragraph(c, text, margin, top-3, usable, size=8)

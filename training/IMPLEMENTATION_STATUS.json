@@ -15,6 +15,59 @@
   },
   "external_validation": {
     "completed": true,
+    "models": [
+      {
+        "model": "CNN",
+        "threshold": 0.47500000000000003,
+        "accuracy": 0.215,
+        "precision": 0.20304568527918782,
+        "recall": 1.0,
+        "specificity": 0.01875,
+        "f1": 0.33755274261603374,
+        "roc_auc": 0.47062499999999996,
+        "average_precision": 0.1812919620494526,
+        "TN": 3,
+        "FP": 157,
+        "FN": 0,
+        "TP": 40,
+        "cohort": "external",
+        "count": 200
+      },
+      {
+        "model": "MobileNetV2",
+        "threshold": 0.745,
+        "accuracy": 0.55,
+        "precision": 0.23958333333333334,
+        "recall": 0.575,
+        "specificity": 0.54375,
+        "f1": 0.3382352941176471,
+        "roc_auc": 0.54421875,
+        "average_precision": 0.2402071891445132,
+        "TN": 87,
+        "FP": 73,
+        "FN": 17,
+        "TP": 23,
+        "cohort": "external",
+        "count": 200
+      },
+      {
+        "model": "Ensemble",
+        "threshold": 0.745,
+        "accuracy": 0.55,
+        "precision": 0.23958333333333334,
+        "recall": 0.575,
+        "specificity": 0.54375,
+        "f1": 0.3382352941176471,
+        "roc_auc": 0.5440625,
+        "average_precision": 0.2401527968329583,
+        "TN": 87,
+        "FP": 73,
+        "FN": 17,
+        "TP": 23,
+        "cohort": "external",
+        "count": 200
+      }
+    ],
     "available": true,
     "metrics": {
       "model": "MobileNetV2",
@@ -33,7 +86,7 @@
       "TP": 23
     },
     "model_id": "ea584b998a45",
-    "config_sha256": "5e0683ca004efbcb5976468f4ad31cf1935acb5736a722f4385b4266b2bec797",
+    "config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
     "source": "OpenI Indiana, NLM API",
     "normal_count": 160,
     "pneumonia_count": 40,
@@ -51,6 +104,20 @@
     "remote_run": false
   },
   "tests": {
-    "local_passed": 40
+    "local_passed": 49
+  },
+  "ensemble": {
+    "fitted": true,
+    "weights": {
+      "CNN": 0.001005948939264576,
+      "MobileNetV2": 0.9989940510607355
+    },
+    "threshold": 0.745,
+    "validation_count": 952,
+    "selection": "validation NLL, weights bounded [0.001,0.999]; recall>=0.90 then specificity then F1",
+    "model_ids": {
+      "CNN": "19f707027db4",
+      "MobileNetV2": "ea584b998a45"
+    }
   }
 }

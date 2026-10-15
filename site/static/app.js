@@ -18,7 +18,7 @@ async function loadStatus(){
   statusLoading=true;
   try{status=await api('/api/status',{signal:AbortSignal.timeout(8000)});
   if(connectionError&&status.ready){error('');connectionError=false;}
-$('header-status').textContent=status.ready?'Модель дайын':'Модель қолжетімсіз';$('status-dot').classList.toggle('ready',status.ready);if(!status.ready)error(status.message||'Модель қосылмаған.');const m=status.metrics?.find(x=>x.model==='MobileNetV2');const cnn=status.metrics?.find(x=>x.model==='CNN');if(m){$('metric-accuracy').textContent=percent(m.accuracy);$('metric-recall').textContent=percent(m.recall);$('metric-count').textContent=Math.round(m.TN+m.FP+m.FN+m.TP);const body=$('metrics-table');body.replaceChildren();for(const [key,label,type] of [['accuracy','Accuracy','percent'],['precision','Precision','percent'],['recall','Recall / sensitivity','percent'],['specificity','Specificity','percent'],['f1','F1-score','decimal'],['roc_auc','ROC-AUC','decimal']]){const tr=document.createElement('tr');for(const value of [label,cnn?cnn[key]:null,m[key]]){const td=document.createElement('td');td.textContent=typeof value==='string'?value:value==null?'—':type==='percent'?percent(value):decimal(value,4);tr.append(td);}body.append(tr);}}const external=status.external_validation;$('external-note').textContent=external?.available?`Сыртқы тексеру (OpenI, ${external.metrics.count} сурет): accuracy ${percent(external.metrics.accuracy)}, recall ${percent(external.metrics.recall)}. Ішкі тесттен бөлек. Топтау есеп ID-іне сүйенеді.`:(external?.message||'Сыртқы бағалау қолжетімсіз.');const paired=status.mcnemar;$('mcnemar-note').textContent=paired?.available?`Ішкі test: McNemar p=${Number(paired.p_value).toExponential(3)}, α=0,05. ${paired.significant?'Айырма статистикалық маңызды.':'Статистикалық маңыздылық анықталмады.'} Бұл осы тестке қатысты.`:(paired?.message||'McNemar нәтижесі қолжетімсіз.');if(status.config)$('research-threshold').textContent=decimal(status.config.threshold);updateButton();}catch(e){
+$('header-status').textContent=status.ready?'Модель дайын':'Модель қолжетімсіз';$('status-dot').classList.toggle('ready',status.ready);if(!status.ready)error(status.message||'Модель қосылмаған.');const m=status.metrics?.find(x=>x.model==='MobileNetV2');const cnn=status.metrics?.find(x=>x.model==='CNN');const ensemble=status.metrics?.find(x=>x.model==='Ensemble');if(m){$('metric-accuracy').textContent=percent(m.accuracy);$('metric-recall').textContent=percent(m.recall);$('metric-count').textContent=Math.round(m.TN+m.FP+m.FN+m.TP);const body=$('metrics-table');body.replaceChildren();for(const [key,label,type] of [['accuracy','Accuracy','percent'],['precision','Precision','percent'],['recall','Recall / sensitivity','percent'],['specificity','Specificity','percent'],['f1','F1-score','decimal'],['roc_auc','ROC-AUC','decimal']]){const tr=document.createElement('tr');for(const value of [label,cnn?cnn[key]:null,m[key],status.ensemble?.available?ensemble?.[key]:null]){const td=document.createElement('td');td.textContent=typeof value==='string'?value:value==null?'—':type==='percent'?percent(value):decimal(value,4);tr.append(td);}body.append(tr);}}const external=status.external_validation;$('external-note').textContent=external?.available?`Сыртқы тексеру (OpenI, ${external.metrics.count} сурет): accuracy ${percent(external.metrics.accuracy)}, recall ${percent(external.metrics.recall)}. Ішкі тесттен бөлек. Топтау есеп ID-іне сүйенеді.`:(external?.message||'Сыртқы бағалау қолжетімсіз.');const paired=status.mcnemar;$('mcnemar-note').textContent=paired?.available?`Ішкі test: McNemar p=${Number(paired.p_value).toExponential(3)}, α=0,05. ${paired.significant?'Айырма статистикалық маңызды.':'Статистикалық маңыздылық анықталмады.'} Бұл осы тестке қатысты.`:(paired?.message||'McNemar нәтижесі қолжетімсіз.');if(status.config)$('research-threshold').textContent=decimal(status.config.threshold);updateButton();}catch(e){
     status=null;connectionError=true;
     $('header-status').textContent='Серверге қосылмады';
     $('status-dot').classList.remove('ready');
@@ -101,8 +101,8 @@ $('download-result').addEventListener('click',()=>{
       'Бұл нәтиже нені білдіреді?',explanation.meaning,'',
       'Суреттегі модель назары',r.explanation?.available?`Grad-CAM картасы ${r.explanation.target_class} санатына есептелді. Қызыл-сары аймақтар осы санатқа оң ықпал еткен жуық белсенділікті көрсетеді. Белгіленген суретті сайттағы бөлек батырмамен жүктеуге болады.`:(r.explanation?.message||'Жылу картасы қолжетімсіз.'),'',
       'Түсіндірудің шектеуі',explanation.limit,'',
-      'Екі модельдің осы суреттегі болжамдары',...(r.comparison?.available?r.comparison.models.map(m=>`${m.name}: ${m.model_class}; балл: ${m.pneumonia_score}; шешім шегі: ${m.threshold}`):[r.comparison?.message||'Салыстыру қолжетімсіз.']),
-      r.comparison?.available?(r.comparison.agreement?'Екі модель бір санатты таңдады.':'Екі модель әртүрлі санат таңдады.'):'','Модель баллдары калибрленген клиникалық сенімділік емес. Бірінің баллы жоғары болуы оның дұрыс екенін дәлелдемейді.','',
+      'Модельдердің осы суреттегі болжамдары',...(r.comparison?.available?r.comparison.models.map(m=>`${m.name}: ${m.model_class}; балл: ${m.pneumonia_score}; шешім шегі: ${m.threshold}`):[r.comparison?.message||'Салыстыру қолжетімсіз.']),
+      r.comparison?.available?(r.comparison.agreement?'Модельдер бір санатты таңдады.':'Модельдер әртүрлі санат таңдады.'):'','Модель баллдары калибрленген клиникалық сенімділік емес. Бірінің баллы жоғары болуы оның дұрыс екенін дәлелдемейді.','',
       '------------------------------------------------------------','');
   }
   lines.push('Бұл — оқу моделінің болжамы, медициналық диагноз емес.','Балл диагноздың сенімділік пайызы емес.');
@@ -134,16 +134,17 @@ function showComparison(r){
   $('comparison-panel').hidden=false;
   const body=$('comparison-table');body.replaceChildren();
   const verdict=$('comparison-verdict');
-  if(!comparison?.available){verdict.textContent='Қолжетімсіз';verdict.className='different';$('comparison-note').textContent=comparison?.message||'Екі модельді салыстыру қолжетімсіз.';return;}
+  if(!comparison?.available){verdict.textContent='Қолжетімсіз';verdict.className='different';$('comparison-note').textContent=comparison?.message||'Модельдерді салыстыру қолжетімсіз.';return;}
   const cnn=comparison.models.find(m=>m.name==='CNN');
   const mobile=comparison.models.find(m=>m.name==='MobileNetV2');
+  const ensemble=comparison.models.find(m=>m.name==='Ensemble');
   for(const [label,key] of [['Болжам санаты','model_class'],['Пневмония санатының баллы','pneumonia_score'],['Өз шешім шегі','threshold']]){
     const row=document.createElement('tr');
     const title=document.createElement('th');title.scope='row';title.textContent=label;row.append(title);
-    for(const model of [cnn,mobile]){const cell=document.createElement('td');if(key==='model_class'){const tag=document.createElement('span');tag.className='comparison-category '+(model[key]==='PNEUMONIA'?'pneumonia':'normal');tag.textContent=model[key];cell.append(tag);}else{cell.textContent=decimal(model[key],6);}row.append(cell);}body.append(row);
+    for(const model of [cnn,mobile,ensemble]){const cell=document.createElement('td');if(!model){cell.textContent='Қолжетімсіз';}else if(key==='model_class'){const tag=document.createElement('span');tag.className='comparison-category '+(model[key]==='PNEUMONIA'?'pneumonia':'normal');tag.textContent=model[key];cell.append(tag);}else{cell.textContent=decimal(model[key],6);}row.append(cell);}body.append(row);
   }
   verdict.textContent=comparison.agreement?'Болжамдар сәйкес':'Болжамдар әртүрлі';verdict.className=comparison.agreement?'agree':'different';
-  $('comparison-note').textContent=(comparison.agreement?'Екі модель осы суретке бір санат таңдады.':'Екі модель осы суретке әртүрлі санат таңдады.')+' Модель баллдары клиникалық сенімділік пайызы емес. Бірінің баллы жоғары болуы оның дұрыс екенін дәлелдемейді.';
+  $('comparison-note').textContent=(comparison.agreement?'Модельдер осы суретке бір санат таңдады.':'Модельдер осы суретке әртүрлі санат таңдады.')+(comparison.ensemble?.available?' Ensemble салмақтары validation-да таңдалған.':(' '+(comparison.ensemble?.message||'')))+' Модель баллдары клиникалық сенімділік пайызы емес. Бірінің баллы жоғары болуы оның дұрыс екенін дәлелдемейді.';
 }
 
 
@@ -168,7 +169,7 @@ function renderHistory(){
     const filename=document.createElement('strong');filename.textContent=entry.file.name;filename.title=entry.file.name;
     const details=document.createElement('span');details.className='history-item-details';
     details.textContent=`${entry.result.model_class} · балл ${decimal(entry.result.pneumonia_score)} · ${entry.time.toLocaleTimeString('kk-KZ',{timeZone:'Asia/Qyzylorda',hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
-    const comparison=document.createElement('small');comparison.textContent=entry.result.comparison?.available?(entry.result.comparison.agreement?'Екі модель: болжамдар сәйкес':'Екі модель: болжамдар әртүрлі'):'MobileNetV2 нәтижесі';
+    const comparison=document.createElement('small');comparison.textContent=entry.result.comparison?.available?(entry.result.comparison.agreement?'Модельдер: болжамдар сәйкес':'Модельдер: болжамдар әртүрлі'):'MobileNetV2 нәтижесі';
     content.append(filename,details,comparison);
     const button=document.createElement('button');button.type='button';button.className='history-open';button.textContent=entry.id===activeHistoryId?'Ашық':'Қайта ашу';button.setAttribute('aria-label',`${entry.file.name} нәтижесін қайта ашу`);button.disabled=busy;button.addEventListener('click',()=>openHistoryEntry(entry.id));
     row.append(thumbnail,content,button);list.append(row);

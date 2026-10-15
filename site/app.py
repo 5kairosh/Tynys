@@ -20,6 +20,7 @@ import numpy as np
 from starlette.concurrency import run_in_threadpool
 
 from calibration import calibrate_score, validate_calibration
+from ensemble import ensemble_score, validate_ensemble
 from ood import OODDetector
 from dicom_input import dicom_to_png, dicom_status
 from pad_geometry import pad_geometry
@@ -127,8 +128,17 @@ class Engine:
         except Exception:
             return {'available':False,'message':'Осы модель конфигурациясына сәйкес сыртқы бағалау есебі жоқ.'}
 
+    def ensemble_status(self):
+        try:
+            value=validate_ensemble((self.config or {}).get("ensemble"))
+            if self.cnn_model is None or value.get("model_ids") != {"CNN":self.cnn_fingerprint,"MobileNetV2":self.fingerprint}:
+                raise ValueError("Модельдер сәйкес емес.")
+            return {"available":True, **value}
+        except (ValueError, TypeError):
+            return {"available":False,"message":"Ensemble конфигурациясы немесе CNN қолжетімсіз. Негізгі модель жұмыс істейді."}
+
     def status(self):
-        return {"external_validation": self.external_status(), "dicom": dicom_status(), "xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
+        return {"ensemble": self.ensemble_status(), "external_validation": self.external_status(), "dicom": dicom_status(), "xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
                 "config": self.config, "metrics": self.metrics,
                 "model_id": self.fingerprint,
                 "comparison_ready": self.cnn_model is not None,
@@ -254,6 +264,14 @@ class Engine:
                                        'threshold': self.cnn_threshold, 'model_id': self.cnn_fingerprint},
                                       {'name': 'MobileNetV2', 'model_class': mobile_class, 'pneumonia_score': score,
                                        'threshold': threshold, 'model_id': self.fingerprint}]}
+                ensemble = self.ensemble_status()
+                if comparison['available'] and ensemble['available']:
+                    combined = ensemble_score(cnn_score, score, ensemble)
+                    comparison['models'].append({'name':'Ensemble','pneumonia_score':combined,'threshold':ensemble['threshold'],
+                        'model_class':self.config['classes'][int(combined>=ensemble['threshold'])],
+                        'weights':ensemble['weights']})
+                    comparison['agreement'] = len({m['model_class'] for m in comparison['models']}) == 1
+                comparison['ensemble'] = ensemble
                 try:
                     explanation = self.gradcam(image, original_image.numpy(), score >= threshold)
                     if explanation.get('available') and abs(explanation['reconstructed_score'] - raw_score) > 1e-5:

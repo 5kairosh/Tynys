@@ -5,3 +5,20 @@
 Тексеру: 40 pytest тесті өтті. Live API-де T≠1, OOD available=true; raw 0.9930723309516907, calibrated 0.9937370549125802, Grad-CAM reconstruction raw-пен сәйкес. CR 200, CT 400. Нақты NORMAL/PNEUMONIA PDF-і 2 бет. PDF-тің жаңа ескертпелерден асып кетуі түзетілді. Слайдтар визуал тексерілді.
 Бітпегені: Docker build/run — daemon қосылмаған. OOD non-X-ray сапасы клиникалық тексерілген жоқ. Сыртқы report UID longitudinal patient ID емес.
 
+
+
+2-КЕЗЕҢ — ENSEMBLE ОРЫНДАЛДЫ
+952 validation сырттық баллы; салмақ тек NLL арқылы [0.001,0.999] шегінде таңдалды.
+CNN: 0.001005948939264576; MobileNetV2: 0.9989940510607355. Шек: 0.745.
+Validation NLL: 0.08825658; тең орташа NLL: 0.15204642.
+Ішкі test: accuracy 89.16%, precision 87.74%, recall 96.12%, specificity 77.49%, F1 0.9174, AUC 0.9583.
+TN179 FP52 FN15 TP372. Accuracy MobileNetV2-ден өспеді.
+Сол сыртқы OpenI200: accuracy55%, recall57.50%, specificity54.37%, F1 .3382, AUC .5441.
+TN87 FP73 FN17 TP23. Сыртқы белгілер fitting үшін қолданылған жоқ.
+Файлдар: ensemble_fit.py, site/ensemble.py, app.py, app.js, index.html, pdf_report.py,
+model_config.json, test_metrics.csv, test_predictions.csv, external_validation.json,
+ensemble_report.json, README, MODEL_CARD, Colab, презентация/айтылым жаңарды.
+49 pytest тесті өтті. Шын браузерде екі JPG талданды, 4 баған көрінеді;
+PDF (NORMAL/PNEUMONIA, екі бет) жүктеліп, үш болжам және layout тексерілді.
+Барлық 12 слайд көрілді; native кестелер сақталған, integrity/layout finding=0.
+Docker daemon қосылмаған, контейнер тексерілмеді. Multi-label келесі бөлек кезең.

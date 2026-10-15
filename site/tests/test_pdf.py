@@ -19,11 +19,13 @@ def test_pdf(count,ood_warning,model_class):
        'calibration':{'method':'temperature','T':2.1},
        'comparison':{'available':True,'agreement':True,'models':[
            {'name':'CNN','model_class':'PNEUMONIA','pneumonia_score':.7,'threshold':.485},
-           {'name':'MobileNetV2','model_class':'PNEUMONIA','pneumonia_score':.8,'threshold':.74}]}}
+           {'name':'MobileNetV2','model_class':'PNEUMONIA','pneumonia_score':.8,'threshold':.745},
+           {'name':'Ensemble','model_class':'PNEUMONIA','pneumonia_score':.79,'threshold':.745}]}}
     data=make_report([(png(),r)]*count)
     assert data.startswith(b'%PDF')
     reader=PdfReader(io.BytesIO(data))
     assert len(reader.pages)==count
     assert 'mock-model-123' in reader.pages[0].extract_text()
+    assert 'Ensemble' in reader.pages[0].extract_text()
     if ood_warning:
         assert 'рентгенге ұқсамайды' in reader.pages[0].extract_text()

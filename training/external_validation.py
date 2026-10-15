@@ -136,6 +136,10 @@ def main():
         from calibration import calibrate_score
         config = read_config(ROOT/'site/model/model_config.json')
         model = tf.keras.models.load_model(ROOT/'site/model/pneumonia_mobilenetv2.keras',compile=False,safe_mode=True)
+        cnn = tf.keras.models.load_model(ROOT/'site/model/cnn_best.keras',compile=False,safe_mode=True)
+        from ensemble import ensemble_score
+        from ensemble_fit import metrics as evaluate
+        cnn_threshold = next(float(r['threshold']) for r in csv.DictReader((ROOT/'site/model/test_metrics.csv').open()) if r['model']=='CNN')
         seen = set()
         outputs = []
         for i,row in enumerate(rows):
@@ -155,7 +159,12 @@ def main():
             image = tf.image.resize_with_pad(tf.cast(image,tf.float32),*config['image_size'])
             raw = float(model(image[None,...],training=False).numpy()[0,0])
             score = calibrate_score(raw,config.get('calibration'))
-            outputs.append({**row,'sha256':sha,'score':score,'prediction':int(score>=config['threshold'])})
+            cnn_raw = float(cnn(image[None,...],training=False).numpy()[0,0])
+            cnn_score = calibrate_score(cnn_raw,config['model_calibrations']['CNN'])
+            combined = ensemble_score(cnn_score,score,config['ensemble'])
+            outputs.append({**row,'sha256':sha,'score':score,'prediction':int(score>=config['threshold']),
+                'CNN_score':cnn_score,'CNN_prediction':int(cnn_score>=cnn_threshold),
+                'MobileNetV2_score':score,'Ensemble_score':combined,'Ensemble_prediction':int(combined>=config['ensemble']['threshold'])})
             if (i+1)%25==0 or i+1==len(rows):print(f'{i+1}/{len(rows)}',flush=True)
         y = [int(r['label']) for r in outputs]
         pred = [r['prediction'] for r in outputs]
@@ -173,7 +182,10 @@ def main():
         with (args.output/'external_predictions.csv').open('w',newline='',encoding='utf-8') as f:
             fields=sorted(set().union(*(r.keys() for r in outputs)));w=csv.DictWriter(f,fieldnames=fields);w.writeheader();w.writerows(outputs)
         np.savetxt(args.output/'external_confusion_matrix.csv',[[tn,fp],[fn,tp]],delimiter=',',fmt='%d',header='pred_NORMAL,pred_PNEUMONIA')
-        evidence = {'available':True,'metrics':result,'model_id':hashlib.sha256((ROOT/'site/model/pneumonia_mobilenetv2.keras').read_bytes()).hexdigest()[:12],
+        all_models = [dict(evaluate(y,[r[name+'_score'] for r in outputs],threshold,name),cohort='external',count=len(y)) for name,threshold in [('CNN',cnn_threshold),('MobileNetV2',config['threshold']),('Ensemble',config['ensemble']['threshold'])]]
+        with (args.output/'external_all_models_metrics.csv').open('w',newline='',encoding='utf-8') as stream:
+            writer=csv.DictWriter(stream,fieldnames=list(all_models[0]));writer.writeheader();writer.writerows(all_models)
+        evidence = {'models':all_models, 'available':True,'metrics':result,'model_id':hashlib.sha256((ROOT/'site/model/pneumonia_mobilenetv2.keras').read_bytes()).hexdigest()[:12],
                     'config_sha256':hashlib.sha256((ROOT/'site/model/model_config.json').read_bytes()).hexdigest(),
                     'source':'OpenI Indiana, NLM API' if args.openi else 'User-supplied manifest',
                     'normal_count':int(sum(v==0 for v in y)),'pneumonia_count':int(sum(v==1 for v in y)),
