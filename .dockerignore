@@ -1,0 +1,8 @@
+.git
+**/.venv
+**/__pycache__
+.pytest_cache
+training/cache
+training/artifacts
+presentation
+*.zip
