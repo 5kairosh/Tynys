@@ -4,11 +4,14 @@ Avoids downloading the entire 2.29 GiB dataset. Each file must match the saved S
 Signed redirect URL stays in memory. Source images stay in ignored training/cache.
 """
 import csv
+import json
+import time
+from types import SimpleNamespace
 import hashlib
 import io
 from pathlib import Path
 import struct
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import zipfile
 import zlib
 import requests
@@ -25,7 +28,7 @@ ROOT=Path(__file__).resolve().parents[1]
 class RemoteZip(io.RawIOBase):
     def __init__(self):
         source='https://www.kaggle.com/api/v1/datasets/download/paultimothymooney/chest-xray-pneumonia?datasetVersionNumber=2'
-        with requests.get(source,stream=True,timeout=(10,30)) as response:
+        with requests.get(source,stream=True,timeout=(25,45)) as response:
             response.raise_for_status()
             self.url=response.url
             self.size=int(response.headers['Content-Length'])
@@ -50,10 +53,19 @@ class RemoteZip(io.RawIOBase):
     def range(self,start,n):
         for attempt in range(3):
             try:
-                with session().get(self.url,headers={'Range':f'bytes={start}-{min(self.size-1,start+n-1)}'},stream=True,timeout=(10,30)) as response:
+                with session().get(self.url,headers={'Range':f'bytes={start}-{min(self.size-1,start+n-1)}'},stream=True,timeout=(25,45)) as response:
                     if response.status_code!=206:
                         raise ValueError('Дереккөзі HTTP Range қолдамайды. Толық архивті қолмен жүктеңіз.')
-                    return response.content
+                    expected=min(n,self.size-start)
+                    data=bytearray()
+                    began=time.monotonic()
+                    for chunk in response.iter_content(64*1024):
+                        data.extend(chunk)
+                        if len(data)>expected or time.monotonic()-began>120:
+                            raise requests.Timeout('Range transfer exceeded its bounded size/time.')
+                    if len(data)!=expected:
+                        raise requests.ConnectionError('Incomplete HTTP range.')
+                    return bytes(data)
             except requests.RequestException:
                 if attempt==2:
                     raise
@@ -64,11 +76,31 @@ def main():
     cache.mkdir(parents=True,exist_ok=True)
     with (ROOT/'training/manifests/validation_manifest.csv').open() as f:
         rows=list(csv.DictReader(f))
+    complete=[]
+    for row in rows:
+        target=cache/(row['sha256']+Path(row['path']).suffix)
+        if target.exists() and hashlib.sha256(target.read_bytes()).hexdigest()==row['sha256']:
+            complete.append({**row,'path':str(target)})
+    if len(complete)==len(rows):
+        with (cache/'manifest.csv').open('w',newline='',encoding='utf-8') as stream:
+            writer=csv.DictWriter(stream,fieldnames=list(complete[0]));writer.writeheader();writer.writerows(complete)
+        print(f'Кэш толық тексерілді: {len(complete)}/{len(rows)}. Желі қажет емес.',flush=True)
+        return
     remote=RemoteZip()
-    with zipfile.ZipFile(remote) as archive:
-        index={}
-        for info in archive.infolist():
-            index.setdefault(Path(info.filename).name,[]).append(info)
+    index_path=ROOT/'training/cache/kaggle_zip_index_v2.json'
+    if index_path.exists():
+        raw_index=json.loads(index_path.read_text(encoding='utf-8'))
+        assert raw_index['archive_size']==remote.size,'Kaggle archive size changed.'
+        infos=[SimpleNamespace(**value) for value in raw_index['entries']]
+    else:
+        with zipfile.ZipFile(remote) as archive:
+            infos=archive.infolist()
+        raw_index={'archive_size':remote.size,'entries':[
+            {key:getattr(info,key) for key in ['filename','header_offset','compress_size','compress_type','file_size','CRC']} for info in infos]}
+        index_path.write_text(json.dumps(raw_index),encoding='utf-8')
+    index={}
+    for info in infos:
+        index.setdefault(Path(info.filename).name,[]).append(info)
     def fetch(row):
         target=cache/(row['sha256']+Path(row['path']).suffix)
         if target.exists() and hashlib.sha256(target.read_bytes()).hexdigest()==row['sha256']:
@@ -86,12 +118,34 @@ def main():
                 target.write_bytes(image)
                 return {**row,'path':str(target)}
         raise ValueError('Validation файлының SHA-256-сы сәйкес емес: '+Path(row['path']).name)
-    resolved=[]
-    with ThreadPoolExecutor(max_workers=24) as pool:
-        for i,row in enumerate(pool.map(fetch,rows),1):
-            resolved.append(row)
-            if i%25==0 or i==len(rows):
-                print(f'Validation: {i}/{len(rows)}',flush=True)
+    resolved={}
+    missing=[]
+    for row in rows:
+        target=cache/(row['sha256']+Path(row['path']).suffix)
+        if target.exists() and hashlib.sha256(target.read_bytes()).hexdigest()==row['sha256']:
+            resolved[row['sha256']]={**row,'path':str(target)}
+        else:
+            missing.append(row)
+    print(f'Кэштен тексерілді: {len(resolved)}/{len(rows)}; қалғаны: {len(missing)}',flush=True)
+    errors=0
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futures={pool.submit(fetch,row):row for row in missing}
+        for future in as_completed(futures):
+            try:
+                row=future.result()
+                resolved[row['sha256']]=row
+                if len(resolved)%25==0 or len(resolved)==len(rows):
+                    print(f'Validation: {len(resolved)}/{len(rows)}',flush=True)
+            except requests.RequestException as exc:
+                errors+=1
+                print(f'Желі қатесі ({type(exc).__name__}), кэш сақталды.',flush=True)
+                if errors>=8:
+                    for pending in futures:
+                        pending.cancel()
+                    break
+    if len(resolved)!=len(rows):
+        raise requests.ConnectionError(f'Validation толық емес: {len(resolved)}/{len(rows)}. Кэштен қайта жалғастыруға болады.')
+    resolved=[resolved[row['sha256']] for row in rows]
     with (cache/'manifest.csv').open('w',newline='',encoding='utf-8') as stream:
         writer=csv.DictWriter(stream,fieldnames=list(resolved[0]));writer.writeheader();writer.writerows(resolved)
 

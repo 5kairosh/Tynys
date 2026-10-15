@@ -51,11 +51,14 @@ def main():
     cache=ROOT/'training/cache/validation'
     validation=read_rows(cache/'manifest.csv')
     assert {r['sha256'] for r in validation}=={r['sha256'] for r in frames['validation']}
+    assert len(validation)==len(frames['validation'])==952
+    canonical={r['sha256']:r for r in frames['validation']}
+    assert all(r['label']==canonical[r['sha256']]['label'] and r['group']==canonical[r['sha256']]['group'] for r in validation)
     for row in validation:
         assert hashlib.sha256(Path(row['path']).read_bytes()).hexdigest()==row['sha256']
     original=ROOT/'training/original_evaluation'
     original.mkdir(exist_ok=True)
-    for name in ('model_config.json','test_metrics.csv','project_summary.txt'):
+    for name in ('model_config.json','test_metrics.csv'):
         if not (original/name).exists():
             shutil.copyfile(model_dir/name,original/name)
     if not (original/'test_predictions.csv').exists():
