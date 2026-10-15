@@ -21,6 +21,7 @@ from starlette.concurrency import run_in_threadpool
 
 from calibration import calibrate_score, validate_calibration
 from ood import OODDetector
+from dicom_input import dicom_to_png, dicom_status
 
 ROOT = Path(__file__).resolve().parent
 MODEL_DIR = ROOT / "model"
@@ -114,7 +115,7 @@ class Engine:
             return {'available':False,'message':'Осы модельдерге сәйкес McNemar нәтижесі жоқ.'}
 
     def status(self):
-        return {"xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
+        return {"dicom": dicom_status(), "xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
                 "config": self.config, "metrics": self.metrics,
                 "model_id": self.fingerprint,
                 "comparison_ready": self.cnn_model is not None,
@@ -192,6 +193,9 @@ class Engine:
     def predict(self, data, filename):
         if self.model is None:
             raise HTTPException(503, self.error or "Модель әлі дайын емес.")
+        is_dicom = Path(filename).suffix.lower() == '.dcm'
+        if is_dicom:
+            data = dicom_to_png(data)
         try:
             with Image.open(io.BytesIO(data)) as original:
                 if original.format not in {"JPEG", "PNG"}:
@@ -254,6 +258,8 @@ class Engine:
         if not math.isfinite(score) or not 0 <= score <= 1:
             raise HTTPException(500, "Модель жарамсыз балл берді.")
         return {"model_class": self.config["classes"][int(score >= threshold)],
+                "input_format": "DICOM" if is_dicom else "image",
+                "preview": "data:image/png;base64,"+base64.b64encode(data).decode("ascii") if is_dicom else None,
                 "pneumonia_score": score, "raw_score": raw_score, "calibration": self.config.get("calibration"), "threshold": threshold,
                 "filename": Path(filename).name, "width": width, "height": height,
                 "elapsed_ms": round((time.perf_counter() - started) * 1000),
@@ -291,8 +297,8 @@ def status():
 
 @app.post("/api/predict")
 async def predict(file: UploadFile = File(...)):
-    if Path(file.filename or "").suffix.lower() not in {".jpg", ".jpeg", ".png"}:
-        raise HTTPException(400, "JPG немесе PNG файлын таңда.")
+    if Path(file.filename or "").suffix.lower() not in {".jpg", ".jpeg", ".png", ".dcm"}:
+        raise HTTPException(400, "JPG, PNG немесе DICOM файлын таңда.")
     data = await file.read(IMAGE_LIMIT + 1)
     await file.close()
     if not data:
@@ -316,11 +322,11 @@ async def report(files: list[UploadFile] = File(...)):
     inputs = []
     try:
         for file in files:
-            if Path(file.filename or '').suffix.lower() not in {'.jpg', '.jpeg', '.png'}:
-                raise HTTPException(400, 'PDF үшін JPG немесе PNG суретін таңда.')
+            if Path(file.filename or '').suffix.lower() not in {'.jpg', '.jpeg', '.png', '.dcm'}:
+                raise HTTPException(400, 'PDF үшін JPG, PNG немесе DICOM суретін таңда.')
             data = await file.read(IMAGE_LIMIT + 1)
             if not data or len(data) > IMAGE_LIMIT:
-                raise HTTPException(413, 'Әр файл бос болмауы және 12 МБ-тан аспауы керек.')
+                raise HTTPException(400 if not data else 413, 'Әр файл бос болмауы және 12 МБ-тан аспауы керек.')
             inputs.append((data, file.filename or 'xray.png'))
     finally:
         for file in files:
@@ -328,7 +334,11 @@ async def report(files: list[UploadFile] = File(...)):
 
     def generate():
         from pdf_report import make_report
-        items = [(data, engine.predict(data, name)) for data, name in inputs]
+        items = []
+        for data,name in inputs:
+            result = engine.predict(data,name)
+            display = base64.b64decode(result['preview'].split(',',1)[1]) if result.get('preview') else data
+            items.append((display,result))
         return make_report(items)
     pdf = await run_in_threadpool(generate)
     return Response(pdf, media_type='application/pdf',

@@ -29,7 +29,7 @@ $('header-status').textContent=status.ready?'Модель дайын':'Моде�
 window.addEventListener('online',()=>loadStatus());
 window.addEventListener('focus',()=>loadStatus());
 function resetResult(){$('empty-result').hidden=false;$('result-content').hidden=true;$('result-tag').textContent='КҮТУДЕ';$('attention-tools').hidden=true;$('attention-unavailable').hidden=true;$('comparison-panel').hidden=true;results=[];}
-function selectFiles(files){if(busy)return;error('');const list=Array.from(files);if(!list.length)return;if(list.length>10){error('Бір ретте 10 суретке дейін таңдаңыз.');return;}for(const f of list){if(!/\.(jpe?g|png)$/i.test(f.name)){error('Тек JPG, JPEG немесе PNG суреттерін таңдаңыз.');return;}if(f.size>12*1024*1024){error('Әр суреттің көлемі 12 МБ-тан аспауы керек.');return;}if(!f.size){error('Бос файлды жүктеу мүмкін емес.');return;}}selected=list;activeHistoryId=null;renderHistory();resetResult();if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(selected[0]);$('preview-image').src=previewUrl;$('preview').hidden=false;$('dropzone').hidden=true;$('file-info').hidden=false;$('file-name').textContent=selected[0].name;$('file-size').textContent=(selected[0].size/1024).toFixed(0)+' КБ'+(selected.length>1?` · ${selected.length} сурет таңдалды`:'');$('file-list').textContent=selected.length>1?selected.slice(1).map(f=>f.name).join(' · '):'';updateButton();}
+function selectFiles(files){if(busy)return;error('');const list=Array.from(files);if(!list.length)return;if(list.length>10){error('Бір ретте 10 суретке дейін таңдаңыз.');return;}for(const f of list){if(!/\.(jpe?g|png|dcm)$/i.test(f.name)){error('Тек JPG, JPEG, PNG немесе DICOM таңдаңыз.');return;}if(f.size>12*1024*1024){error('Әр суреттің көлемі 12 МБ-тан аспауы керек.');return;}if(!f.size){error('Бос файлды жүктеу мүмкін емес.');return;}}selected=list;activeHistoryId=null;renderHistory();resetResult();if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(selected[0]);$('preview-image').src=previewUrl;$('preview').hidden=false;$('dropzone').hidden=true;$('file-info').hidden=false;$('file-name').textContent=selected[0].name;$('file-size').textContent=(selected[0].size/1024).toFixed(0)+' КБ'+(selected.length>1?` · ${selected.length} сурет таңдалды`:'');$('file-list').textContent=selected.length>1?selected.slice(1).map(f=>f.name).join(' · '):'';updateButton();}
 $('image-input').addEventListener('change',e=>selectFiles(e.target.files));
 $('dropzone').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('image-input').click();}});
 for(const type of ['dragenter','dragover'])$('dropzone').addEventListener(type,e=>{e.preventDefault();$('dropzone').classList.add('dragging');});
@@ -51,7 +51,9 @@ function explainResult(r){
   };
 }
 
-function showResult(r){const pn=r.model_class==='PNEUMONIA';$('empty-result').hidden=true;$('result-content').hidden=false;$('result-tag').textContent='ДАЙЫН';$('result-category').textContent=r.model_class;$('result-category').classList.toggle('pneumonia',pn);$('result-title').textContent=pn?'Пневмония санатына жіктелді':'Қалыпты санатқа жіктелді';$('result-explanation').textContent=explainResult(r).reason;$('score-value').textContent=decimal(r.pneumonia_score);$('calibration-note').textContent=r.calibration?`Validation-да калибрленген балл (T=${decimal(r.calibration.T)}). Клиникалық ықтималдық ретінде тексерілмеген.`:'Калибрлеу қолданылмаған (T=1).';$('score-fill').style.width=(r.pneumonia_score*100)+'%';$('score-fill').style.background=pn?'#ba9651':'var(--green)';$('threshold-marker').style.left=(r.threshold*100)+'%';$('threshold-label').textContent='Шек: '+decimal(r.threshold);$('result-time').textContent=`${r.width} × ${r.height} px · ${r.elapsed_ms} мс`;$('result-model').textContent='MobileNetV2';showAttention(r);const container=$('batch-results');container.replaceChildren();if(results.length>1)for(const item of results){const row=document.createElement('div'),name=document.createElement('span'),label=document.createElement('strong');name.textContent=item.filename;label.textContent=item.model_class+' · '+decimal(item.pneumonia_score);row.append(name,label);container.append(row);}}
+function showResult(r){
+  if(r.preview){$('preview-image').src=r.preview;}
+  const pn=r.model_class==='PNEUMONIA';$('empty-result').hidden=true;$('result-content').hidden=false;$('result-tag').textContent='ДАЙЫН';$('result-category').textContent=r.model_class;$('result-category').classList.toggle('pneumonia',pn);$('result-title').textContent=pn?'Пневмония санатына жіктелді':'Қалыпты санатқа жіктелді';$('result-explanation').textContent=explainResult(r).reason;$('score-value').textContent=decimal(r.pneumonia_score);$('calibration-note').textContent=r.calibration?`Validation-да калибрленген балл (T=${decimal(r.calibration.T)}). Клиникалық ықтималдық ретінде тексерілмеген.`:'Калибрлеу қолданылмаған (T=1).';$('score-fill').style.width=(r.pneumonia_score*100)+'%';$('score-fill').style.background=pn?'#ba9651':'var(--green)';$('threshold-marker').style.left=(r.threshold*100)+'%';$('threshold-label').textContent='Шек: '+decimal(r.threshold);$('result-time').textContent=`${r.width} × ${r.height} px · ${r.elapsed_ms} мс`;$('result-model').textContent='MobileNetV2';showAttention(r);const container=$('batch-results');container.replaceChildren();if(results.length>1)for(const item of results){const row=document.createElement('div'),name=document.createElement('span'),label=document.createElement('strong');name.textContent=item.filename;label.textContent=item.model_class+' · '+decimal(item.pneumonia_score);row.append(name,label);container.append(row);}}
 function showAttention(r){
   const check=r.xray_check;
   $('xray-warning').hidden=false;
@@ -66,13 +68,13 @@ function showAttention(r){
     setAttentionView(true);
   }else{
     $('attention-unavailable').textContent=explanation?.message||'Жылу картасы қолжетімсіз.';
-    $('preview-image').src=previewUrl;
+    $('preview-image').src=r.preview||previewUrl;
   }
 }
 function setAttentionView(show){
   const r=results[0];
   if(!r?.explanation?.available)return;
-  $('preview-image').src=show?r.explanation.overlay:previewUrl;
+  $('preview-image').src=show?r.explanation.overlay:(r.preview||previewUrl);
   $('preview-image').alt=show?`${r.model_class} санатына арналған Grad-CAM жылу картасы`:'Жүктелген рентген суреті';
   $('view-original').setAttribute('aria-pressed',String(!show));
   $('view-attention').setAttribute('aria-pressed',String(show));
@@ -147,7 +149,7 @@ function showComparison(r){
 
 // Session-only history. No localStorage, IndexedDB, cookies or server records.
 function rememberResult(file,result){
-  const entry={id:nextHistoryId++,file,result,time:new Date(),thumbnail:URL.createObjectURL(file)};
+  const entry={id:nextHistoryId++,file,result,time:new Date(),thumbnail:result.preview||URL.createObjectURL(file)};
   analysisHistory.unshift(entry);
   if(results[0]===result)activeHistoryId=entry.id;
   while(analysisHistory.length>20){const removed=analysisHistory.pop();URL.revokeObjectURL(removed.thumbnail);}
