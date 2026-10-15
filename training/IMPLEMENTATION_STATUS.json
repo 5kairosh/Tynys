@@ -96,8 +96,19 @@
     "threshold_tuned_external": false
   },
   "docker": {
-    "built": false,
-    "reason": "Docker Desktop Linux daemon is not running."
+    "built": true,
+    "run_verified": true,
+    "server_version": "29.8.1",
+    "image": "tynys:latest",
+    "image_id": "sha256:e7aa2e2b36c4c774fe6e54132150d16cf0c502234bc393aef6979af1a70ed766",
+    "image_size_bytes": 3281444328,
+    "image_size_display": "3.28GB",
+    "host_port": 7861,
+    "container_port": 7860,
+    "container_removed": true,
+    "traceback_found": false,
+    "cuda_notice": "TensorFlow logs missing CUDA drivers and cuInit 303; CPU inference and all required HTTP/PDF checks passed.",
+    "checked_at": "2026-10-15T18:15:16.5476644+05:00"
   },
   "ci": {
     "configured": true,

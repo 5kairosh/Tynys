@@ -1,0 +1,58 @@
+TYNYS — DOCKER BUILD/RUN ТЕКСЕРУ ЕСЕБІ
+
+Күйі: build және live run тексерілді.
+Docker Server: 29.8.1
+Image: tynys:latest
+Image ID: sha256:e7aa2e2b36c4c774fe6e54132150d16cf0c502234bc393aef6979af1a70ed766
+docker images tynys: 3.28GB
+Нақты көлемі: 3281444328 байт (3.0561 GiB).
+Платформа: linux/amd64. USER: tynys, UID: 1000.
+Dockerfile, requirements нұсқалары, EXPOSE7860 және CMD өзгермеді.
+
+1. BUILD
+Жоба түбірі: C:/Users/kairo/tynys_eval/Tynys
+Команда: docker build -t tynys .
+Exit code: 0.
+Dockerfile/requirements SHA-256, image ID және өлшем: build_result.json.
+Толық build журналы: build_output.txt.
+
+2. RUN
+docker run --rm -d --name tynys-test -p 127.0.0.1:7861:7860 tynys
+7860 бос болмады: онда жергілікті Tynys сервері (PID22696) тұрды.
+Сондықтан тексеру URL: http://127.0.0.1:7861 . Контейнердің ішкі порты:7860.
+
+GET /api/status → 200
+ready:true
+DICOM available:True
+xray_check available:True
+McNemar available:True
+Ensemble available:True
+calibration.T:0.9799594303292329
+TensorFlow:2.21.0
+Модель ID:ea584b998a45
+POST /api/predict, sample.png → 200
+POST /api/predict, sample_cr.dcm → 200
+POST /api/predict, sample_ct.dcm → 400
+POST /api/predict, text.jpg → 400
+POST /api/report, PNG+CR DICOM → 200, %PDF, 2 бет.
+Екі PDF бетінде де Ensemble жолы бар. CR/CT DICOM тест файлдары синтетикалық.
+PNG көпшілікке ашық рентген мысалынан жадта түрлендірілді; пайдаланушы деректері сақталмады.
+
+Толық docker logs ішінде Traceback жоқ.
+TensorFlow CUDA драйвері жоқтығын және cuInit303 хабарламасын шығарды.
+Бұл CPU режимінде орындалған HTTP/PDF тексерулеріне кедергі келтірмеді.
+Лог: container_logs.txt. Толық статус: status.json. HTTP дәлелдері: live_result.json.
+PDF: container_report.pdf.
+
+Тазалау: docker stop tynys-test.
+--rm болғандықтан тоқтағанда контейнер автоматты жойылды; docker ps -a бойынша жоқ.
+Жойылған контейнерге қайта docker rm орындау қажет емес. Дәлел: cleanup.json.
+Бұрынғы жергілікті сервер мен басқа контейнерлер сақталды.
+
+3. ҚҰЖАТТАР
+README_KZ.txt, site/README.txt, README.md, MODEL_CARD.md Deployment/HF Space,
+IMPLEMENTATION_STATUS.json, презентацияның10-слайды және айтылым мәтіні жаңартылды.
+Бұл есеп бұрынғы кезеңдердегі «Docker тексерілмеді» деген тарихи жазбаларды жаңартады.
+Hugging Face Space-қа жариялау орындалған жоқ; нұсқау ғана қосылды.
+
+Презентация:13 слайд қайта рендерленді. Өзгергені тек10-слайд, қалған12-слайдтың пиксельдері алдыңғы нұсқамен бірдей. Integrity/layout finding=0.

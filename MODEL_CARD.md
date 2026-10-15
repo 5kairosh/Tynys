@@ -74,6 +74,39 @@ OpenI суреттерін, үйретілген салмақтарын және
 Толық сандар: training/outputs/multilabel/per_label_metrics.csv және experiment_report.json.
 
 
+## Deployment
+
+Docker: build/run тексерілді (image tynys, Server 29.8.1). Image көлемі: 3.28GB (3281444328 байт). Тексерілген host порт: 7861, контейнер: 7860. PNG/CR DICOM 200; CT DICOM/мәтінді JPG 400; PDF 200, 2 бет; Traceback жоқ. Контейнер жойылды.
+
+Жоба түбірінен:
+
+```sh
+docker build -t tynys .
+docker run --rm -d --name tynys-test -p 127.0.0.1:7860:7860 tynys
+```
+
+7860 бос болмаса, `-p 127.0.0.1:7861:7860` қолданыңыз. Нақты тексеруде 7860-та жергілікті сервер
+болғандықтан 7861 қолданылды. `/api/status` ready=true болғанша күтіңіз.
+`docker logs tynys-test` арқылы журналды көріп, `docker stop tynys-test` арқылы тоқтатыңыз.
+`--rm` тоқтаған контейнерді автоматты жояды. Қосымша `docker rm` қажет емес.
+Команданың ішкі порты 7860, USER tynys (UID 1000), requirements нұсқалары өзгермеген.
+CPU тексеруі өтті. CUDA жоқтығы/cuInit 303 хабарламасы болды, HTTP/PDF жұмысына кедергі келтірмеді.
+Дәлелдер: `training/docker_evidence/` ішіндегі JSON, журнал және екі беттік PDF.
+
+### Hugging Face Docker Space
+
+1. Space құрғанда SDK ретінде Docker таңдаңыз.
+2. Репозиторий түбіріне Dockerfile мен README.md, сондай-ақ site бумасын салыңыз.
+   README.md YAML басында `sdk: docker` және `app_port: 7860` сақталуы керек.
+3. site/model ішінде екі binary .keras модель, model_config.json, test_metrics.csv,
+   ood_params.npz, mcnemar.json және external_validation.json бірге болуы керек.
+4. Build біткен соң Space Logs пен `/api/status` тексеріңіз. Контейнер 0.0.0.0:7860 тыңдайды.
+   Venv, cache, пайдаланушы суреттері, OpenI суреттері мен multi-label салмақтарын жүктемеңіз.
+
+Space интернетке осы тапсырмада жарияланған жоқ. Ресми нұсқаулық:
+[Hugging Face Docker Spaces](https://huggingface.co/docs/hub/spaces-sdks-docker).
+
+
 ## English summary
 
 Educational binary NORMAL/PNEUMONIA classifier. Calibration is fitted on all 952 SHA-verified

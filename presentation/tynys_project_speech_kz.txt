@@ -44,7 +44,9 @@ PDF түпнұсқа, Grad-CAM, T, шешім шегі және салыстыр
 Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
 
 10-слайд
-Ensemble, калибрлеу, OOD және DICOM дайын. 56 жергілікті тест өтті. Үш белгіге жеке эксперимент жүргізілді, бірақ сайтқа қосылған жоқ. Docker daemon өшірулі болғандықтан контейнер тексерілмеді. Келесі жұмыс — деректерді кеңейтіп, белгілерді мамандармен тексеру.
+Ensemble, калибрлеу, OOD және DICOM дайын. 56 жергілікті тест өтті. Үш белгіге жеке эксперимент жүргізілді, сайтқа қосылмады. Docker build/run тексерілді: Server 29.8.1, image tynys, көлемі 3.28GB. 7860-та жергілікті сервер болғандықтан контейнерді 7861 портында сынадым. PNG және CR DICOM 200, CT DICOM және мәтінді JPG 400. PDF екі бет болып шықты. Ready, OOD, McNemar дайын, T=0,97995943. Traceback жоқ, контейнер тоқтатылып автоматты жойылды. Hugging Face Space-қа жариялау орындалған жоқ.
+
+Дереккөз: training/docker_evidence/verification.json; live_result.json; container_logs.txt.
 
 11-слайд
 OpenI-дің сол 200 суретін жаңа калибрленген балл және 0,745 шегімен қайта бағаладым. Accuracy 55,00%, recall 57,50%, AUC 0,5442. Таңдау мен шекті сыртқы белгілерге қарап өзгерткен жоқпын. Report UID — surrogate топ, нақты пациент ID толық расталмаған. Сыртқы CNN accuracy 21,50%, Ensemble 55,00%. Екі модельді біріктіру осы сыртқы жиындағы мәселені шешпеді.

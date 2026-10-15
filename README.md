@@ -24,3 +24,5 @@ Hugging Face Docker Space-қа осы репозиторий мазмұнын с
 Docker тексеруі: `docker build -t tynys .`, кейін `docker run --rm -p 127.0.0.1:7860:7860 tynys`.
 
 Датасет лицензиясы мен модель салмақтарын тарату шарттарын жариялау алдында тексеру қажет.
+
+Docker: build/run тексерілді (image tynys, Server 29.8.1). Image 3.28GB. Жергілікті тексеру порты: 7861. Дәлелдер: `training/docker_evidence/`.

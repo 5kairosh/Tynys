@@ -68,11 +68,12 @@ site/.venv/Scripts/python training/refresh_documentation.py
 
 ТЕСТ ЖӘНЕ DOCKER
 site/.venv/Scripts/python -m pip install pytest pypdf httpx
-site/.venv/Scripts/python -m pytest site/tests -q
+site/.venv/Scripts/python -m pytest site/tests training/tests -q
 CI: .github/workflows/ci.yml, Ubuntu/Python 3.11. Қашықтағы CI орындалуы осы компьютерде расталмаған.
 docker build -t tynys .
 docker run --rm -p 127.0.0.1:7860:7860 tynys
-Docker daemon өшірулі болғандықтан build/run тексерілмеді. Интернетке жарияланған жоқ.
+Docker: build/run тексерілді (image tynys, Server 29.8.1). Image көлемі: 3.28GB (3281444328 байт). Тексерілген host порт: 7861, контейнер: 7860. PNG/CR DICOM 200; CT DICOM/мәтінді JPG 400; PDF 200, 2 бет; Traceback жоқ. Контейнер жойылды.
+Интернетке жарияланған жоқ.
 Hugging Face Docker Space үшін түбірдегі README.md және Dockerfile дайын.
 
 MULTI-LABEL — ЖЕКЕ ОҚУ ЭКСПЕРИМЕНТІ

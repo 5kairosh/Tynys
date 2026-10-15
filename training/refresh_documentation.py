@@ -1,5 +1,6 @@
 """Generate current documentation from measured artifacts, never literal old metrics."""
 import csv
+import hashlib
 import json
 from pathlib import Path
 
@@ -34,6 +35,52 @@ def main():
         data=json.loads((multi_path.parent/'data_report.json').read_text(encoding='utf-8'))
         rows='\n'.join(f"{r['label']}: шек {r['threshold']:.2f}, AUC {r['roc_auc']:.4f}, F1 {r['f1']:.4f}, sensitivity {pct(r['sensitivity'])}, specificity {pct(r['specificity'])}; TN {r['TN']}, FP {r['FP']}, FN {r['FN']}, TP {r['TP']}." for r in multi['metrics'])
         multi_text=('MULTI-LABEL — ЖЕКЕ ОҚУ ЭКСПЕРИМЕНТІ\n'+json.dumps(data['splits'],ensure_ascii=False)+'\n'+rows+'\nImageNet MobileNetV2 + GAP + үш sigmoid Dense(1), BCE. Соңғы 30 қабат, BN мұздатылған. Таңдалған кезең: '+multi['selected_stage']+'.\nШектер тек validation F1 арқылы. MeSH report-level әлсіз белгілер, жоқ белгі weak negative деп алынған.\nReport ID longitudinal пациент ID емес; frontal/lateral аралас. Шағын квоталық жиын жалпы популяцияны көрсетпейді.\nBinary сыртқы cohort-пен сурет қиылысы: '+str(data['binary_external_cohort_image_overlap'])+'; бұл жаңа тәуелсіз binary тексеру емес.\nOpenI суреттерін, үйретілген салмақтарын және қате суреттерін таратуға болмайды: олар тек жергілікті private/cache бумасында, Git/ZIP-ке кірмейді.\nСайтқа қосылған жоқ. Қайта орындау: training/multilabel_colab_kz.ipynb немесе training/multilabel_experiment.py.\nТолық сандар: training/outputs/multilabel/per_label_metrics.csv және experiment_report.json.\n')
+    docker=None
+    evidence=ROOT/'training/docker_evidence/verification.json'
+    if evidence.exists():
+        candidate=json.loads(evidence.read_text(encoding='utf-8'))
+        build=json.loads((evidence.parent/'build_result.json').read_text(encoding='utf-8'))
+        if (candidate.get('built') and candidate.get('run_verified') and
+            build['dockerfile_sha256']==hashlib.sha256((ROOT/'Dockerfile').read_bytes()).hexdigest() and
+            build['requirements_sha256']==hashlib.sha256((ROOT/'site/requirements.txt').read_bytes()).hexdigest()):
+            docker=candidate
+    docker_text=(f"Docker: build/run тексерілді (image tynys, Server {docker['server_version']}). "
+        f"Image көлемі: {docker['image_size_display']} ({docker['image_size_bytes']} байт). "
+        f"Тексерілген host порт: {docker['host_port']}, контейнер: 7860. "
+        "PNG/CR DICOM 200; CT DICOM/мәтінді JPG 400; PDF 200, 2 бет; Traceback жоқ. Контейнер жойылды."
+        if docker else 'Осы Dockerfile/requirements үшін Docker build/run тексерілгені расталмаған.')
+    deployment=f"""## Deployment
+
+{docker_text}
+
+Жоба түбірінен:
+
+```sh
+docker build -t tynys .
+docker run --rm -d --name tynys-test -p 127.0.0.1:7860:7860 tynys
+```
+
+7860 бос болмаса, `-p 127.0.0.1:7861:7860` қолданыңыз. Нақты тексеруде 7860-та жергілікті сервер
+болғандықтан 7861 қолданылды. `/api/status` ready=true болғанша күтіңіз.
+`docker logs tynys-test` арқылы журналды көріп, `docker stop tynys-test` арқылы тоқтатыңыз.
+`--rm` тоқтаған контейнерді автоматты жояды. Қосымша `docker rm` қажет емес.
+Команданың ішкі порты 7860, USER tynys (UID 1000), requirements нұсқалары өзгермеген.
+CPU тексеруі өтті. CUDA жоқтығы/cuInit 303 хабарламасы болды, HTTP/PDF жұмысына кедергі келтірмеді.
+Дәлелдер: `training/docker_evidence/` ішіндегі JSON, журнал және екі беттік PDF.
+
+### Hugging Face Docker Space
+
+1. Space құрғанда SDK ретінде Docker таңдаңыз.
+2. Репозиторий түбіріне Dockerfile мен README.md, сондай-ақ site бумасын салыңыз.
+   README.md YAML басында `sdk: docker` және `app_port: 7860` сақталуы керек.
+3. site/model ішінде екі binary .keras модель, model_config.json, test_metrics.csv,
+   ood_params.npz, mcnemar.json және external_validation.json бірге болуы керек.
+4. Build біткен соң Space Logs пен `/api/status` тексеріңіз. Контейнер 0.0.0.0:7860 тыңдайды.
+   Venv, cache, пайдаланушы суреттері, OpenI суреттері мен multi-label салмақтарын жүктемеңіз.
+
+Space интернетке осы тапсырмада жарияланған жоқ. Ресми нұсқаулық:
+[Hugging Face Docker Spaces](https://huggingface.co/docs/hub/spaces-sdks-docker).
+"""
     presentation_name='tynys_complete_13slides_kz.pptx' if multi else 'tynys_project_12slides_kz.pptx'
     body=f'''TYNYS — ҚАЗІРГІ ЕСЕПТЕЛГЕН НҰСҚА
 
@@ -100,11 +147,12 @@ site/.venv/Scripts/python training/refresh_documentation.py
 
 ТЕСТ ЖӘНЕ DOCKER
 site/.venv/Scripts/python -m pip install pytest pypdf httpx
-site/.venv/Scripts/python -m pytest site/tests -q
+site/.venv/Scripts/python -m pytest site/tests training/tests -q
 CI: .github/workflows/ci.yml, Ubuntu/Python 3.11. Қашықтағы CI орындалуы осы компьютерде расталмаған.
 docker build -t tynys .
 docker run --rm -p 127.0.0.1:7860:7860 tynys
-Docker daemon өшірулі болғандықтан build/run тексерілмеді. Интернетке жарияланған жоқ.
+{docker_text}
+Интернетке жарияланған жоқ.
 Hugging Face Docker Space үшін түбірдегі README.md және Dockerfile дайын.
 
 {multi_text}
@@ -175,6 +223,8 @@ OpenI: CC BY-NC-ND 4.0. Суреттер архивке/репозиторийг
 
 {multi_text}
 
+{deployment}
+
 ## English summary
 
 Educational binary NORMAL/PNEUMONIA classifier. Calibration is fitted on all 952 SHA-verified
@@ -187,6 +237,7 @@ features but non-X-ray detection performance is unvalidated. No clinical approva
     status['calibration']={'fitted':True,'runtime_temperature':config['calibration']['T'],'validation_count':952,'threshold':config['threshold']}
     status['ood']={'available':True,**calibration['ood']}
     status['external_validation']={'completed':True,**external}
+    if docker:status['docker']=docker
     if multi:status['multilabel']={'completed':True,'website_integration':False,'distributed_weights':False,'metrics':multi['metrics']}
     if ensemble:status['ensemble']={'fitted':True,**ensemble}
     (ROOT/'training/IMPLEMENTATION_STATUS.json').write_text(json.dumps(status,ensure_ascii=False,indent=2),encoding='utf-8')

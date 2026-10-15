@@ -1,6 +1,6 @@
 """Exercise the actual Docker HTTP service; never writes uploaded images.
 
-Run after docker run: python training/verify_docker_live.py --port 7861
+Run after docker run: python training/verify_docker_live.py --port 7861 --image path/to/public-xray.png
 Evidence contains HTTP status, model configuration and PDF checks, no image data.
 """
 import argparse
