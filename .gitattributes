@@ -1,0 +1,3 @@
+# Evaluation evidence binds this configuration to its exact SHA-256 bytes.
+# Preserve the validated file on Windows and Linux; do not normalize its EOLs.
+site/model/model_config.json -text
