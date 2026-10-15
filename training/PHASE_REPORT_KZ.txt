@@ -125,3 +125,23 @@ README_KZ.txt, site/README.txt, README.md, MODEL_CARD.md Deployment/HF Space,
 IMPLEMENTATION_STATUS.json, презентацияның10-слайды және айтылым мәтіні жаңартылды.
 Бұл есеп бұрынғы кезеңдердегі «Docker тексерілмеді» деген тарихи жазбаларды жаңартады.
 Hugging Face Space-қа жариялау орындалған жоқ; нұсқау ғана қосылды.
+
+
+GITHUB PUSH ЖӘНЕ ҚАШЫҚТАҒЫ CI — ОРЫНДАЛДЫ
+Репозиторий: https://github.com/5kairosh/Tynys (public), master -> origin/master.
+Бастапқы push commit:416f86864341120909ce934057a0b24b9abadf44.
+Алғашқы run38745020252:1 failed,55 passed. McNemar config SHA-256 сәйкес келмеді.
+Себеп: Git Windows CRLF конфигурациясын Linux checkout-та LF етіп өзгерткен.
+Түзету: .gitattributes -text және git add --renormalize арқылы индекске дәл байттарды қайта енгізу.
+Git ережесінің өзін қосу жеткіліксіз болды, кейін индекстегі файл да жаңартылды.
+JSON мәндері, модель салмақтары, тест талаптары өзгерген жоқ. Екі түзету commit:8c496e0,53eeca4.
+Сәтті CI run: https://github.com/5kairosh/Tynys/actions/runs/38745485393
+Job: https://github.com/5kairosh/Tynys/actions/runs/38745485393/job/116457888539
+Тексерілген code commit: 53eeca479b9624e714d9e1a64173ad23761e8fff
+Күйі: completed/success. Ubuntu-latest, Python3.11.17.
+Pytest: 56 passed, 1 warning in 10.87s
+Run аяқталған уақыт:2026-10-15T13:47:17Z; тексерілген уақыт:2026-10-15T13:48:59.263575+00:00.
+API/job log дәлелдері:training/ci_evidence/. Токендер файлға немесе commit-ке жазылған жоқ.
+README/CI badge/статус/10-слайд/айтылым жаңартылды.
+Тесттен кейінгі құжаттама commit-і release manifest-ке енгізіледі.
+HF Space жариялауы орындалған жоқ.

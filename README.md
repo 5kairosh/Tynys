@@ -26,3 +26,13 @@ Docker тексеруі: `docker build -t tynys .`, кейін `docker run --rm 
 Датасет лицензиясы мен модель салмақтарын тарату шарттарын жариялау алдында тексеру қажет.
 
 Docker: build/run тексерілді (image tynys, Server 29.8.1). Image 3.28GB. Жергілікті тексеру порты: 7861. Дәлелдер: `training/docker_evidence/`.
+
+## GitHub және CI
+
+[Репозиторий](https://github.com/5kairosh/Tynys)
+
+[![CI](https://github.com/5kairosh/Tynys/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/5kairosh/Tynys/actions/workflows/ci.yml)
+
+CI қашықта өтті (ubuntu-latest, Python 3.11, 56 тест).
+[Расталған run](https://github.com/5kairosh/Tynys/actions/runs/38745485393).
+Дәлелдер: `training/ci_evidence/success_run.json`, `pytest_success.txt`.

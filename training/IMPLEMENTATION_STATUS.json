@@ -112,7 +112,12 @@
   },
   "ci": {
     "configured": true,
-    "remote_run": false
+    "remote_run": true,
+    "repo_url": "https://github.com/5kairosh/Tynys",
+    "run_id": 38745485393,
+    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/38745485393",
+    "status": "success",
+    "checked_at": "2026-10-15T13:48:59.263575+00:00"
   },
   "tests": {
     "local_passed": 56

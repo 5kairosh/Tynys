@@ -69,7 +69,9 @@ site/.venv/Scripts/python training/refresh_documentation.py
 ТЕСТ ЖӘНЕ DOCKER
 site/.venv/Scripts/python -m pip install pytest pypdf httpx
 site/.venv/Scripts/python -m pytest site/tests training/tests -q
-CI: .github/workflows/ci.yml, Ubuntu/Python 3.11. Қашықтағы CI орындалуы осы компьютерде расталмаған.
+CI қашықта өтті (ubuntu-latest, Python 3.11, 56 тест). Run: https://github.com/5kairosh/Tynys/actions/runs/38745485393 . Тексерілген code commit: 53eeca479b9624e714d9e1a64173ad23761e8fff.
+Репозиторий: https://github.com/5kairosh/Tynys
+[![CI](https://github.com/5kairosh/Tynys/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/5kairosh/Tynys/actions/workflows/ci.yml)
 docker build -t tynys .
 docker run --rm -p 127.0.0.1:7860:7860 tynys
 Docker: build/run тексерілді (image tynys, Server 29.8.1). Image көлемі: 3.28GB (3281444328 байт). Тексерілген host порт: 7861, контейнер: 7860. PNG/CR DICOM 200; CT DICOM/мәтінді JPG 400; PDF 200, 2 бет; Traceback жоқ. Контейнер жойылды.

@@ -1,0 +1,45 @@
+Run https://github.com/5kairosh/Tynys/actions/runs/38745020252
+Root cause: Git normalized SHA-bound model_config.json CRLF bytes to LF. Tests were not changed.
+2026-10-15T13:43:49.2648779Z ##[group]Run .venv/bin/python -m pytest site/tests training/tests -q
+2026-10-15T13:43:49.2649297Z .venv/bin/python -m pytest site/tests training/tests -q
+2026-10-15T13:43:49.2713170Z shell: /usr/bin/bash -e {0}
+2026-10-15T13:43:49.2713416Z env:
+2026-10-15T13:43:49.2713682Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T13:43:49.2714128Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-15T13:43:49.2714580Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T13:43:49.2714980Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T13:43:49.2715368Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T13:43:49.2715745Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-15T13:43:49.2716064Z ##[endgroup]
+2026-10-15T13:43:59.4839297Z F.......................................................                 [100%]
+2026-10-15T13:43:59.4840305Z =================================== FAILURES ===================================
+2026-10-15T13:43:59.4841111Z ________________________________ test_protocol _________________________________
+2026-10-15T13:43:59.4841887Z 
+2026-10-15T13:43:59.4842198Z client = <starlette.testclient.TestClient object at 0x7fc3e2b70750>
+2026-10-15T13:43:59.4842654Z 
+2026-10-15T13:43:59.4842821Z     def test_protocol(client):
+2026-10-15T13:43:59.4843294Z         status=client.get('/api/status').json()
+2026-10-15T13:43:59.4844024Z         assert status['ready'] and status['comparison_ready'] and status['dicom']['available']
+2026-10-15T13:43:59.4845055Z >       assert 'calibration' in status and 'xray_check' in status and status['mcnemar']['available']
+2026-10-15T13:43:59.4848982Z E       AssertionError: assert ('calibration' in {'ensemble': {'available': True, 'weights': {'CNN': 0.001005948939264576, 'MobileNetV2': 0.9989940510607355}, 'thresho...e': True, 'message': None, 'notice': 'Validation үлестірімінен ауытқу эвристикасы. Рентген екенін дәлелдемейді.'}, ...} and 'xray_check' in {'ensemble': {'available': True, 'weights': {'CNN': 0.001005948939264576, 'MobileNetV2': 0.9989940510607355}, 'thresho...e': True, 'message': None, 'notice': 'Validation үлестірімінен ауытқу эвристикасы. Рентген екенін дәлелдемейді.'}, ...} and False)
+2026-10-15T13:43:59.4851221Z 
+2026-10-15T13:43:59.4851638Z site/tests/test_api.py:22: AssertionError
+2026-10-15T13:43:59.4852104Z ---------------------------- Captured stderr setup -----------------------------
+2026-10-15T13:43:59.4852748Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-10-15T13:43:59.4853745Z I0000 00:00:1792071831.194093    2476 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-10-15T13:43:59.4854675Z I0000 00:00:1792071831.246432    2476 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-10-15T13:43:59.4855633Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-10-15T13:43:59.4856339Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-10-15T13:43:59.4857007Z I0000 00:00:1792071833.256923    2476 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-10-15T13:43:59.4857827Z E0000 00:00:1792071835.121661    2476 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-10-15T13:43:59.4858461Z =============================== warnings summary ===============================
+2026-10-15T13:43:59.4858818Z site/tests/test_api.py::test_protocol
+2026-10-15T13:43:59.4859665Z   /home/runner/work/Tynys/Tynys/.venv/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+2026-10-15T13:43:59.4860790Z     from starlette.testclient import TestClient as TestClient  # noqa
+2026-10-15T13:43:59.4861086Z 
+2026-10-15T13:43:59.4861530Z -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2026-10-15T13:43:59.4862012Z =========================== short test summary info ============================
+2026-10-15T13:43:59.4864354Z FAILED site/tests/test_api.py::test_protocol - AssertionError: assert ('calibration' in {'ensemble': {'available': True, 'weights': {'CNN': 0.001005948939264576, 'MobileNetV2': 0.9989940510607355}, 'thresho...e': True, 'message': None, 'notice': 'Validation үлестірімінен ауытқу эвристикасы. Рентген екенін дәлелдемейді.'}, ...} and 'xray_check' in {'ensemble': {'available': True, 'weights': {'CNN': 0.001005948939264576, 'MobileNetV2': 0.9989940510607355}, 'thresho...e': True, 'message': None, 'notice': 'Validation үлестірімінен ауытқу эвристикасы. Рентген екенін дәлелдемейді.'}, ...} and False)
+2026-10-15T13:43:59.4866229Z 1 failed, 55 passed, 1 warning in 9.29s
+2026-10-15T13:44:00.3317586Z ##[error]Process completed with exit code 1.
+2026-10-15T13:44:00.3464751Z

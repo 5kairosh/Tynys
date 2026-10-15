@@ -82,6 +82,15 @@ Space интернетке осы тапсырмада жарияланған ж
 [Hugging Face Docker Spaces](https://huggingface.co/docs/hub/spaces-sdks-docker).
 """
     presentation_name='tynys_complete_13slides_kz.pptx' if multi else 'tynys_project_12slides_kz.pptx'
+    saved_status=json.loads((ROOT/'training/IMPLEMENTATION_STATUS.json').read_text(encoding='utf-8'))
+    ci=saved_status.get('ci',{})
+    ci_links=''
+    ci_text='CI: .github/workflows/ci.yml, Ubuntu/Python 3.11. Қашықтағы CI орындалуы осы компьютерде расталмаған.'
+    if ci.get('remote_run') and ci.get('status')=='success':
+        proof=json.loads((ROOT/'training/ci_evidence/success_run.json').read_text(encoding='utf-8'))
+        assert proof['run_id']==ci['run_id'] and proof['pytest_count']==56
+        ci_text=f"CI қашықта өтті (ubuntu-latest, Python 3.11, 56 тест). Run: {ci['run_url']} . Тексерілген code commit: {proof['tested_commit']}."
+        ci_links=f"Репозиторий: {ci['repo_url']}\n[![CI]({ci['repo_url']}/actions/workflows/ci.yml/badge.svg?branch=master)]({ci['repo_url']}/actions/workflows/ci.yml)"
     body=f'''TYNYS — ҚАЗІРГІ ЕСЕПТЕЛГЕН НҰСҚА
 
 ІСКЕ ҚОСУ
@@ -148,7 +157,8 @@ site/.venv/Scripts/python training/refresh_documentation.py
 ТЕСТ ЖӘНЕ DOCKER
 site/.venv/Scripts/python -m pip install pytest pypdf httpx
 site/.venv/Scripts/python -m pytest site/tests training/tests -q
-CI: .github/workflows/ci.yml, Ubuntu/Python 3.11. Қашықтағы CI орындалуы осы компьютерде расталмаған.
+{ci_text}
+{ci_links}
 docker build -t tynys .
 docker run --rm -p 127.0.0.1:7860:7860 tynys
 {docker_text}

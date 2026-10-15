@@ -1,0 +1,17 @@
+{
+  "configured": true,
+  "remote_run": true,
+  "repo_url": "https://github.com/5kairosh/Tynys",
+  "run_id": 38745485393,
+  "run_url": "https://github.com/5kairosh/Tynys/actions/runs/38745485393",
+  "status": "success",
+  "checked_at": "2026-10-15T13:48:59.263575+00:00",
+  "tested_commit": "53eeca479b9624e714d9e1a64173ad23761e8fff",
+  "job_id": 116457888539,
+  "job_url": "https://github.com/5kairosh/Tynys/actions/runs/38745485393/job/116457888539",
+  "pytest_count": 56,
+  "pytest_summary": "56 passed, 1 warning in 10.87s",
+  "runner": "ubuntu-latest",
+  "python": "3.11.17",
+  "log_source": "GitHub Actions job logs via GitHub connector; public anonymous logs endpoint returned403."
+}
