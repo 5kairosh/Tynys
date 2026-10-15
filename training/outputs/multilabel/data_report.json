@@ -1,0 +1,59 @@
+{
+  "seed": 42,
+  "labels": [
+    "pneumonia",
+    "atelectasis",
+    "cardiomegaly"
+  ],
+  "source": "NLM OpenI Indiana API; MeSH major+minor report labels",
+  "splits": {
+    "train": {
+      "images": 434,
+      "groups": 233,
+      "positive_counts": {
+        "pneumonia": 54,
+        "atelectasis": 151,
+        "cardiomegaly": 141
+      }
+    },
+    "validation": {
+      "images": 91,
+      "groups": 49,
+      "positive_counts": {
+        "pneumonia": 10,
+        "atelectasis": 30,
+        "cardiomegaly": 28
+      }
+    },
+    "test": {
+      "images": 92,
+      "groups": 49,
+      "positive_counts": {
+        "pneumonia": 10,
+        "atelectasis": 29,
+        "cardiomegaly": 29
+      }
+    }
+  },
+  "requested_images": 617,
+  "unavailable_images": 0,
+  "downloaded_images": 617,
+  "unique_images": 617,
+  "duplicates_removed": 0,
+  "group_overlap": 0,
+  "sha256_overlap": 0,
+  "binary_external_cohort_image_overlap": 71,
+  "limitations": [
+    "Small quota-sampled prototype cohort; not population representative.",
+    "Report UID is not a verified longitudinal patient ID.",
+    "Absent MeSH label treated as weak negative; labels not image-level clinical ground truth.",
+    "Frontal/lateral projections mixed; no PA-only claim.",
+    "Separate task; may overlap prior binary external cohort, not new independent binary evidence."
+  ],
+  "distribution": "OpenI images, image-derived error visualizations and trained weights remain local only; excluded from Git and ZIP per project requirements.",
+  "images_with_multiple_positive_labels": 51,
+  "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+  "label_aliases": {
+    "Pulmonary Atelectasis": "atelectasis"
+  }
+}

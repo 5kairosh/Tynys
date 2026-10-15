@@ -104,7 +104,7 @@
     "remote_run": false
   },
   "tests": {
-    "local_passed": 49
+    "local_passed": 56
   },
   "ensemble": {
     "fitted": true,
@@ -119,5 +119,54 @@
       "CNN": "19f707027db4",
       "MobileNetV2": "ea584b998a45"
     }
+  },
+  "multilabel": {
+    "completed": true,
+    "website_integration": false,
+    "distributed_weights": false,
+    "metrics": [
+      {
+        "label": "pneumonia",
+        "threshold": 0.26,
+        "roc_auc": 0.5378048780487805,
+        "f1": 0.23076923076923078,
+        "precision": 0.1875,
+        "sensitivity": 0.3,
+        "specificity": 0.8414634146341463,
+        "TN": 69,
+        "FP": 13,
+        "FN": 7,
+        "TP": 3,
+        "count": 92
+      },
+      {
+        "label": "atelectasis",
+        "threshold": 0.17,
+        "roc_auc": 0.6195949644225507,
+        "f1": 0.4827586206896552,
+        "precision": 0.3218390804597701,
+        "sensitivity": 0.9655172413793104,
+        "specificity": 0.06349206349206349,
+        "TN": 4,
+        "FP": 59,
+        "FN": 1,
+        "TP": 28,
+        "count": 92
+      },
+      {
+        "label": "cardiomegaly",
+        "threshold": 0.18000000000000002,
+        "roc_auc": 0.5632183908045977,
+        "f1": 0.48936170212765956,
+        "precision": 0.35384615384615387,
+        "sensitivity": 0.7931034482758621,
+        "specificity": 0.3333333333333333,
+        "TN": 21,
+        "FP": 42,
+        "FN": 6,
+        "TP": 23,
+        "count": 92
+      }
+    ]
   }
 }

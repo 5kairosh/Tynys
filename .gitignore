@@ -3,4 +3,5 @@ site/.venv/
 .pytest_cache/
 training/cache/
 training/artifacts/
+training/outputs/multilabel/private/
 *.log

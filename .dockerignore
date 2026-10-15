@@ -6,3 +6,5 @@ training/cache
 training/artifacts
 presentation
 *.zip
+
+training/outputs/multilabel/private

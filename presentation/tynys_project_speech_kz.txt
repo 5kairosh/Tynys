@@ -1,35 +1,62 @@
 1-слайд
 Tynys өкпе рентгенін NORMAL және PNEUMONIA санаттарына жіктейді. CNN мен MobileNetV2-ні TensorFlow/Keras арқылы үйретіп, қазақша сайтқа қостым. Қазір validation калибрлеуі мен OOD ескертуі де іске қосылды.
 
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
+
 2-слайд
 Мәселе — рентгенді бастапқы сұрыптауға қолдау қажеттілігі. Мақсат — екі санатты классификация моделін ыңғайлы сайт арқылы қолдану. Клиникада маман уақытын қаншалықты үнемдейтінін өлшеген жоқпын.
+
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
 
 3-слайд
 5856 жарамды суретті тазалағаннан кейін train 3801, validation 952, test 618 сурет қалды. Көшірмелерді SHA-256 және файл атауынан алынған топтармен тексердім. Бұл топтар ресми пациент ID емес.
 
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
+
 4-слайд
 CNN белгілерді басынан үйренеді. MobileNetV2 ImageNet салмақтарына сүйенеді. Кіріс бұрынғыдай RGB, float32 және resize_with_pad 224×224. Жаңа validation шектері CNN үшін 0,475, MobileNetV2 үшін 0,745. Сыртқы нормализация қосылған жоқ.
+
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
 
 5-слайд
 Модель sigmoid арқылы raw балл шығарады. Оны sigmoid(logit(raw)/T) арқылы калибрлейміз. Шартты raw 0,80 болса, p_cal шамамен 0,804, ол 0,745 шегінен жоғары, сондықтан PNEUMONIA. Binary cross-entropy формуласы үйретудегі raw баллға қатысты.
 
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
+
 6-слайд
 Қазіргі калибрленген test: CNN accuracy 71,52%, MobileNetV2 89,16%. MobileNetV2 recall 96,12%, FN 15, FP 52. 90% мақсатына жетпеді. McNemar: CNN-only 19, MobileNetV2-only 128, p=4,83×10⁻²¹. Ensemble accuracy 89,16%, ROC-AUC 0,9583. Accuracy өскен жоқ.
+
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
 
 7-слайд
 Бір суретке CNN, MobileNetV2 және Ensemble санаты, баллы және өз шешім шегі көрсетіледі. Ensemble коэффициенттері тек validation NLL бойынша таңдалған: CNN шамамен 0,10%, MobileNetV2 99,90%. Сайт пен PDF осы конфигурацияны қолданады.
 
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
+
 8-слайд
 Grad-CAM таңдалған санатқа ықпал еткен аймақтарды жуық көрсетеді. Оның reconstructed_score мәні калибрленген емес, raw sigmoid-пен салыстырылады. Карта зақым шекарасы емес. OOD тек ескерту береді, болжамды блоктамайды.
+
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
 
 9-слайд
 PDF түпнұсқа, Grad-CAM, T, шешім шегі және салыстыруды көрсетеді. OOD ескертуі де кіреді. NORMAL мен PNEUMONIA беттерінің бір параққа сыйуын тексердім. Тарих тек бет жадында, жаңартқанда жойылады.
 
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
+
 10-слайд
-Ensemble қосылды, 49 тест өтті. Калибрлеу мен OOD жұмыс істейді. Docker daemon өшірулі, контейнер тексерілмеді. Келесі кезең — сайттан бөлек multi-label эксперименті.
+Ensemble, калибрлеу, OOD және DICOM дайын. 56 жергілікті тест өтті. Үш белгіге жеке эксперимент жүргізілді, бірақ сайтқа қосылған жоқ. Docker daemon өшірулі болғандықтан контейнер тексерілмеді. Келесі жұмыс — деректерді кеңейтіп, белгілерді мамандармен тексеру.
 
 11-слайд
 OpenI-дің сол 200 суретін жаңа калибрленген балл және 0,745 шегімен қайта бағаладым. Accuracy 55,00%, recall 57,50%, AUC 0,5442. Таңдау мен шекті сыртқы белгілерге қарап өзгерткен жоқпын. Report UID — surrogate топ, нақты пациент ID толық расталмаған. Сыртқы CNN accuracy 21,50%, Ensemble 55,00%. Екі модельді біріктіру осы сыртқы жиындағы мәселені шешпеді.
 
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
+
 12-слайд
 952 validation файлының бәрі SHA-256 бойынша тексерілді. MobileNetV2 T=0,97996, CNN T=0,68203. OOD 1280 белгі мен covariance арқылы есептелді, 95-процентиль шегі 26,3409. Non-X-ray сапасы бөлек тексерілген жоқ. Бұл оқу прототипі, клиникалық қолдануға бөлек тексеру қажет.
+
+Дереккөздер: site/model/model_config.json; test_metrics.csv; mcnemar.json; external_validation.json; training/calibration_report.json.
+
+13-слайд
+Бұл сайттан бөлек үш белгі бойынша оқу эксперименті. 617 бірегей сурет, train 434, validation 91, test 92. Бір report және бірдей SHA-256 суреттері бөліктер арасында қайталанбайды. ImageNet MobileNetV2, GAP және үш sigmoid басын BCE арқылы үйреттім. Алдымен head, кейін соңғы 30 қабат, BatchNormalization мұздатылған. Таңдалған кезең: fine. Әр белгі шегі validation F1 бойынша таңдалған. pneumonia: AUC 0,5378, F1 0,2308. atelectasis: AUC 0,6196, F1 0,4828. cardiomegaly: AUC 0,5632, F1 0,4894. MeSH report деңгейіндегі әлсіз белгі, нақты диагноз емес. 0 URL қолжетімсіз болғандықтан бөлуден бұрын шығарылды. 8 қате сурет жергілікті private бумасына сақталды. OpenI суреттері мен осы салмақтар таратылатын архивке кірмейді. Сайтта бұрынғы binary модельдер қалды.
+
+Дереккөздер: training/outputs/multilabel/{data_report.json,experiment_report.json,per_label_metrics.csv}.

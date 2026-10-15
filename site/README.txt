@@ -75,7 +75,21 @@ docker run --rm -p 127.0.0.1:7860:7860 tynys
 Docker daemon өшірулі болғандықтан build/run тексерілмеді. Интернетке жарияланған жоқ.
 Hugging Face Docker Space үшін түбірдегі README.md және Dockerfile дайын.
 
+MULTI-LABEL — ЖЕКЕ ОҚУ ЭКСПЕРИМЕНТІ
+{"train": {"images": 434, "groups": 233, "positive_counts": {"pneumonia": 54, "atelectasis": 151, "cardiomegaly": 141}}, "validation": {"images": 91, "groups": 49, "positive_counts": {"pneumonia": 10, "atelectasis": 30, "cardiomegaly": 28}}, "test": {"images": 92, "groups": 49, "positive_counts": {"pneumonia": 10, "atelectasis": 29, "cardiomegaly": 29}}}
+pneumonia: шек 0.26, AUC 0.5378, F1 0.2308, sensitivity 30.00%, specificity 84.15%; TN 69, FP 13, FN 7, TP 3.
+atelectasis: шек 0.17, AUC 0.6196, F1 0.4828, sensitivity 96.55%, specificity 6.35%; TN 4, FP 59, FN 1, TP 28.
+cardiomegaly: шек 0.18, AUC 0.5632, F1 0.4894, sensitivity 79.31%, specificity 33.33%; TN 21, FP 42, FN 6, TP 23.
+ImageNet MobileNetV2 + GAP + үш sigmoid Dense(1), BCE. Соңғы 30 қабат, BN мұздатылған. Таңдалған кезең: fine.
+Шектер тек validation F1 арқылы. MeSH report-level әлсіз белгілер, жоқ белгі weak negative деп алынған.
+Report ID longitudinal пациент ID емес; frontal/lateral аралас. Шағын квоталық жиын жалпы популяцияны көрсетпейді.
+Binary сыртқы cohort-пен сурет қиылысы: 71; бұл жаңа тәуелсіз binary тексеру емес.
+OpenI суреттерін, үйретілген салмақтарын және қате суреттерін таратуға болмайды: олар тек жергілікті private/cache бумасында, Git/ZIP-ке кірмейді.
+Сайтқа қосылған жоқ. Қайта орындау: training/multilabel_colab_kz.ipynb немесе training/multilabel_experiment.py.
+Толық сандар: training/outputs/multilabel/per_label_metrics.csv және experiment_report.json.
+
+
 ҚҰЖАТТАР
-presentation/tynys_project_12slides_kz.pptx және tynys_project_speech_kz.txt — қазіргі қорғаныс нұсқасы.
+presentation/tynys_complete_13slides_kz.pptx және tynys_project_speech_kz.txt — қазіргі қорғаныс нұсқасы.
 MODEL_CARD.md — модель сипаттамасы, training/PHASE_REPORT_KZ.txt — кезеңдер есебі.
 Training кэші мен OpenI суреттері таратылатын архивке кірмейді.

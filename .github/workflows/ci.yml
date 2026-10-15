@@ -9,7 +9,9 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
-          cache-dependency-path: site/requirements.txt
+          cache-dependency-path: |
+            site/requirements.txt
+            training/requirements-training.txt
       - run: python -m venv .venv
-      - run: .venv/bin/pip install -r site/requirements.txt pytest pypdf httpx
-      - run: .venv/bin/python -m pytest site/tests -q
+      - run: .venv/bin/pip install -r training/requirements-training.txt pytest pypdf httpx
+      - run: .venv/bin/python -m pytest site/tests training/tests -q

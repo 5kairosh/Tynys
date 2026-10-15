@@ -26,6 +26,15 @@ def main():
     temperatures='\n'.join(f"{row['model']}: T={row['T']:.8f}, validation NLL {row['NLL_raw']:.8f} → {row['NLL_calibrated']:.8f}." for row in calibration['validation_calibration'])
     ensemble=config.get('ensemble')
     ensemble_text=('Ensemble: validation-да таңдалған салмақтар '+json.dumps(ensemble['weights'])+f", шек {ensemble['threshold']:.3f}. Сыртқы белгілер таңдау үшін қолданылған жоқ." if ensemble else 'Ensemble әлі қосылған жоқ, бұл келесі кезең.')
+    multi_path=ROOT/'training/outputs/multilabel/experiment_report.json'
+    multi=None
+    multi_text='Multi-label жеке эксперименті әзірленуде; сайтқа қосылмаған.'
+    if multi_path.exists():
+        multi=json.loads(multi_path.read_text(encoding='utf-8'))
+        data=json.loads((multi_path.parent/'data_report.json').read_text(encoding='utf-8'))
+        rows='\n'.join(f"{r['label']}: шек {r['threshold']:.2f}, AUC {r['roc_auc']:.4f}, F1 {r['f1']:.4f}, sensitivity {pct(r['sensitivity'])}, specificity {pct(r['specificity'])}; TN {r['TN']}, FP {r['FP']}, FN {r['FN']}, TP {r['TP']}." for r in multi['metrics'])
+        multi_text=('MULTI-LABEL — ЖЕКЕ ОҚУ ЭКСПЕРИМЕНТІ\n'+json.dumps(data['splits'],ensure_ascii=False)+'\n'+rows+'\nImageNet MobileNetV2 + GAP + үш sigmoid Dense(1), BCE. Соңғы 30 қабат, BN мұздатылған. Таңдалған кезең: '+multi['selected_stage']+'.\nШектер тек validation F1 арқылы. MeSH report-level әлсіз белгілер, жоқ белгі weak negative деп алынған.\nReport ID longitudinal пациент ID емес; frontal/lateral аралас. Шағын квоталық жиын жалпы популяцияны көрсетпейді.\nBinary сыртқы cohort-пен сурет қиылысы: '+str(data['binary_external_cohort_image_overlap'])+'; бұл жаңа тәуелсіз binary тексеру емес.\nOpenI суреттерін, үйретілген салмақтарын және қате суреттерін таратуға болмайды: олар тек жергілікті private/cache бумасында, Git/ZIP-ке кірмейді.\nСайтқа қосылған жоқ. Қайта орындау: training/multilabel_colab_kz.ipynb немесе training/multilabel_experiment.py.\nТолық сандар: training/outputs/multilabel/per_label_metrics.csv және experiment_report.json.\n')
+    presentation_name='tynys_complete_13slides_kz.pptx' if multi else 'tynys_project_12slides_kz.pptx'
     body=f'''TYNYS — ҚАЗІРГІ ЕСЕПТЕЛГЕН НҰСҚА
 
 ІСКЕ ҚОСУ
@@ -98,8 +107,10 @@ docker run --rm -p 127.0.0.1:7860:7860 tynys
 Docker daemon өшірулі болғандықтан build/run тексерілмеді. Интернетке жарияланған жоқ.
 Hugging Face Docker Space үшін түбірдегі README.md және Dockerfile дайын.
 
+{multi_text}
+
 ҚҰЖАТТАР
-presentation/tynys_project_12slides_kz.pptx және tynys_project_speech_kz.txt — қазіргі қорғаныс нұсқасы.
+presentation/{presentation_name} және tynys_project_speech_kz.txt — қазіргі қорғаныс нұсқасы.
 MODEL_CARD.md — модель сипаттамасы, training/PHASE_REPORT_KZ.txt — кезеңдер есебі.
 Training кэші мен OpenI суреттері таратылатын архивке кірмейді.
 '''
@@ -160,6 +171,10 @@ DICOM CR/DX кірісі жадта percentile PNG-ге айналады. DICOM 
 Модель салмақтарына автоматты жаңа лицензия берілмейді, дереккөз шарттары тексерілуі керек.
 OpenI: CC BY-NC-ND 4.0. Суреттер архивке/репозиторийге кірмейді.
 
+## Жеке multi-label эксперименті
+
+{multi_text}
+
 ## English summary
 
 Educational binary NORMAL/PNEUMONIA classifier. Calibration is fitted on all 952 SHA-verified
@@ -172,6 +187,7 @@ features but non-X-ray detection performance is unvalidated. No clinical approva
     status['calibration']={'fitted':True,'runtime_temperature':config['calibration']['T'],'validation_count':952,'threshold':config['threshold']}
     status['ood']={'available':True,**calibration['ood']}
     status['external_validation']={'completed':True,**external}
+    if multi:status['multilabel']={'completed':True,'website_integration':False,'distributed_weights':False,'metrics':multi['metrics']}
     if ensemble:status['ensemble']={'fitted':True,**ensemble}
     (ROOT/'training/IMPLEMENTATION_STATUS.json').write_text(json.dumps(status,ensure_ascii=False,indent=2),encoding='utf-8')
     payload={'config':config,'metrics':metrics,'external':external,'calibration':calibration,'mcnemar':paired}

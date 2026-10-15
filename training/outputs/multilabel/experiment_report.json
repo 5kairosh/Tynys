@@ -1,0 +1,111 @@
+{
+  "completed": true,
+  "seed": 42,
+  "labels": [
+    "pneumonia",
+    "atelectasis",
+    "cardiomegaly"
+  ],
+  "selected_stage": "fine",
+  "threshold_selection": "per-label validation F1, 0.01..0.99 grid; no test tuning",
+  "thresholds": {
+    "pneumonia": 0.26,
+    "atelectasis": 0.17,
+    "cardiomegaly": 0.18000000000000002
+  },
+  "history": [
+    {
+      "stage": "head",
+      "auc": [
+        0.5118768811225891,
+        0.6414597630500793,
+        0.6538443565368652
+      ],
+      "loss": [
+        0.6260474324226379,
+        0.5449637770652771,
+        0.5333974361419678
+      ],
+      "val_auc": [
+        0.5364231467247009,
+        0.6055728793144226,
+        0.6511887907981873
+      ],
+      "val_loss": [
+        0.5637686848640442,
+        0.5378393530845642,
+        0.5240215063095093
+      ]
+    },
+    {
+      "stage": "fine_last30_bn_frozen",
+      "auc": [
+        0.7247909903526306,
+        0.7653624415397644
+      ],
+      "loss": [
+        0.4942580759525299,
+        0.4582282602787018
+      ],
+      "val_auc": [
+        0.6575180888175964,
+        0.6699309349060059
+      ],
+      "val_loss": [
+        0.5200141668319702,
+        0.5143580436706543
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "label": "pneumonia",
+      "threshold": 0.26,
+      "roc_auc": 0.5378048780487805,
+      "f1": 0.23076923076923078,
+      "precision": 0.1875,
+      "sensitivity": 0.3,
+      "specificity": 0.8414634146341463,
+      "TN": 69,
+      "FP": 13,
+      "FN": 7,
+      "TP": 3,
+      "count": 92
+    },
+    {
+      "label": "atelectasis",
+      "threshold": 0.17,
+      "roc_auc": 0.6195949644225507,
+      "f1": 0.4827586206896552,
+      "precision": 0.3218390804597701,
+      "sensitivity": 0.9655172413793104,
+      "specificity": 0.06349206349206349,
+      "TN": 4,
+      "FP": 59,
+      "FN": 1,
+      "TP": 28,
+      "count": 92
+    },
+    {
+      "label": "cardiomegaly",
+      "threshold": 0.18000000000000002,
+      "roc_auc": 0.5632183908045977,
+      "f1": 0.48936170212765956,
+      "precision": 0.35384615384615387,
+      "sensitivity": 0.7931034482758621,
+      "specificity": 0.3333333333333333,
+      "TN": 21,
+      "FP": 42,
+      "FN": 6,
+      "TP": 23,
+      "count": 92
+    }
+  ],
+  "error_visualizations": 8,
+  "weights_sha256": "02ef320dafe9e5f150de01701415a245b400f8bb13ce85ae2c9217812a7b6361",
+  "trained_on": "OpenI Indiana, weak report MeSH labels",
+  "distributed_weights": false,
+  "website_integration": false,
+  "architecture": "ImageNet MobileNetV2 + GAP + Dropout(.2) + 3 independent Dense(1,sigmoid) heads, concatenated; BCE; final30 layers fine-tuned with BN frozen",
+  "tensorflow_version": "2.21.0"
+}
