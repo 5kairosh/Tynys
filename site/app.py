@@ -135,7 +135,7 @@ class Engine:
                 "cnn_threshold": self.cnn_threshold,
                 "comparison_message": self.comparison_error,
                 "tensorflow_version": self.tf.__version__ if self.tf else None,
-                "calibration": self.config.get("calibration") if self.config else None}
+                "calibration": self.config.get("calibration", {"method":"none","T":1.0,"fitted":False}) if self.config else {"method":"none","T":1.0,"fitted":False}}
 
     def gradcam(self, image, original_rgb, positive):
         """Class-specific Grad-CAM on MobileNetV2's last spatial feature map.
