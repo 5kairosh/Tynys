@@ -19,6 +19,8 @@ from PIL import Image, UnidentifiedImageError
 import numpy as np
 from starlette.concurrency import run_in_threadpool
 
+from calibration import calibrate_score, validate_calibration
+
 ROOT = Path(__file__).resolve().parent
 MODEL_DIR = ROOT / "model"
 IMAGE_LIMIT = 12 * 1024 * 1024
@@ -36,6 +38,9 @@ def read_config(path):
     threshold = config.get("threshold")
     if isinstance(threshold, bool) or not isinstance(threshold, (int, float)) or not math.isfinite(threshold) or not 0 <= threshold <= 1:
         raise ValueError("Шешім шегі 0 мен 1 арасында болуы керек.")
+    validate_calibration(config.get("calibration"))
+    for value in config.get("model_calibrations", {}).values():
+        validate_calibration(value)
     return config
 
 
@@ -101,7 +106,8 @@ class Engine:
                 "comparison_ready": self.cnn_model is not None,
                 "cnn_threshold": self.cnn_threshold,
                 "comparison_message": self.comparison_error,
-                "tensorflow_version": self.tf.__version__ if self.tf else None}
+                "tensorflow_version": self.tf.__version__ if self.tf else None,
+                "calibration": self.config.get("calibration") if self.config else None}
 
     def gradcam(self, image, original_rgb, positive):
         """Class-specific Grad-CAM on MobileNetV2's last spatial feature map.
@@ -191,11 +197,13 @@ class Engine:
                 original_image = tf.io.decode_image(data, channels=3, expand_animations=False)
                 original_image.set_shape([None, None, 3])
                 image = tf.image.resize_with_pad(tf.cast(original_image, tf.float32), *self.config["image_size"])
-                score = float(self.model(image[None, ...], training=False).numpy()[0, 0])
+                raw_score = float(self.model(image[None, ...], training=False).numpy()[0, 0])
+                score = calibrate_score(raw_score, self.config.get("calibration"))
                 threshold = float(self.config["threshold"])
                 comparison = {'available': False, 'message': self.comparison_error}
                 if self.cnn_model is not None:
                     cnn_score = float(self.cnn_model(image[None,...],training=False).numpy()[0,0])
+                    cnn_score = calibrate_score(cnn_score, self.config.get('model_calibrations', {}).get('CNN'))
                     if not math.isfinite(cnn_score) or not 0 <= cnn_score <= 1:
                         raise ValueError('CNN returned an invalid score.')
                     cnn_class = self.config['classes'][int(cnn_score >= self.cnn_threshold)]
@@ -208,7 +216,7 @@ class Engine:
                                        'threshold': threshold, 'model_id': self.fingerprint}]}
                 try:
                     explanation = self.gradcam(image, original_image.numpy(), score >= threshold)
-                    if explanation.get('available') and abs(explanation['reconstructed_score'] - score) > 1e-5:
+                    if explanation.get('available') and abs(explanation['reconstructed_score'] - raw_score) > 1e-5:
                         raise ValueError('Grad-CAM head does not match model prediction.')
                 except Exception:
                     logging.exception('Grad-CAM unavailable; prediction remains valid')
@@ -219,7 +227,7 @@ class Engine:
         if not math.isfinite(score) or not 0 <= score <= 1:
             raise HTTPException(500, "Модель жарамсыз балл берді.")
         return {"model_class": self.config["classes"][int(score >= threshold)],
-                "pneumonia_score": score, "threshold": threshold,
+                "pneumonia_score": score, "raw_score": raw_score, "calibration": self.config.get("calibration"), "threshold": threshold,
                 "filename": Path(filename).name, "width": width, "height": height,
                 "elapsed_ms": round((time.perf_counter() - started) * 1000),
                 "model_id": self.fingerprint,

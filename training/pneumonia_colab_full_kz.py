@@ -1,9 +1,8 @@
-# Өкпе рентгенін классификациялау: Colab үшін толық код
-# Жаңа GPU сессиясында басынан соңына дейін орында.
+# Colab: барлық ұяшықты ретімен орында.
 
 import subprocess, sys
 subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q',
-                       'kagglehub', 'scikit-learn', 'pandas', 'matplotlib', 'Pillow'])
+                       'kagglehub', 'scikit-learn', 'pandas', 'matplotlib', 'Pillow', 'scipy'])
 
 
 import os, re, json, random, hashlib, shutil, time
@@ -290,10 +289,43 @@ for name,model in models.items():
     print(name,'validation-та таңдалған threshold:',threshold)
 
 
+# Validation арқылы temperature scaling. Test бұл есептеуге қатыспайды.
+from scipy.optimize import minimize_scalar
+from scipy.special import expit
+
+def temperature_probabilities(probabilities, temperature):
+    probabilities = np.clip(np.asarray(probabilities,dtype=np.float64),1e-7,1-1e-7)
+    logits = np.log(probabilities)-np.log1p(-probabilities)
+    return expit(logits/temperature)
+
+calibrations = {}
+calibration_diagnostics = []
+for name,model in models.items():
+    raw_val = model.predict(val_ds,verbose=0).ravel()
+    val_y = val_df.label.to_numpy()
+    logits = np.log(np.clip(raw_val.astype(np.float64),1e-7,1-1e-7))-np.log1p(-np.clip(raw_val.astype(np.float64),1e-7,1-1e-7))
+    def nll(temperature):
+        z = logits/temperature
+        return float(np.mean(np.logaddexp(0,z)-val_y*z))
+    fit = minimize_scalar(nll,bounds=(.2,5.),method='bounded')
+    if not fit.success:
+        raise ValueError('Калибрлеу оңтайландыруы аяқталмады.')
+    temperature = float(fit.x)
+    calibrated_val = temperature_probabilities(raw_val,temperature)
+    threshold,table = choose_threshold(val_y,calibrated_val)
+    thresholds[name] = threshold
+    calibrations[name] = {'method':'temperature','T':temperature}
+    table.to_csv(OUT/f'{name}_validation_calibrated_thresholds.csv',index=False)
+    calibration_diagnostics.append({'model':name,'T':temperature,'validation_NLL_raw':nll(1.),'validation_NLL_calibrated':nll(temperature),'threshold':threshold})
+pd.DataFrame(calibration_diagnostics).to_csv(OUT/'calibration_validation.csv',index=False)
+display(pd.DataFrame(calibration_diagnostics))
+
+
 test_y = test_df.label.to_numpy()
 results, test_probabilities = [], {}
 for name,model in models.items():
-    prob = model.predict(test_ds,verbose=0).ravel()
+    raw_prob = model.predict(test_ds,verbose=0).ravel()
+    prob = temperature_probabilities(raw_prob,calibrations[name]['T'])
     pred = (prob >= thresholds[name]).astype(int)
     tn,fp,fn,tp = confusion_matrix(test_y,pred,labels=[0,1]).ravel()
     results.append({'model':name,'threshold':thresholds[name],
@@ -343,7 +375,8 @@ else:
 MODEL_PATH = OUT/'pneumonia_mobilenetv2.keras'
 transfer.save(MODEL_PATH)
 config = {'classes':CLASS_NAMES,'image_size':list(IMG_SIZE),
-    'threshold':thresholds['MobileNetV2'],'seed':SEED,'selected_stage':best_stage,
+    'threshold':thresholds['MobileNetV2'],'calibration':calibrations['MobileNetV2'],
+    'model_calibrations':calibrations,'seed':SEED,'selected_stage':best_stage,
     'tensorflow_version':tf.__version__,'dataset':'paultimothymooney/chest-xray-pneumonia',
     'use':'educational prototype; not clinical diagnosis',
     'grouping':'filename-derived surrogate IDs, not verified patient metadata'}
@@ -356,7 +389,8 @@ print('Модель сақталды және қайта жүктеу тексе
 
 def predict_xray(filepath, model=reloaded, threshold=config['threshold']):
     image,_ = decode_image(tf.constant(str(filepath)),tf.constant(0))
-    score = float(model.predict(image[None,...],verbose=0)[0,0])
+    raw_score = float(model.predict(image[None,...],verbose=0)[0,0])
+    score = float(temperature_probabilities([raw_score],config['calibration']['T'])[0])
     label = CLASS_NAMES[int(score>=threshold)]
     with Image.open(filepath) as original:
         plt.figure(figsize=(5,5)); plt.imshow(original.convert('L'),cmap='gray')
@@ -419,5 +453,3 @@ archive = shutil.make_archive(str(OUT),'zip',root_dir=OUT)
 print('Нәтижелер архиві:',archive)
 from google.colab import files
 files.download(archive)
-
-
