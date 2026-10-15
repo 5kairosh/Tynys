@@ -39,38 +39,30 @@ def download(url, destination):
 
 
 def openi_manifest(cache):
-    """NLM primary source. MeSH NORMAL or Pneumonia, one frontal view per report.
+    """NLM API supplies the actual image URL and explicit MeSH labels.
 
-    Report UID is a patient surrogate, not a verified longitudinal patient ID.
-    Explicit patient IDs are preferable for rigorous patient-level evaluation.
+    UID is a report-level surrogate. Longitudinal patient identity is not verified.
+    Captions can describe both frontal and lateral views; no projection claim is made.
     """
-    reports = download('https://openi.nlm.nih.gov/imgs/collections/NLMCXR_reports.tgz', cache/'reports.tgz')
+    import re
     rows = []
-    with tarfile.open(reports) as archive:
-        for member in archive:
-            if not member.name.endswith('.xml'):
-                continue
-            doc = ET.fromstring(archive.extractfile(member).read())
-            terms = [n.text.strip().lower() for n in doc.findall('.//MeSH/major') if n.text]
-            if 'pneumonia' in terms:
+    for query in ('pneumonia','normal'):
+        metadata = download('https://openi.nlm.nih.gov/api/search?query='+query+'&m=1&n=1000&coll=cxr',cache/(query+'.json'))
+        payload = json.loads(metadata.read_text(encoding='utf-8'))
+        for record in payload.get('list',[]):
+            terms = [re.sub('<[^>]+>','',t).strip().lower() for t in (record.get('MeSH',{}).get('major') or [])]
+            if any(t.split('/')[0]=='pneumonia' for t in terms):
                 label = 1
             elif terms == ['normal']:
                 label = 0
             else:
                 continue
-            uid = doc.find('uId')
-            patient = uid.attrib.get('id') if uid is not None else None
-            if not patient:
+            if not record.get('uid') or not record.get('imgLarge'):
                 continue
-            for image in doc.findall('.//parentImage'):
-                caption = ' '.join(image.itertext()).lower()
-                if not any(word in caption for word in ('frontal', 'pa and', 'pa chest', 'ap chest')):
-                    continue
-                image_id = image.attrib['id']
-                rows.append({'url': f'https://openi.nlm.nih.gov/imgs/512/source/{image_id}.png',
-                             'label':label, 'patient_id':'openi:'+patient,
-                             'source':'OpenI Indiana, MeSH major label', 'patient_id_kind':'report_uid_surrogate'})
-                break
+            rows.append({'url':'https://openi.nlm.nih.gov'+record['imgLarge'],
+                         'label':label,'patient_id':'openi:'+record['uid'],
+                         'source':'OpenI Indiana, MeSH major, NLM API',
+                         'patient_id_kind':'report_uid_surrogate','license':record.get('licenseURL','')})
     return rows
 
 
@@ -130,6 +122,13 @@ def main():
         else:
             raise ValueError('--manifest немесе --openi таңда.')
         rows = select_groups(rows,args.count,args.seed)
+        from concurrent.futures import ThreadPoolExecutor
+        remote = [r for r in rows if not r.get('path')]
+        def fetch_row(row):
+            return download(row['url'],args.cache/(hashlib.sha256(row['url'].encode()).hexdigest()+'.png'))
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            for index,_ in enumerate(pool.map(fetch_row,remote),1):
+                print(f'Жүктелді: {index}/{len(remote)}',flush=True)
         import tensorflow as tf
         import numpy as np
         from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,confusion_matrix
