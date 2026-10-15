@@ -513,10 +513,13 @@ def calculate_mcnemar(predictions, model_dir):
 
 
 
-paired_test = calculate_mcnemar(OUT/'test_predictions.csv',OUT)
+if 'CNN' in models:
+    paired_test = calculate_mcnemar(OUT/'test_predictions.csv',OUT)
+else:
+    paired_test = {'available':False,'message':'CNN үйретілмеген, McNemar қолжетімсіз.'}
 (OUT/'mcnemar.json').write_text(json.dumps(paired_test,ensure_ascii=False,indent=2),encoding='utf-8')
 with (OUT/'project_summary.txt').open('a',encoding='utf-8') as stream:
-    stream.write('\nMcNemar (жұптық тест): '+json.dumps(paired_test,ensure_ascii=False)+'\n')
+    stream.write('\nMcNemar: '+json.dumps(paired_test,ensure_ascii=False)+'\n')
 print(paired_test)
 
 
