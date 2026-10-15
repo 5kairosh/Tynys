@@ -22,6 +22,7 @@ from starlette.concurrency import run_in_threadpool
 from calibration import calibrate_score, validate_calibration
 from ood import OODDetector
 from dicom_input import dicom_to_png, dicom_status
+from pad_geometry import pad_geometry
 
 ROOT = Path(__file__).resolve().parent
 MODEL_DIR = ROOT / "model"
@@ -165,13 +166,9 @@ class Engine:
         cam = tf.image.resize(cam[..., None], [target_h, target_w])[..., 0]
         source_h, source_w = original_rgb.shape[:2]
         # Invert resize_with_pad's exact float32 resize/crop geometry.
-        ratio = tf.maximum(tf.cast(source_w, tf.float32) / target_w,
-                           tf.cast(source_h, tf.float32) / target_h)
-        resized_h_float = tf.cast(source_h, tf.float32) / ratio
-        resized_w_float = tf.cast(source_w, tf.float32) / ratio
-        resized_h, resized_w = int(tf.floor(resized_h_float)), int(tf.floor(resized_w_float))
-        pad_y = max(0, int(tf.floor((target_h - resized_h_float) / 2)))
-        pad_x = max(0, int(tf.floor((target_w - resized_w_float) / 2)))
+        geometry = pad_geometry(source_h,source_w,target_h,target_w)
+        resized_h,resized_w = geometry['resized_h'],geometry['resized_w']
+        pad_y,pad_x = geometry['pad_y'],geometry['pad_x']
         cam = cam[pad_y:pad_y + resized_h, pad_x:pad_x + resized_w]
         original = Image.fromarray(original_rgb.astype(np.uint8), 'RGB')
         original.thumbnail((1600, 1600), Image.Resampling.LANCZOS)
