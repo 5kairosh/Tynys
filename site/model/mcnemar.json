@@ -1,0 +1,16 @@
+{
+  "available": true,
+  "method": "exact McNemar (two-sided binomial)",
+  "n": 618,
+  "cnn_only_correct": 20,
+  "mobilenet_only_correct": 128,
+  "p_value": 1.8041385810152942e-20,
+  "alpha": 0.05,
+  "significant": true,
+  "notice": "Жұптық тест, осы ішкі test жиынына қатысты. Пациент суреттері тәуелсіз болмауы мүмкін.",
+  "model_ids": {
+    "CNN": "19f707027db4",
+    "MobileNetV2": "ea584b998a45"
+  },
+  "config_sha256": "2694e303cae9d122e89e51972e86ce40509ffcdf089a6077b3f3751dbf85bc87"
+}

@@ -99,8 +99,19 @@ class Engine:
                 logging.exception("Cannot load trained model")
                 self.error = "Модель жүктелмеді. Сервер журналын және model бумасын тексер."
 
+    def paired_test_status(self):
+        try:
+            value = json.loads((MODEL_DIR/'mcnemar.json').read_text(encoding='utf-8'))
+            ids = {'CNN':self.cnn_fingerprint,'MobileNetV2':self.fingerprint}
+            config_hash = hashlib.sha256((MODEL_DIR/'model_config.json').read_bytes()).hexdigest()
+            if value['model_ids'] != ids or value['config_sha256'] != config_hash:
+                raise ValueError('Артефакт басқа модельге не конфигурацияға арналған.')
+            return value
+        except Exception:
+            return {'available':False,'message':'Осы модельдерге сәйкес McNemar нәтижесі жоқ.'}
+
     def status(self):
-        return {"ready": self.model is not None, "message": self.error,
+        return {"mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
                 "config": self.config, "metrics": self.metrics,
                 "model_id": self.fingerprint,
                 "comparison_ready": self.cnn_model is not None,
