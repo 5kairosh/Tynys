@@ -6,87 +6,58 @@ library_name: keras
 
 # Tynys модель картасы
 
-## Міндеті және архитектура
+## Архитектура және деректер
 
-Екі санатты оқу классификаторы: NORMAL (0), PNEUMONIA (1).
-MobileNetV2 ImageNet салмақтарымен, GlobalAveragePooling, Dropout және sigmoid Dense(1).
-Бастапқы классификаторды үйреткеннен кейін соңғы 30 қабаттың BatchNormalization емес қабаттарын баптау.
-CNN baseline: Conv2D 32/64/128, MaxPooling, GlobalAveragePooling, Dropout, Dense(1).
+MobileNetV2 (ImageNet), GlobalAveragePooling, Dropout, sigmoid Dense(1).
+Алдымен head, кейін соңғы 30 қабаттың BatchNormalization емес қабаттарын fine-tuning.
+CNN: Conv2D 32/64/128, MaxPooling, GAP, Dropout, Dense(1).
+[Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia).
+Train 3801, validation 952, test 618. 5856 жарамды сурет, тазалаудан кейін 5371.
+Файл атауы топтары ресми patient ID емес. SHA-256 тек байт бойынша көшірмені тексереді.
 
-Кіріс: `decode_image(channels=3, expand_animations=False)`, float32, `resize_with_pad(224,224)`.
-Rescaling модель ішінде. EXIF айналдыруы, сыртқы нормализация, crop қолданылмайды.
-DICOM CR/DX кірісі алдымен 1–99 процентиль, Modality LUT және MONOCHROME1 инверсиясы арқылы жадта PNG-ге айналады.
-DICOM осы деректерде бөлек клиникалық валидациядан өтпеген.
+## Қазіргі ішкі метрикалар, calibration fitted
 
-## Деректер
+CNN: шек 0.475, accuracy 71.52%, precision 70.81%, recall 92.76%, specificity 35.93%, F1 0.8031, ROC-AUC 0.8211; TN 83, FP 148, FN 28, TP 359.
+MobileNetV2: шек 0.745, accuracy 89.16%, precision 87.74%, recall 96.12%, specificity 77.49%, F1 0.9174, ROC-AUC 0.9581; TN 179, FP 52, FN 15, TP 372.
 
-[Kaggle Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia).
-5856 жарамды сурет, тазалаудан кейін 5371. Train 3801, validation 952, test 618.
-SHA-256 тек байт бойынша көшірмені тексереді. Файл атауынан алынған топтар ресми пациент ID емес.
+MobileNetV2: T=0.97995943, validation NLL 0.08822560 → 0.08820212.
+CNN: T=0.68202770, validation NLL 0.29725222 → 0.27995523.
+Validation толық 952/952. Қазіргі шектер validation-да recall≥0.90 шартынан қайта таңдалған.
+Test fitting үшін қолданылған жоқ. MobileNetV2 90% accuracy мақсатына жетпеді.
 
-## Ішкі бағалау
+## Қазіргі сыртқы метрикалар
 
-Сақталған бастапқы модель, 618 test суреті: accuracy 0.891586, precision 0.877358,
-recall 0.961240, specificity 0.774892, F1 0.917386, ROC-AUC 0.958075.
-Шек 0.740, тек validation-да recall >= 0.90 шартынан specificity, F1 арқылы таңдалған.
-TN 179, FP 52, FN 15, TP 372. 90% accuracy мақсатына жетпеді.
-CNN accuracy 0.716828, шек 0.485.
-Жұптық exact McNemar: CNN-only correct 20, MobileNetV2-only correct 128,
-p = 1.8041385810152942e-20. Бір пациенттің суреттері тәуелсіз болмауы мүмкін.
-
-## Сыртқы бағалау және калибрлеу
-
-Орындалу күйі мен нақты нәтижелері `training/external_validation_report.txt` және
-`training/external_validation_metrics.csv` ішінде, бар болса беріледі.
-Калибрлеу T және шек `site/model/model_config.json` ішінде сақталады.
-`calibration` кілті болмаса T=1, бастапқы режим. Validation дерегінен есептемей T ойдан қосылмайды.
-Temperature scaling сыртқы клиникалық калибрлеуді дәлелдемейді.
+OpenI Indiana NLM API, 200 сурет (160 NORMAL, 40 PNEUMONIA), seed 42.
+MobileNetV2: шек 0.745, accuracy 55.00%, precision 23.96%, recall 57.50%, specificity 54.37%, F1 0.3382, ROC-AUC 0.5442; TN 87, FP 73, FN 17, TP 23.
+Таңдау бұрынғы cohort-пен бірдей, сыртқы шек өзгертілмеді. SHA-256 қиылысы жоқ.
+Бір есеп UID-іне бір сурет. Longitudinal patient identity толық расталмаған.
+MeSH белгілері клиникалық gold standard емес, проекцияны PA деп кепілдемейміз.
 
 ## OOD және түсіндірме
 
-OOD validation-ның 1280 өлшемді белгілері, shrinkage covariance және Махаланобис қашықтығының
-95-процентиліне сүйенеді. Бұл non-X-ray деректерде дәлелденген детектор емес.
-Параметрлер жоқ/жарамсыз болса ескерту қолжетімсіз, негізгі болжам жұмыс істейді.
-Grad-CAM 7×7 картадан жуық назар аймағын береді, зақым шекарасын анықтамайды.
+Validation-ның 1280 белгісі, shrinkage covariance, 95-процентиль шегі 26.34090290.
+Параметрлер дайын, non-X-ray сапасы бөлек бағаланған жоқ. OOD тек ескерту береді.
+Grad-CAM 7×7 картадан жуық аймақты көрсетеді, зақым шекарасын анықтамайды.
+Калибрлеу клиникалық ықтималдықты дәлелдемейді. NORMAL барлық ауруды жоққа шығармайды.
 
-## Қолдану шектеулері
+## McNemar және ensemble
 
-Оқу, модельді салыстыру және бастапқы сұрыптау мүмкіндігін зерттеу.
-Клиникалық диагноз, ем таңдау немесе пациентті автоматты өткізу үшін қолданылмайды.
-Сыртқы популяциядағы сапа, балалар/ересектер айырмасы, аппарат пен проекция әсері бөлек тексеріледі.
-NORMAL барлық ауруды жоққа шығармайды. Балл клиникалық сенімділік пайызы емес.
-Жүктелген суреттер серверде және браузердің тұрақты қоймасында сақталмайды. Тарих тек бет жадында.
+CNN-only correct 19, MobileNetV2-only correct 128,
+exact two-sided p=4.8323820233e-21. Пациент суреттерінің тәуелсіздігі толық расталмаған.
+Ensemble әлі қосылған жоқ, бұл келесі кезең.
 
-## Лицензия
+## Кіріс, қолдану шектеулері және лицензия
 
-Жоба салмақтарына автоматты түрде жаңа лицензия берілмейді.
-Датасет авторларының, ImageNet/MobileNetV2 және бастапқы файлдардың шарттарын тексеру қажет.
-OpenI Indiana материалдары: [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/),
-тек сыртқы бағалау, архивке суреттерді қоспау. Есептегі MeSH белгілері gold standard емес.
+decode_image, float32, resize_with_pad(224,224), модель. Rescaling ішінде.
+DICOM CR/DX кірісі жадта percentile PNG-ге айналады. DICOM clinical validation жасалмаған.
+Оқу прототипі. Диагноз, ем таңдау немесе пациент туралы автоматты шешім үшін қолданылмайды.
+Сайт суреттерді тұрақты қоймада сақтамайды. Тарих тек бет жадында.
+Модель салмақтарына автоматты жаңа лицензия берілмейді, дереккөз шарттары тексерілуі керек.
+OpenI: CC BY-NC-ND 4.0. Суреттер архивке/репозиторийге кірмейді.
 
 ## English summary
 
-Educational binary chest X-ray classifier (NORMAL/PNEUMONIA), using a fine-tuned MobileNetV2
-and a CNN baseline. Internal metrics and exact paired McNemar results are reported above.
-No clinical diagnostic approval is claimed. Temperature scaling and Mahalanobis OOD warnings
-require validation-derived artifacts. Missing optional artifacts do not block inference.
-See the external evaluation report for completed external measurements and cohort limitations.
-
-
-## 2026-10-15 нақты сыртқы нәтиже
-
-OpenI Indiana (NLM API), 200 сурет, 160 NORMAL және 40 PNEUMONIA, seed 42.
-Шек 0.740 өзгерген жоқ. Accuracy 0.55, precision 0.239583, recall 0.575,
-specificity 0.54375, F1 0.338235, ROC-AUC 0.544219. TN 87, FP 73, FN 17, TP 23.
-Ішкі SHA-256 қиылысы жоқ. Бір есеп UID-іне бір сурет алынды.
-Есеп UID-тері ресми longitudinal patient ID емес, сондықтан пациент деңгейіндегі тәуелсіздік толық расталмаған.
-Капшендер бірнеше проекцияны сипаттай алады. Бұл нәтиже тек таңдалған 200 суретке қатысты.
-
-Калибрлеу мен OOD: код қосылды, параметрлер есептелген жоқ. Validation жүктеу 312/952
-файлдан кейін storage.googleapis.com TLS/read timeout-ымен үзілді. Runtime T=1.
-Жартылай validation-дан T немесе OOD шегін есептеген жоқпыз. Қайта жалғастыру README-де.
-
-English: External OpenI evaluation (200 report-level groups) yielded accuracy 55.0%,
-sensitivity 57.5%, specificity 54.375%, ROC-AUC 0.544219 at the unchanged threshold 0.740.
-Report UIDs are surrogate groups, not verified longitudinal patient IDs. Calibration and OOD
-parameters remain unfitted after an interrupted validation-data download; legacy T=1 is preserved.
+Educational binary NORMAL/PNEUMONIA classifier. Calibration is fitted on all 952 SHA-verified
+validation images. T(MobileNetV2)=0.97995943, threshold=0.745.
+Current internal and external results are listed above. OOD parameters are fitted on validation
+features but non-X-ray detection performance is unvalidated. No clinical approval is claimed.

@@ -1,0 +1,7 @@
+1-КЕЗЕҢ АЯҚТАЛДЫ
+Не істелді: 952/952 validation суреті SHA-256 бойынша қалпына келтірілді. Екі модельдің T, validation шектері, OOD параметрлері есептелді. Сыртқы OpenI қайта бағаланды.
+Нақты сандар: MobileNetV2 T=0.9799594303292329, threshold=0.745; CNN T=0.6820277027003551, threshold=0.475. OOD 95-процентиль шегі=26.340902898169077. Ішкі MobileNetV2 accuracy=89.16%, recall=96.12%. Сыртқы accuracy=55.00%, recall=57.50%.
+Жаңарды: model_config.json, test_metrics.csv, mcnemar.json, ood_params.npz, calibration_report.json, README, MODEL_CARD, 12 слайд пен айтылым. Ескі ағымдағы шектер мәтіннен алынды, кей метрикалар қайта есептегенде өзгермеді.
+Тексеру: 40 pytest тесті өтті. Live API-де T≠1, OOD available=true; raw 0.9930723309516907, calibrated 0.9937370549125802, Grad-CAM reconstruction raw-пен сәйкес. CR 200, CT 400. Нақты NORMAL/PNEUMONIA PDF-і 2 бет. PDF-тің жаңа ескертпелерден асып кетуі түзетілді. Слайдтар визуал тексерілді.
+Бітпегені: Docker build/run — daemon қосылмаған. OOD non-X-ray сапасы клиникалық тексерілген жоқ. Сыртқы report UID longitudinal patient ID емес.
+

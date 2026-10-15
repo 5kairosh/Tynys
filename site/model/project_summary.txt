@@ -1,25 +1,78 @@
-Өкпе рентгенінен пневмония белгілерін анықтау — оқу жобасы
-
-Датасет: Kaggle Chest X-Ray Images (Pneumonia).
-Оқылған жарамды суреттер: 5856.
-Train: 3801, validation: 952, test: 618.
-Development-тен test қиылысуына байланысты шығарылған суреттер: 453.
-Модель: MobileNetV2, Transfer Learning; таңдалған кезең: fine.
-Шешім шегі validation жиынында таңдалды: 0.740.
-
-Test accuracy: 89.16%
-Test precision: 87.74%
-Test recall/sensitivity: 96.12%
-Test specificity: 77.49%
-Test F1: 0.9174
-Test ROC-AUC: 0.9581
-Test average precision: 0.9682
-False negative: 15; false positive: 52.
-
-Тұжырым: бұл нәтижелер тек осы эксперименттің бөлінуіне қатысты.
-Файл атынан алынған топтар ресми пациент ID емес.
-Клиникалық қолдануға сыртқы деректе және мамандармен бөлек тексеру қажет.
-90% accuracy мақсатынан өтті ме: жоқ.
-
-McNemar (exact, two-sided): b=20, c=128, n=618, p=1.8041385810152942e-20.
-Осы ішкі тестте айырма статистикалық маңызды (alpha=0.05). Пациент суреттері тәуелсіз болмауы мүмкін.
+Validation temperature scaling және OOD есептелді. Оқу прототипі.
+{
+  "validation_calibration": [
+    {
+      "model": "MobileNetV2",
+      "T": 0.9799594303292329,
+      "threshold": 0.745,
+      "validation_count": 952,
+      "NLL_raw": 0.08822559646510704,
+      "NLL_calibrated": 0.08820212464991944
+    },
+    {
+      "model": "CNN",
+      "T": 0.6820277027003551,
+      "threshold": 0.47500000000000003,
+      "validation_count": 952,
+      "NLL_raw": 0.2972522175817493,
+      "NLL_calibrated": 0.27995523188892374
+    }
+  ],
+  "ood": {
+    "validation_count": 952,
+    "feature_dimension": 1280,
+    "threshold": 26.340902898169077,
+    "percentile": 95,
+    "non_xray_validated": false
+  },
+  "test_metrics": [
+    {
+      "model": "CNN",
+      "threshold": 0.47500000000000003,
+      "accuracy": 0.7152103559870551,
+      "precision": 0.7080867850098619,
+      "recall": 0.9276485788113695,
+      "specificity": 0.3593073593073593,
+      "f1": 0.8031319910514542,
+      "roc_auc": 0.8211349374140072,
+      "average_precision": 0.8929576990291581,
+      "TN": 83,
+      "FP": 148,
+      "FN": 28,
+      "TP": 359
+    },
+    {
+      "model": "MobileNetV2",
+      "threshold": 0.745,
+      "accuracy": 0.8915857605177994,
+      "precision": 0.8773584905660378,
+      "recall": 0.9612403100775194,
+      "specificity": 0.7748917748917749,
+      "f1": 0.9173859432799013,
+      "roc_auc": 0.9580746557490744,
+      "average_precision": 0.9682350864220023,
+      "TN": 179,
+      "FP": 52,
+      "FN": 15,
+      "TP": 372
+    }
+  ],
+  "mcnemar": {
+    "available": true,
+    "method": "exact McNemar (two-sided binomial)",
+    "n": 618,
+    "cnn_only_correct": 19,
+    "mobilenet_only_correct": 128,
+    "p_value": 4.832382023295393e-21,
+    "alpha": 0.05,
+    "significant": true,
+    "notice": "Жұптық тест, осы ішкі test жиынына қатысты. Пациент суреттері тәуелсіз болмауы мүмкін.",
+    "model_ids": {
+      "CNN": "19f707027db4",
+      "MobileNetV2": "ea584b998a45"
+    },
+    "config_sha256": "5e0683ca004efbcb5976468f4ad31cf1935acb5736a722f4385b4266b2bec797"
+  },
+  "provenance": "Original Oct13 models and SHA-verified validation. Archived raw test scores evaluated once after fitting."
+}
+90% accuracy мақсаты: жетпеді

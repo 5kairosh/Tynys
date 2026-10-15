@@ -128,7 +128,7 @@ def main():
             return download(row['url'],args.cache/(hashlib.sha256(row['url'].encode()).hexdigest()+'.png'))
         with ThreadPoolExecutor(max_workers=6) as pool:
             for index,_ in enumerate(pool.map(fetch_row,remote),1):
-                print(f'Жүктелді: {index}/{len(remote)}',flush=True)
+                if index%25==0 or index==len(remote):print(f'Жүктелді: {index}/{len(remote)}',flush=True)
         import tensorflow as tf
         import numpy as np
         from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,confusion_matrix
@@ -156,7 +156,7 @@ def main():
             raw = float(model(image[None,...],training=False).numpy()[0,0])
             score = calibrate_score(raw,config.get('calibration'))
             outputs.append({**row,'sha256':sha,'score':score,'prediction':int(score>=config['threshold'])})
-            print(f'{i+1}/{len(rows)}',flush=True)
+            if (i+1)%25==0 or i+1==len(rows):print(f'{i+1}/{len(rows)}',flush=True)
         y = [int(r['label']) for r in outputs]
         pred = [r['prediction'] for r in outputs]
         tn,fp,fn,tp = map(int,confusion_matrix(y,pred,labels=[0,1]).ravel())

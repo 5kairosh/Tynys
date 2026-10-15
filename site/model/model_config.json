@@ -7,11 +7,25 @@
     224,
     224
   ],
-  "threshold": 0.74,
+  "threshold": 0.745,
   "seed": 42,
   "selected_stage": "fine",
   "tensorflow_version": "2.21.0",
   "dataset": "paultimothymooney/chest-xray-pneumonia",
   "use": "educational prototype; not clinical diagnosis",
-  "grouping": "filename-derived surrogate IDs, not verified patient metadata"
+  "grouping": "filename-derived surrogate IDs, not verified patient metadata",
+  "calibration": {
+    "method": "temperature",
+    "T": 0.9799594303292329
+  },
+  "model_calibrations": {
+    "MobileNetV2": {
+      "method": "temperature",
+      "T": 0.9799594303292329
+    },
+    "CNN": {
+      "method": "temperature",
+      "T": 0.6820277027003551
+    }
+  }
 }

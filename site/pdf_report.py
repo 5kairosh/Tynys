@@ -90,15 +90,15 @@ def make_report(items):
         paragraph(c, 'Түпнұсқа рентген', margin, 624, image_width, size=9, bold=True)
         explanation = r.get('explanation', {})
         paragraph(c, 'Grad-CAM: '+r['model_class'], margin+image_width+gap, 624, image_width, size=9, bold=True)
-        fitted_image(c, original, margin, 396, image_width, 208)
+        fitted_image(c, original, margin, 424, image_width, 180)
         if explanation.get('available'):
             overlay = base64.b64decode(explanation['overlay'].split(',',1)[1])
-            fitted_image(c, overlay, margin+image_width+gap, 396, image_width, 208)
+            fitted_image(c, overlay, margin+image_width+gap, 424, image_width, 180)
         else:
             paragraph(c, explanation.get('message','Жылу картасы қолжетімсіз.'),
                       margin+image_width+gap, 505, image_width, size=9, color=MUTED)
         top = paragraph(c, 'Сары-қызыл түс таңдалған санатқа оң ықпал еткен жуық белсенділікті көрсетеді. Бұл ауру ошағы немесе оның шекарасы емес.',
-                        margin, 382, usable, size=8, color=MUTED)
+                        margin, 410, usable, size=8, color=MUTED)
         check = r.get('xray_check',{})
         if check.get('available') and check.get('is_xray') is False:
             top = paragraph(c, 'Бұл сурет рентгенге ұқсамайды — болжам сенімсіз болуы мүмкін.',margin,top-4,usable,size=8,color=HexColor('#926b2c'))
@@ -106,7 +106,7 @@ def make_report(items):
             top = paragraph(c, 'OOD тексеруі қолжетімсіз.',margin,top-4,usable,size=7,color=MUTED)
         if r.get('calibration'):
             top = paragraph(c, 'Validation калибрлеуі: T='+decimal(r['calibration']['T'])+'. Клиникалық ықтималдық ретінде тексерілмеген.',margin,top-3,usable,size=7,color=MUTED)
-        top = paragraph(c, 'Неге бұл санат таңдалды?', margin, top-19, usable, size=11, bold=True)
+        top = paragraph(c, 'Неге бұл санат таңдалды?', margin, top-13, usable, size=11, bold=True)
         relation = 'шекке тең немесе одан жоғары' if positive else 'шектен төмен'
         sign = '>=' if positive else '<'
         reason = (f'Модель баллы {decimal(r["pneumonia_score"],6)}, ал сақталған шек {decimal(r["threshold"],6)}. '
@@ -115,17 +115,17 @@ def make_report(items):
         top = paragraph(c, reason, margin, top-9, usable, size=9)
         comparison = r.get('comparison', {})
         if comparison.get('available'):
-            top = paragraph(c, 'Осы суреттегі екі модель', margin, top-15, usable, size=10, bold=True)
+            top = paragraph(c, 'Осы суреттегі екі модель', margin, top-11, usable, size=10, bold=True)
             for model in comparison['models']:
                 text = f'{model["name"]}: {model["model_class"]} / балл: {decimal(model["pneumonia_score"])} / шек: {decimal(model["threshold"])}'
                 top = paragraph(c, text, margin, top-3, usable, size=8)
             verdict = 'Болжамдар сәйкес.' if comparison['agreement'] else 'Болжамдар әртүрлі.'
             top = paragraph(c, verdict+' Баллдың жоғары болуы болжамның дұрыстығын дәлелдемейді.', margin, top-3, usable, size=7, color=MUTED)
-        top = paragraph(c, 'Нәтижені түсіндіру', margin, top-17, usable, size=11, bold=True)
+        top = paragraph(c, 'Нәтижені түсіндіру', margin, top-12, usable, size=11, bold=True)
         meaning = ('Модель суретті пневмония санатына жатқызды. Бұл адамның пневмониямен ауырғанын өздігінен растамайды.'
                    if positive else 'Модель баллы пневмония санатын таңдау шегіне жетпеді. Бұл пневмонияның жоқтығын немесе адамның толық сау екенін дәлелдемейді.')
         top = paragraph(c, meaning, margin, top-9, usable, size=9)
-        top = paragraph(c, 'Шектеуі', margin, top-17, usable, size=10, bold=True)
+        top = paragraph(c, 'Шектеуі', margin, top-12, usable, size=10, bold=True)
         top = paragraph(c, 'Grad-CAM соңғы 7 × 7 белгілер картасынан үлкейтіледі. Карта дәл шекара, клиникалық дәлел немесе нақты медициналық белгі атауын бермейді. Балл диагноздың сенімділік пайызы емес.',
                         margin, top-8, usable, size=8, color=MUTED)
         if top < 65:

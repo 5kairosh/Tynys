@@ -3,7 +3,7 @@
   "model": "MobileNetV2",
   "cohort": "external",
   "count": 200,
-  "threshold": 0.74,
+  "threshold": 0.745,
   "accuracy": 0.55,
   "precision": 0.23958333333333334,
   "recall": 0.575,

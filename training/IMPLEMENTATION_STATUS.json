@@ -1,18 +1,46 @@
 {
   "calibration": {
-    "fitted": false,
-    "runtime_temperature": 1,
-    "reason": "Google storage HTTPS handshake/read timeout after three retries; validation download incomplete. 312/952 SHA-verified files cached."
+    "fitted": true,
+    "runtime_temperature": 0.9799594303292329,
+    "validation_count": 952,
+    "threshold": 0.745
   },
   "ood": {
-    "available": false,
-    "reason": "Full validation feature vectors not yet available; parameters were not fabricated."
+    "available": true,
+    "validation_count": 952,
+    "feature_dimension": 1280,
+    "threshold": 26.340902898169077,
+    "percentile": 95,
+    "non_xray_validated": false
   },
   "external_validation": {
     "completed": true,
-    "source": "NLM OpenI",
-    "count": 200,
-    "patient_grouping": "report UID surrogate; longitudinal patient IDs unverified"
+    "available": true,
+    "metrics": {
+      "model": "MobileNetV2",
+      "cohort": "external",
+      "count": 200,
+      "threshold": 0.745,
+      "accuracy": 0.55,
+      "precision": 0.23958333333333334,
+      "recall": 0.575,
+      "specificity": 0.54375,
+      "f1": 0.3382352941176471,
+      "roc_auc": 0.54421875,
+      "TN": 87,
+      "FP": 73,
+      "FN": 17,
+      "TP": 23
+    },
+    "model_id": "ea584b998a45",
+    "config_sha256": "5e0683ca004efbcb5976468f4ad31cf1935acb5736a722f4385b4266b2bec797",
+    "source": "OpenI Indiana, NLM API",
+    "normal_count": 160,
+    "pneumonia_count": 40,
+    "patient_grouping": "one report UID per sample; longitudinal patient IDs unverified",
+    "seed": 42,
+    "sha256_overlap": 0,
+    "threshold_tuned_external": false
   },
   "docker": {
     "built": false,
@@ -23,6 +51,6 @@
     "remote_run": false
   },
   "tests": {
-    "local_passed": 34
+    "local_passed": 40
   }
 }

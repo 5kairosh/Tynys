@@ -11,8 +11,9 @@ def png():
 
 @pytest.mark.parametrize('count',[1,2,10])
 @pytest.mark.parametrize('ood_warning',[False,True])
-def test_pdf(count,ood_warning):
-    r={'model_class':'PNEUMONIA','pneumonia_score':.8,'threshold':.74,'width':60,'height':90,'filename':'test.png','model_id':'mock-model-123',
+@pytest.mark.parametrize('model_class',['NORMAL','PNEUMONIA'])
+def test_pdf(count,ood_warning,model_class):
+    r={'model_class':model_class,'pneumonia_score':.8,'threshold':.74,'width':60,'height':90,'filename':'test.png','model_id':'mock-model-123',
        'explanation':{'available':False,'message':'Карта қолжетімсіз.'},
        'xray_check':{'available':True,'is_xray':not ood_warning},
        'calibration':{'method':'temperature','T':2.1},

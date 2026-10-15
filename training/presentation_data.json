@@ -1,0 +1,185 @@
+{
+  "config": {
+    "classes": [
+      "NORMAL",
+      "PNEUMONIA"
+    ],
+    "image_size": [
+      224,
+      224
+    ],
+    "threshold": 0.745,
+    "seed": 42,
+    "selected_stage": "fine",
+    "tensorflow_version": "2.21.0",
+    "dataset": "paultimothymooney/chest-xray-pneumonia",
+    "use": "educational prototype; not clinical diagnosis",
+    "grouping": "filename-derived surrogate IDs, not verified patient metadata",
+    "calibration": {
+      "method": "temperature",
+      "T": 0.9799594303292329
+    },
+    "model_calibrations": {
+      "MobileNetV2": {
+        "method": "temperature",
+        "T": 0.9799594303292329
+      },
+      "CNN": {
+        "method": "temperature",
+        "T": 0.6820277027003551
+      }
+    }
+  },
+  "metrics": [
+    {
+      "model": "CNN",
+      "threshold": "0.47500000000000003",
+      "accuracy": "0.7152103559870551",
+      "precision": "0.7080867850098619",
+      "recall": "0.9276485788113695",
+      "specificity": "0.3593073593073593",
+      "f1": "0.8031319910514542",
+      "roc_auc": "0.8211349374140072",
+      "average_precision": "0.8929576990291581",
+      "TN": "83",
+      "FP": "148",
+      "FN": "28",
+      "TP": "359"
+    },
+    {
+      "model": "MobileNetV2",
+      "threshold": "0.745",
+      "accuracy": "0.8915857605177994",
+      "precision": "0.8773584905660378",
+      "recall": "0.9612403100775194",
+      "specificity": "0.7748917748917749",
+      "f1": "0.9173859432799013",
+      "roc_auc": "0.9580746557490744",
+      "average_precision": "0.9682350864220023",
+      "TN": "179",
+      "FP": "52",
+      "FN": "15",
+      "TP": "372"
+    }
+  ],
+  "external": {
+    "available": true,
+    "metrics": {
+      "model": "MobileNetV2",
+      "cohort": "external",
+      "count": 200,
+      "threshold": 0.745,
+      "accuracy": 0.55,
+      "precision": 0.23958333333333334,
+      "recall": 0.575,
+      "specificity": 0.54375,
+      "f1": 0.3382352941176471,
+      "roc_auc": 0.54421875,
+      "TN": 87,
+      "FP": 73,
+      "FN": 17,
+      "TP": 23
+    },
+    "model_id": "ea584b998a45",
+    "config_sha256": "5e0683ca004efbcb5976468f4ad31cf1935acb5736a722f4385b4266b2bec797",
+    "source": "OpenI Indiana, NLM API",
+    "normal_count": 160,
+    "pneumonia_count": 40,
+    "patient_grouping": "one report UID per sample; longitudinal patient IDs unverified",
+    "seed": 42,
+    "sha256_overlap": 0,
+    "threshold_tuned_external": false
+  },
+  "calibration": {
+    "validation_calibration": [
+      {
+        "model": "MobileNetV2",
+        "T": 0.9799594303292329,
+        "threshold": 0.745,
+        "validation_count": 952,
+        "NLL_raw": 0.08822559646510704,
+        "NLL_calibrated": 0.08820212464991944
+      },
+      {
+        "model": "CNN",
+        "T": 0.6820277027003551,
+        "threshold": 0.47500000000000003,
+        "validation_count": 952,
+        "NLL_raw": 0.2972522175817493,
+        "NLL_calibrated": 0.27995523188892374
+      }
+    ],
+    "ood": {
+      "validation_count": 952,
+      "feature_dimension": 1280,
+      "threshold": 26.340902898169077,
+      "percentile": 95,
+      "non_xray_validated": false
+    },
+    "test_metrics": [
+      {
+        "model": "CNN",
+        "threshold": 0.47500000000000003,
+        "accuracy": 0.7152103559870551,
+        "precision": 0.7080867850098619,
+        "recall": 0.9276485788113695,
+        "specificity": 0.3593073593073593,
+        "f1": 0.8031319910514542,
+        "roc_auc": 0.8211349374140072,
+        "average_precision": 0.8929576990291581,
+        "TN": 83,
+        "FP": 148,
+        "FN": 28,
+        "TP": 359
+      },
+      {
+        "model": "MobileNetV2",
+        "threshold": 0.745,
+        "accuracy": 0.8915857605177994,
+        "precision": 0.8773584905660378,
+        "recall": 0.9612403100775194,
+        "specificity": 0.7748917748917749,
+        "f1": 0.9173859432799013,
+        "roc_auc": 0.9580746557490744,
+        "average_precision": 0.9682350864220023,
+        "TN": 179,
+        "FP": 52,
+        "FN": 15,
+        "TP": 372
+      }
+    ],
+    "mcnemar": {
+      "available": true,
+      "method": "exact McNemar (two-sided binomial)",
+      "n": 618,
+      "cnn_only_correct": 19,
+      "mobilenet_only_correct": 128,
+      "p_value": 4.832382023295393e-21,
+      "alpha": 0.05,
+      "significant": true,
+      "notice": "Жұптық тест, осы ішкі test жиынына қатысты. Пациент суреттері тәуелсіз болмауы мүмкін.",
+      "model_ids": {
+        "CNN": "19f707027db4",
+        "MobileNetV2": "ea584b998a45"
+      },
+      "config_sha256": "5e0683ca004efbcb5976468f4ad31cf1935acb5736a722f4385b4266b2bec797"
+    },
+    "provenance": "Original Oct13 models and SHA-verified validation. Archived raw test scores evaluated once after fitting."
+  },
+  "mcnemar": {
+    "available": true,
+    "method": "exact McNemar (two-sided binomial)",
+    "n": 618,
+    "cnn_only_correct": 19,
+    "mobilenet_only_correct": 128,
+    "p_value": 4.832382023295393e-21,
+    "alpha": 0.05,
+    "significant": true,
+    "notice": "Жұптық тест, осы ішкі test жиынына қатысты. Пациент суреттері тәуелсіз болмауы мүмкін.",
+    "model_ids": {
+      "CNN": "19f707027db4",
+      "MobileNetV2": "ea584b998a45"
+    },
+    "config_sha256": "5e0683ca004efbcb5976468f4ad31cf1935acb5736a722f4385b4266b2bec797"
+  }
+}
