@@ -20,6 +20,7 @@ import numpy as np
 from starlette.concurrency import run_in_threadpool
 
 from calibration import calibrate_score, validate_calibration
+from ood import OODDetector
 
 ROOT = Path(__file__).resolve().parent
 MODEL_DIR = ROOT / "model"
@@ -57,6 +58,7 @@ class Engine:
         self.cnn_threshold = None
         self.cnn_fingerprint = None
         self.comparison_error = None
+        self.ood = OODDetector()
 
     def load(self):
         with self.lock:
@@ -77,6 +79,7 @@ class Engine:
                 self.tf, self.model, self.config, self.metrics = tf, model, config, metrics
                 self.fingerprint = hashlib.sha256((MODEL_DIR / "pneumonia_mobilenetv2.keras").read_bytes()).hexdigest()[:12]
                 self.error = None
+                self.ood.load(MODEL_DIR/"ood_params.npz", self.fingerprint)
                 try:
                     cnn_path = MODEL_DIR/'cnn_best.keras'
                     cnn_rows = [r for r in metrics if r['model'] == 'CNN']
@@ -111,7 +114,7 @@ class Engine:
             return {'available':False,'message':'Осы модельдерге сәйкес McNemar нәтижесі жоқ.'}
 
     def status(self):
-        return {"mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
+        return {"xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
                 "config": self.config, "metrics": self.metrics,
                 "model_id": self.fingerprint,
                 "comparison_ready": self.cnn_model is not None,
@@ -211,6 +214,19 @@ class Engine:
                 raw_score = float(self.model(image[None, ...], training=False).numpy()[0, 0])
                 score = calibrate_score(raw_score, self.config.get("calibration"))
                 threshold = float(self.config["threshold"])
+                xray_check = self.ood.status()
+                if xray_check['available']:
+                    try:
+                        x = image[None,...]
+                        for layer in self.model.layers[1:]:
+                            x = layer(x,training=False)
+                            if isinstance(layer,tf.keras.Model) and layer.name.startswith('mobilenetv2'):
+                                break
+                        vector = tf.reduce_mean(x,axis=(1,2)).numpy()[0]
+                        xray_check = self.ood.check(vector)
+                    except Exception:
+                        logging.exception('OOD warning unavailable')
+                        xray_check = {'available':False,'message':'OOD қашықтығын есептеу мүмкін болмады.'}
                 comparison = {'available': False, 'message': self.comparison_error}
                 if self.cnn_model is not None:
                     cnn_score = float(self.cnn_model(image[None,...],training=False).numpy()[0,0])
@@ -242,7 +258,7 @@ class Engine:
                 "filename": Path(filename).name, "width": width, "height": height,
                 "elapsed_ms": round((time.perf_counter() - started) * 1000),
                 "model_id": self.fingerprint,
-                "explanation": explanation,
+                "explanation": explanation, "xray_check": xray_check,
                 "comparison": comparison,
                 "notice": "Оқу моделінің болжамы. Медициналық диагноз емес."}
 

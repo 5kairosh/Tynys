@@ -319,6 +319,36 @@ pd.DataFrame(calibration_diagnostics).to_csv(OUT/'calibration_validation.csv',in
 display(pd.DataFrame(calibration_diagnostics))
 
 
+# OOD параметрлері тек validation жиынынан есептеледі.
+# Бұл эвристиканың non-X-ray деректеріндегі сапасы бөлек тексерілуі керек.
+try:
+    mobile_layers = transfer.layers
+    base_index = next(i for i,layer in enumerate(mobile_layers)
+                      if isinstance(layer,tf.keras.Model) and layer.name.startswith('mobilenetv2'))
+    features = []
+    for images,_ in val_ds:
+        x = images
+        for layer in mobile_layers[1:base_index+1]:
+            x = layer(x,training=False)
+        features.append(tf.reduce_mean(x,axis=(1,2)).numpy())
+    vectors = np.concatenate(features).astype(np.float64)
+    mean = vectors.mean(axis=0)
+    covariance = np.cov(vectors,rowvar=False)
+    # Shrinkage fixes singular covariance when n < feature dimension.
+    scale = max(float(np.trace(covariance)/len(mean)),1e-8)
+    covariance = .9*covariance + .1*scale*np.eye(len(mean))
+    precision = np.linalg.solve(covariance,np.eye(len(mean)))
+    centered = vectors-mean
+    distances = np.sqrt(np.maximum(0,np.einsum('ij,jk,ik->i',centered,precision,centered)))
+    ood_threshold = float(np.quantile(distances,.95))
+    # Save after the selected model has been serialized, to bind the exact file ID.
+    ood_parameters = dict(mean=mean,precision=precision,threshold=ood_threshold)
+    print('OOD validation параметрлері есептелді. Non-X-ray валидациясы жүргізілген жоқ.')
+except Exception as exc:
+    ood_parameters = None
+    print('OOD қолжетімсіз:',exc)
+
+
 test_y = test_df.label.to_numpy()
 results, test_probabilities = [], {}
 for name,model in models.items():
@@ -372,6 +402,9 @@ else:
 
 MODEL_PATH = OUT/'pneumonia_mobilenetv2.keras'
 transfer.save(MODEL_PATH)
+if ood_parameters is not None:
+    np.savez_compressed(OUT/'ood_params.npz',**ood_parameters,
+        model_id=hashlib.sha256(MODEL_PATH.read_bytes()).hexdigest()[:12])
 config = {'classes':CLASS_NAMES,'image_size':list(IMG_SIZE),
     'threshold':thresholds['MobileNetV2'],'calibration':calibrations['MobileNetV2'],
     'model_calibrations':calibrations,'seed':SEED,'selected_stage':best_stage,

@@ -99,6 +99,13 @@ def make_report(items):
                       margin+image_width+gap, 505, image_width, size=9, color=MUTED)
         top = paragraph(c, 'Сары-қызыл түс таңдалған санатқа оң ықпал еткен жуық белсенділікті көрсетеді. Бұл ауру ошағы немесе оның шекарасы емес.',
                         margin, 382, usable, size=8, color=MUTED)
+        check = r.get('xray_check',{})
+        if check.get('available') and check.get('is_xray') is False:
+            top = paragraph(c, 'Бұл сурет рентгенге ұқсамайды — болжам сенімсіз болуы мүмкін.',margin,top-4,usable,size=8,color=HexColor('#926b2c'))
+        elif not check.get('available'):
+            top = paragraph(c, 'OOD тексеруі қолжетімсіз.',margin,top-4,usable,size=7,color=MUTED)
+        if r.get('calibration'):
+            top = paragraph(c, 'Validation калибрлеуі: T='+decimal(r['calibration']['T'])+'. Клиникалық ықтималдық ретінде тексерілмеген.',margin,top-3,usable,size=7,color=MUTED)
         top = paragraph(c, 'Неге бұл санат таңдалды?', margin, top-19, usable, size=11, bold=True)
         relation = 'шекке тең немесе одан жоғары' if positive else 'шектен төмен'
         sign = '>=' if positive else '<'

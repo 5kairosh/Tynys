@@ -53,6 +53,10 @@ function explainResult(r){
 
 function showResult(r){const pn=r.model_class==='PNEUMONIA';$('empty-result').hidden=true;$('result-content').hidden=false;$('result-tag').textContent='ДАЙЫН';$('result-category').textContent=r.model_class;$('result-category').classList.toggle('pneumonia',pn);$('result-title').textContent=pn?'Пневмония санатына жіктелді':'Қалыпты санатқа жіктелді';$('result-explanation').textContent=explainResult(r).reason;$('score-value').textContent=decimal(r.pneumonia_score);$('calibration-note').textContent=r.calibration?`Validation-да калибрленген балл (T=${decimal(r.calibration.T)}). Клиникалық ықтималдық ретінде тексерілмеген.`:'Калибрлеу қолданылмаған (T=1).';$('score-fill').style.width=(r.pneumonia_score*100)+'%';$('score-fill').style.background=pn?'#ba9651':'var(--green)';$('threshold-marker').style.left=(r.threshold*100)+'%';$('threshold-label').textContent='Шек: '+decimal(r.threshold);$('result-time').textContent=`${r.width} × ${r.height} px · ${r.elapsed_ms} мс`;$('result-model').textContent='MobileNetV2';showAttention(r);const container=$('batch-results');container.replaceChildren();if(results.length>1)for(const item of results){const row=document.createElement('div'),name=document.createElement('span'),label=document.createElement('strong');name.textContent=item.filename;label.textContent=item.model_class+' · '+decimal(item.pneumonia_score);row.append(name,label);container.append(row);}}
 function showAttention(r){
+  const check=r.xray_check;
+  $('xray-warning').hidden=false;
+  $('xray-warning').classList.toggle('flagged',check?.available&&check.is_xray===false);
+  $('xray-warning').textContent=check?.available?(check.is_xray===false?'Бұл сурет рентгенге ұқсамайды — болжам сенімсіз болуы мүмкін. OOD тек үлестірімге ұқсастықты тексереді.':'OOD: validation үлестірімінен айқын ауытқу табылмады. Бұл рентген екенін дәлелдемейді.'):(check?.message||'OOD тексеруі қолжетімсіз.');
   showComparison(r);
   const explanation=r.explanation;
   $('attention-tools').hidden=!explanation?.available;
