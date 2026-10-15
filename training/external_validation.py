@@ -173,6 +173,13 @@ def main():
         with (args.output/'external_predictions.csv').open('w',newline='',encoding='utf-8') as f:
             fields=sorted(set().union(*(r.keys() for r in outputs)));w=csv.DictWriter(f,fieldnames=fields);w.writeheader();w.writerows(outputs)
         np.savetxt(args.output/'external_confusion_matrix.csv',[[tn,fp],[fn,tp]],delimiter=',',fmt='%d',header='pred_NORMAL,pred_PNEUMONIA')
+        evidence = {'available':True,'metrics':result,'model_id':hashlib.sha256((ROOT/'site/model/pneumonia_mobilenetv2.keras').read_bytes()).hexdigest()[:12],
+                    'config_sha256':hashlib.sha256((ROOT/'site/model/model_config.json').read_bytes()).hexdigest(),
+                    'source':'OpenI Indiana, NLM API' if args.openi else 'User-supplied manifest',
+                    'normal_count':int(sum(v==0 for v in y)),'pneumonia_count':int(sum(v==1 for v in y)),
+                    'patient_grouping':'one report UID per sample; longitudinal patient IDs unverified' if args.openi else 'manifest patient_id',
+                    'seed':args.seed,'sha256_overlap':0,'threshold_tuned_external':False}
+        (ROOT/'site/model/external_validation.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2),encoding='utf-8')
         report.write_text('Сыртқы валидация орындалды. Шек өзгертілмеді.\n'+json.dumps(result,ensure_ascii=False,indent=2)+'\nMeSH белгілері клиникалық gold standard емес. Дереккөз және пациент ID түрі external_predictions.csv ішінде. SHA-256 тек байт бойынша көшірмені анықтайды.\n',encoding='utf-8')
     except Exception as exc:
         report.write_text('Сыртқы валидация аяқталмады. Метрикалар есептелген жоқ.\nКедергі: '+str(exc)+'\nБалама: NORMAL/PNEUMONIA, patient_id және path/url бар сыртқы CSV беріп, скриптті қайта орында.\n',encoding='utf-8')

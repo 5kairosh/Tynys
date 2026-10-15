@@ -118,8 +118,17 @@ class Engine:
         except Exception:
             return {'available':False,'message':'Осы модельдерге сәйкес McNemar нәтижесі жоқ.'}
 
+    def external_status(self):
+        try:
+            value = json.loads((MODEL_DIR/'external_validation.json').read_text(encoding='utf-8'))
+            if value['model_id'] != self.fingerprint or value['config_sha256'] != hashlib.sha256((MODEL_DIR/'model_config.json').read_bytes()).hexdigest():
+                raise ValueError('Сыртқы бағалау конфигурациясы сәйкес емес.')
+            return value
+        except Exception:
+            return {'available':False,'message':'Осы модель конфигурациясына сәйкес сыртқы бағалау есебі жоқ.'}
+
     def status(self):
-        return {"dicom": dicom_status(), "xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
+        return {"external_validation": self.external_status(), "dicom": dicom_status(), "xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
                 "config": self.config, "metrics": self.metrics,
                 "model_id": self.fingerprint,
                 "comparison_ready": self.cnn_model is not None,

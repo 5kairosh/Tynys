@@ -1,0 +1,7 @@
+-r ../site/requirements.txt
+scipy==1.17.1
+scikit-learn==1.9.1
+pandas==3.0.6
+requests==2.34.2
+kagglehub==1.0.2
+matplotlib
