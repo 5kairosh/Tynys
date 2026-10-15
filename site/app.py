@@ -23,6 +23,7 @@ from calibration import calibrate_score, validate_calibration
 from ood import OODDetector
 from dicom_input import dicom_to_png, dicom_status
 from pad_geometry import pad_geometry
+from upload_memory import UploadMemoryLimit
 
 ROOT = Path(__file__).resolve().parent
 MODEL_DIR = ROOT / "model"
@@ -42,6 +43,8 @@ def read_config(path):
     if isinstance(threshold, bool) or not isinstance(threshold, (int, float)) or not math.isfinite(threshold) or not 0 <= threshold <= 1:
         raise ValueError("Шешім шегі 0 мен 1 арасында болуы керек.")
     validate_calibration(config.get("calibration"))
+    if not isinstance(config.get("model_calibrations", {}),dict):
+        raise ValueError("Модель калибрлеуі объект болуы керек.")
     for value in config.get("model_calibrations", {}).values():
         validate_calibration(value)
     return config
@@ -276,6 +279,7 @@ async def lifespan(app):
 
 
 app = FastAPI(title="Tynys", lifespan=lifespan)
+app.add_middleware(UploadMemoryLimit)
 
 
 @app.middleware("http")

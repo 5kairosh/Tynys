@@ -36,7 +36,8 @@ def test_protocol(client):
     x=tf.io.decode_image(raw,channels=3,expand_animations=False)
     x=tf.image.resize_with_pad(tf.cast(x,tf.float32),224,224)
     expected=float(engine.model(x[None,...],training=False).numpy()[0,0])
-    assert r['pneumonia_score']==r['raw_score']
+    from calibration import calibrate_score
+    assert r['pneumonia_score']==calibrate_score(r['raw_score'],engine.config.get('calibration'))
     assert abs(r['raw_score']-expected)<1e-6
     converted=client.post('/api/predict',files={'file':('sample.dcm',dicom())})
     assert converted.status_code==200,converted.text
@@ -50,8 +51,15 @@ def test_protocol(client):
         engine.config={**old,'calibration':{'method':'temperature','T':2},'threshold':.5}
         calibrated=client.post('/api/predict',files={'file':('sample.png',raw)}).json()
         assert calibrated['raw_score']==r['raw_score']
-        assert calibrated['pneumonia_score']!=calibrated['raw_score']
+        assert calibrated['pneumonia_score']==calibrate_score(calibrated['raw_score'],{'method':'temperature','T':2})
         if calibrated['explanation']['available']:
             assert abs(calibrated['explanation']['reconstructed_score']-r['raw_score'])<1e-5
     finally:
         engine.config=old
+
+
+def test_memory_limit(client):
+    from upload_memory import MAX_BODY
+    # Reject by declared size before consuming the upload.
+    response=client.post('/api/predict',headers={'content-length':str(MAX_BODY+1)},content=b'')
+    assert response.status_code==413
