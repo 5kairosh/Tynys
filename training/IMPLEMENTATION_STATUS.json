@@ -1,0 +1,28 @@
+{
+  "calibration": {
+    "fitted": false,
+    "runtime_temperature": 1,
+    "reason": "Google storage HTTPS handshake/read timeout after three retries; validation download incomplete. 312/952 SHA-verified files cached."
+  },
+  "ood": {
+    "available": false,
+    "reason": "Full validation feature vectors not yet available; parameters were not fabricated."
+  },
+  "external_validation": {
+    "completed": true,
+    "source": "NLM OpenI",
+    "count": 200,
+    "patient_grouping": "report UID surrogate; longitudinal patient IDs unverified"
+  },
+  "docker": {
+    "built": false,
+    "reason": "Docker Desktop Linux daemon is not running."
+  },
+  "ci": {
+    "configured": true,
+    "remote_run": false
+  },
+  "tests": {
+    "local_passed": 34
+  }
+}

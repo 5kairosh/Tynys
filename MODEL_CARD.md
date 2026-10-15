@@ -71,3 +71,22 @@ and a CNN baseline. Internal metrics and exact paired McNemar results are report
 No clinical diagnostic approval is claimed. Temperature scaling and Mahalanobis OOD warnings
 require validation-derived artifacts. Missing optional artifacts do not block inference.
 See the external evaluation report for completed external measurements and cohort limitations.
+
+
+## 2026-10-15 нақты сыртқы нәтиже
+
+OpenI Indiana (NLM API), 200 сурет, 160 NORMAL және 40 PNEUMONIA, seed 42.
+Шек 0.740 өзгерген жоқ. Accuracy 0.55, precision 0.239583, recall 0.575,
+specificity 0.54375, F1 0.338235, ROC-AUC 0.544219. TN 87, FP 73, FN 17, TP 23.
+Ішкі SHA-256 қиылысы жоқ. Бір есеп UID-іне бір сурет алынды.
+Есеп UID-тері ресми longitudinal patient ID емес, сондықтан пациент деңгейіндегі тәуелсіздік толық расталмаған.
+Капшендер бірнеше проекцияны сипаттай алады. Бұл нәтиже тек таңдалған 200 суретке қатысты.
+
+Калибрлеу мен OOD: код қосылды, параметрлер есептелген жоқ. Validation жүктеу 312/952
+файлдан кейін storage.googleapis.com TLS/read timeout-ымен үзілді. Runtime T=1.
+Жартылай validation-дан T немесе OOD шегін есептеген жоқпыз. Қайта жалғастыру README-де.
+
+English: External OpenI evaluation (200 report-level groups) yielded accuracy 55.0%,
+sensitivity 57.5%, specificity 54.375%, ROC-AUC 0.544219 at the unchanged threshold 0.740.
+Report UIDs are surrogate groups, not verified longitudinal patient IDs. Calibration and OOD
+parameters remain unfitted after an interrupted validation-data download; legacy T=1 is preserved.
