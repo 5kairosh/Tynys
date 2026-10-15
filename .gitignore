@@ -1,0 +1,6 @@
+site/.venv/
+**/__pycache__/
+.pytest_cache/
+training/cache/
+training/artifacts/
+*.log

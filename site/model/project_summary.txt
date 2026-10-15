@@ -1,0 +1,22 @@
+Өкпе рентгенінен пневмония белгілерін анықтау — оқу жобасы
+
+Датасет: Kaggle Chest X-Ray Images (Pneumonia).
+Оқылған жарамды суреттер: 5856.
+Train: 3801, validation: 952, test: 618.
+Development-тен test қиылысуына байланысты шығарылған суреттер: 453.
+Модель: MobileNetV2, Transfer Learning; таңдалған кезең: fine.
+Шешім шегі validation жиынында таңдалды: 0.740.
+
+Test accuracy: 89.16%
+Test precision: 87.74%
+Test recall/sensitivity: 96.12%
+Test specificity: 77.49%
+Test F1: 0.9174
+Test ROC-AUC: 0.9581
+Test average precision: 0.9682
+False negative: 15; false positive: 52.
+
+Тұжырым: бұл нәтижелер тек осы эксперименттің бөлінуіне қатысты.
+Файл атынан алынған топтар ресми пациент ID емес.
+Клиникалық қолдануға сыртқы деректе және мамандармен бөлек тексеру қажет.
+90% accuracy мақсатынан өтті ме: жоқ.

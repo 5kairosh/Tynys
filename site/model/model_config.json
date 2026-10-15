@@ -1,0 +1,17 @@
+{
+  "classes": [
+    "NORMAL",
+    "PNEUMONIA"
+  ],
+  "image_size": [
+    224,
+    224
+  ],
+  "threshold": 0.74,
+  "seed": 42,
+  "selected_stage": "fine",
+  "tensorflow_version": "2.21.0",
+  "dataset": "paultimothymooney/chest-xray-pneumonia",
+  "use": "educational prototype; not clinical diagnosis",
+  "grouping": "filename-derived surrogate IDs, not verified patient metadata"
+}

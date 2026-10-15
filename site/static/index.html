@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Tynys — өкпе рентгендерін NORMAL және PNEUMONIA санаттарына жіктейтін TensorFlow оқу жобасы.">
+  <title>Tynys — рентгенге жаңа көзқарас</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230c766c'/%3E%3Cpath d='M29 16h6v13h13v6H35v13h-6V35H16v-6h13z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+<div class="site-wrap">
+  <header class="header">
+    <a class="brand" href="#" aria-label="Tynys басты бет"><span class="brand-mark">✚</span>tynys<span class="brand-period">.</span></a>
+    <nav aria-label="Негізгі мәзір"><a href="#analysis">Рентгенді тексеру</a><a href="#research">Зерттеу нәтижесі</a><a href="#about">Жоба туралы</a></nav>
+    <button class="model-pill" id="model-details"><span class="status-dot" id="status-dot"></span><span id="header-status">Модель тексерілуде</span><span class="pill-arrow">↗</span></button>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span>МЕДИЦИНА МЕН МАШИНАЛЫҚ ОҚЫТУ</div>
+        <h1 id="hero-title">Әр суретке<br>жаңа <em>көзқарас.</em></h1>
+        <p class="hero-description">Өкпе рентгенін жүктеңіз. Нейрондық желі суретті талдап, қалыпты немесе пневмония санатына жатқызады.</p>
+        <a class="button primary" href="#analysis">Рентгенді тексеру <span>↗</span></a>
+        <div class="hero-caption"><span class="small-cross">✚</span> Зерттеуге арналған. Дәрігер бағасын алмастырмайды.</div>
+      </div>
+      <div class="hero-visual">
+        <div class="art-label"><span class="tiny-dot"></span>ӨКПЕНІҢ ОҚУ ИЛЛЮСТРАЦИЯСЫ</div>
+        <img src="/static/hero.png" alt="Мөлдір көгілдір түсті өкпе иллюстрациясы" class="lung-art">
+        <div class="visual-caption"><span>01 / Өкпе рентгені</span><span>MobileNetV2</span></div>
+      </div>
+    </section>
+    <section class="numbers" aria-label="Модельдің тест нәтижелері">
+      <div class="numbers-intro">Өлшенген нәтиже.<br><strong>Ашық әдіс.</strong></div>
+      <div><strong id="metric-accuracy">—</strong><span>Тесттегі accuracy</span></div>
+      <div><strong id="metric-recall">—</strong><span>Пневмония recall</span></div>
+      <div><strong id="metric-count">—</strong><span>Тест суреттері</span></div>
+    </section>
+
+    <section class="analysis-section" id="analysis" aria-labelledby="analysis-title">
+      <div class="section-heading"><div><div class="eyebrow">01 / СУРЕТТІ ТАЛДАУ</div><h2 id="analysis-title">Рентгеннен <em>бастайық.</em></h2></div><p>Бір сурет. Екі санат.<br>Сіздің үйретілген модельдің болжамы.</p></div>
+      <div class="analysis-grid">
+        <div class="upload-panel">
+          <div class="panel-top"><span>Рентген суреті</span><span class="format">JPG / PNG</span></div>
+          <label class="dropzone" id="dropzone" for="image-input" tabindex="0">
+            <div class="upload-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M20 26V7m-7 7 7-7 7 7M8 26v7h24v-7"/></svg></div>
+            <strong>Суретті осы жерге әкеліңіз</strong><span>немесе файлды таңдау үшін басыңыз</span><small>12 МБ-қа дейін · JPG, JPEG, PNG</small>
+          </label>
+          <input id="image-input" type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple class="visually-hidden">
+          <div class="preview" id="preview" hidden><img id="preview-image" alt="Жүктелген рентген суреті"><button class="remove-image" id="remove-image" aria-label="Суретті өшіру">×</button></div>
+          <div id="attention-tools" class="attention-tools" hidden>
+            <div class="attention-switch" role="group" aria-label="Рентген көрінісі"><button id="view-original" type="button" aria-pressed="false">Түпнұсқа</button><button id="view-attention" type="button" aria-pressed="true">Модель назары</button></div>
+            <button id="download-attention" class="attention-download" type="button">Белгіленген сурет ↓</button>
+            <div class="attention-legend"><span class="attention-scale"></span><span>Сарыдан қызылға: оң ықпал күшейеді</span></div>
+            <p id="attention-caption"></p>
+          </div>
+          <p id="attention-unavailable" class="attention-unavailable" hidden></p>
+          <div class="file-info" id="file-info" hidden><div><strong id="file-name"></strong><span id="file-size"></span></div><span class="file-check">✓</span></div>
+          <div id="file-list" class="file-list"></div>
+          <button class="button primary analyze-button" id="analyze" disabled><span id="analyze-label">Суретті талдау</span><span id="analyze-arrow">↗</span></button>
+          <p class="privacy-note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8V6a5 5 0 0 1 10 0v2M3 8h14v10H3z"/></svg>Талдаудан кейін сурет серверде сақталмайды.</p>
+        </div>
+        <div class="result-panel" id="result-panel" aria-live="polite">
+          <div class="panel-top"><span>Модель нәтижесі</span><span class="format" id="result-tag">КҮТУДЕ</span></div>
+          <div class="empty-result" id="empty-result"><div class="result-orbit"><span>✚</span></div><h3>Суретіңізді күтеміз</h3><p>Рентгенді жүктеп, «Суретті талдау»<br>батырмасын басыңыз.</p><span class="model-label">TensorFlow · MobileNetV2</span></div>
+          <div id="result-content" hidden>
+            <div class="result-category" id="result-category"></div>
+            <h3 class="result-title" id="result-title"></h3><p id="result-explanation" class="result-explanation"></p>
+            <div class="score-heading"><span>Пневмония санатының баллы</span><strong id="score-value"></strong></div>
+            <div class="score-track"><div id="score-fill"></div><span id="threshold-marker"></span></div>
+            <div class="score-labels"><span>0,000</span><span id="threshold-label"></span><span>1,000</span></div>
+            <div class="result-meta"><span id="result-time"></span><span id="result-model"></span></div>
+            <button class="button secondary download-result" id="download-result">Қорытындыны жүктеу <span>↓</span></button>
+            <button class="button secondary download-pdf" id="download-pdf">PDF есепті жүктеу <span>↓</span></button>
+            <div id="batch-results" class="batch-results"></div>
+          </div>
+          <div class="result-notice"><span>i</span><p>Бұл — суреттің модельдік классификациясы. Балл диагноздың сенімділік пайызы емес. <strong>NORMAL жауабы барлық ауруды жоққа шығармайды.</strong></p></div>
+        </div>
+      </div>
+      <section id="comparison-panel" class="comparison-panel" aria-labelledby="comparison-title" hidden>
+        <div class="comparison-heading"><div><div class="eyebrow">БІР СУРЕТ / ЕКІ МОДЕЛЬ</div><h3 id="comparison-title">CNN және MobileNetV2</h3></div><span id="comparison-verdict"></span></div>
+        <div class="table-scroll"><table class="comparison-table"><thead><tr><th>Осы суреттің нәтижесі</th><th>CNN</th><th>MobileNetV2</th></tr></thead><tbody id="comparison-table"></tbody></table></div>
+        <p id="comparison-note"></p>
+      </section>
+      <section class="history-panel" aria-labelledby="history-title">
+        <div class="history-heading"><div><h3 id="history-title">Талдау тарихы <span id="history-count">0</span></h3><p>Осы бет ашық тұрғандағы соңғы 20 сурет. Бетті жаңартқанда тарих жойылады.</p></div><button id="clear-history" class="history-clear" type="button" disabled>Тарихты тазалау</button></div>
+        <p id="history-empty" class="history-empty">Тексерілген суреттер осы жерде пайда болады.</p>
+        <ol id="history-list" class="history-list" aria-label="Тексерілген рентгендер"></ol>
+        <p id="history-feedback" class="history-feedback" role="status" aria-live="polite"></p>
+      </section>
+      <div class="error-message" id="error-message" role="alert" hidden></div>
+    </section>
+
+    <section class="method-section" id="about">
+      <div class="section-heading"><div><div class="eyebrow">02 / ӘДІС</div><h2>Күрделі модель.<br><em>Түсінікті қадамдар.</em></h2></div><p>Colab-тағы модель мен өңдеу әдісі<br>осы сайтта да қолданылады.</p></div>
+      <div class="method-grid"><article><span class="step-number">01</span><h3>Суретті дайындау</h3><p>Рентген үш арнамен оқылып, пропорциясын сақтай отырып 224 × 224 өлшеміне келеді.</p></article><article><span class="step-number">02</span><h3>Белгілерді тану</h3><p>Үйретілген MobileNetV2 желісі сурет белгілерін өңдеп, пневмония санатына балл береді.</p></article><article><span class="step-number">03</span><h3>Нәтижені көрсету</h3><p>Балл модельдің сақталған шешім шегімен салыстырылып, NORMAL немесе PNEUMONIA шығады.</p></article></div>
+    </section>
+
+    <section class="research-section" id="research">
+      <div class="section-heading"><div><div class="eyebrow">03 / ЭКСПЕРИМЕНТ</div><h2>Сандар сөйлейді.</h2></div><p>Сайтқа қосылған модель архивіндегі<br>нақты тест нәтижелері.</p></div>
+      <div class="research-layout"><div class="research-main"><div class="table-scroll"><table><caption class="visually-hidden">CNN мен MobileNetV2 салыстыру</caption><thead><tr><th>Көрсеткіш</th><th>CNN</th><th>MobileNetV2</th></tr></thead><tbody id="metrics-table"><tr><td colspan="3">Метрикалар жүктелуде…</td></tr></tbody></table></div><p class="research-footnote">Нәтижелер осы датасеттің тест жиынына қатысты. Өзге суреттердегі сапа бөлек бағалауды қажет етеді.</p></div><aside class="research-aside"><span class="mini-label">НЕГІЗГІ МОДЕЛЬ</span><h3>MobileNetV2</h3><p>ImageNet салмақтары.<br>Transfer Learning.<br>Fine-tuning.</p><div class="model-threshold"><span>Шешім шегі</span><strong id="research-threshold">—</strong></div><a href="https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia" target="_blank" rel="noopener noreferrer">Датасетті қарау ↗</a></aside></div>
+      <details class="research-graphs"><summary>Colab-тағы нақты графиктерді қарау <span>+</span></summary><div class="graph-content"><figure><img src="/static/graphs/MobileNetV2_test_metrics.png" alt="MobileNetV2 тест қателері матрицасы, ROC және precision-recall қисықтары" loading="lazy"><figcaption>Test: қателер матрицасы, ROC және precision-recall</figcaption></figure><div class="graph-pair"><figure><img src="/static/graphs/mobilenet_fine_history.png" alt="Fine-tuning кезіндегі train және validation loss пен accuracy" loading="lazy"><figcaption>Fine-tuning үйрету тарихы</figcaption></figure><figure><img src="/static/graphs/class_distribution.png" alt="Train, validation және test класстарының сурет саны" loading="lazy"><figcaption>Деректердің бөлінуі</figcaption></figure></div></div></details>
+    </section>
+    <section class="closing"><div class="eyebrow">БІЛІМНЕН БАСТАЛАТЫН МҮМКІНДІК</div><h2>Технология көмектеседі.<br><em>Шешімді маман қабылдайды.</em></h2><p>Tynys — TensorFlow және Keras негізіндегі оқу жобасы.<br>Қазіргі модель екі санатты ажыратады. Бірнеше ауру белгісін анықтау — келесі зерттеу кезеңі.</p><a href="#analysis" class="button secondary">Бір суретті тексеру <span>↗</span></a></section>
+  </main>
+  <footer><a class="brand" href="#"><span class="brand-mark">✚</span>tynys<span class="brand-period">.</span></a><span>Өкпе рентгендерін классификациялау · Оқу прототипі</span><a href="https://www.tensorflow.org/tutorials/images/transfer_learning" target="_blank" rel="noopener noreferrer">TensorFlow ↗</a></footer>
+</div>
+<dialog id="model-dialog"><button id="close-dialog" class="dialog-close" aria-label="Жабу">×</button><div class="eyebrow">САҚТАЛҒАН МОДЕЛЬ</div><h2>Модель туралы</h2><div id="model-info"></div><p>Конфигурация мен көрсеткіштер нәтижелер архивінен оқылады.</p></dialog>
+</body></html>
