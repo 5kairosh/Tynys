@@ -1,0 +1,96 @@
+{
+  "base_url": "http://127.0.0.1:7861",
+  "ready": true,
+  "status": {
+    "model_id": "ea584b998a45",
+    "tensorflow_version": "2.21.0",
+    "calibration": {
+      "method": "temperature",
+      "T": 0.9799594303292329
+    },
+    "dicom": {
+      "available": true,
+      "message": null
+    },
+    "xray_check": {
+      "available": true,
+      "message": null,
+      "notice": "Validation үлестірімінен ауытқу эвристикасы. Рентген екенін дәлелдемейді."
+    },
+    "mcnemar": {
+      "available": true,
+      "method": "exact McNemar (two-sided binomial)",
+      "n": 618,
+      "cnn_only_correct": 19,
+      "mobilenet_only_correct": 128,
+      "p_value": 4.832382023295393e-21,
+      "alpha": 0.05,
+      "significant": true,
+      "notice": "Жұптық тест, осы ішкі test жиынына қатысты. Пациент суреттері тәуелсіз болмауы мүмкін.",
+      "model_ids": {
+        "CNN": "19f707027db4",
+        "MobileNetV2": "ea584b998a45"
+      },
+      "config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174"
+    },
+    "ensemble": {
+      "available": true,
+      "weights": {
+        "CNN": 0.001005948939264576,
+        "MobileNetV2": 0.9989940510607355
+      },
+      "threshold": 0.745,
+      "validation_count": 952,
+      "selection": "validation NLL, weights bounded [0.001,0.999]; recall>=0.90 then specificity then F1",
+      "model_ids": {
+        "CNN": "19f707027db4",
+        "MobileNetV2": "ea584b998a45"
+      }
+    }
+  },
+  "predict_checks": [
+    {
+      "file": "sample.png",
+      "http_status": 200,
+      "model_class": "NORMAL",
+      "raw_score": 0.07911160588264465,
+      "pneumonia_score": 0.07553113880390629,
+      "threshold": 0.745,
+      "gradcam_available": true
+    },
+    {
+      "file": "sample_cr.dcm",
+      "http_status": 200,
+      "model_class": "PNEUMONIA",
+      "raw_score": 0.9967244267463684,
+      "pneumonia_score": 0.9970848554976925,
+      "threshold": 0.745,
+      "gradcam_available": true
+    },
+    {
+      "file": "sample_ct.dcm",
+      "http_status": 400
+    },
+    {
+      "file": "text.jpg",
+      "http_status": 400
+    }
+  ],
+  "pdf": {
+    "http_status": 200,
+    "signature": "%PDF",
+    "pages": 2,
+    "ensemble_on_each_page": true
+  },
+  "synthetic_dicom": true,
+  "public_png_source": "Normal_posteroanterior_(PA)_chest_radiograph_(X-ray).jpg",
+  "total_verification_seconds": 7.53,
+  "traceback_found": false,
+  "container_name": "tynys-test",
+  "run_command": "docker run --rm -d --name tynys-test -p 127.0.0.1:7861:7860 tynys",
+  "host_port": 7861,
+  "container_port": 7860,
+  "port_reason": "7860 already occupied by existing local Tynys process 22696; preserved.",
+  "container_image_id": "sha256:e7aa2e2b36c4c774fe6e54132150d16cf0c502234bc393aef6979af1a70ed766",
+  "user": "tynys"
+}

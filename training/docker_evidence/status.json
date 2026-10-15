@@ -1,0 +1,224 @@
+{
+  "ensemble": {
+    "available": true,
+    "weights": {
+      "CNN": 0.001005948939264576,
+      "MobileNetV2": 0.9989940510607355
+    },
+    "threshold": 0.745,
+    "validation_count": 952,
+    "selection": "validation NLL, weights bounded [0.001,0.999]; recall>=0.90 then specificity then F1",
+    "model_ids": {
+      "CNN": "19f707027db4",
+      "MobileNetV2": "ea584b998a45"
+    }
+  },
+  "external_validation": {
+    "models": [
+      {
+        "model": "CNN",
+        "threshold": 0.47500000000000003,
+        "accuracy": 0.215,
+        "precision": 0.20304568527918782,
+        "recall": 1.0,
+        "specificity": 0.01875,
+        "f1": 0.33755274261603374,
+        "roc_auc": 0.47062499999999996,
+        "average_precision": 0.1812919620494526,
+        "TN": 3,
+        "FP": 157,
+        "FN": 0,
+        "TP": 40,
+        "cohort": "external",
+        "count": 200
+      },
+      {
+        "model": "MobileNetV2",
+        "threshold": 0.745,
+        "accuracy": 0.55,
+        "precision": 0.23958333333333334,
+        "recall": 0.575,
+        "specificity": 0.54375,
+        "f1": 0.3382352941176471,
+        "roc_auc": 0.54421875,
+        "average_precision": 0.2402071891445132,
+        "TN": 87,
+        "FP": 73,
+        "FN": 17,
+        "TP": 23,
+        "cohort": "external",
+        "count": 200
+      },
+      {
+        "model": "Ensemble",
+        "threshold": 0.745,
+        "accuracy": 0.55,
+        "precision": 0.23958333333333334,
+        "recall": 0.575,
+        "specificity": 0.54375,
+        "f1": 0.3382352941176471,
+        "roc_auc": 0.5440625,
+        "average_precision": 0.2401527968329583,
+        "TN": 87,
+        "FP": 73,
+        "FN": 17,
+        "TP": 23,
+        "cohort": "external",
+        "count": 200
+      }
+    ],
+    "available": true,
+    "metrics": {
+      "model": "MobileNetV2",
+      "cohort": "external",
+      "count": 200,
+      "threshold": 0.745,
+      "accuracy": 0.55,
+      "precision": 0.23958333333333334,
+      "recall": 0.575,
+      "specificity": 0.54375,
+      "f1": 0.3382352941176471,
+      "roc_auc": 0.54421875,
+      "TN": 87,
+      "FP": 73,
+      "FN": 17,
+      "TP": 23
+    },
+    "model_id": "ea584b998a45",
+    "config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
+    "source": "OpenI Indiana, NLM API",
+    "normal_count": 160,
+    "pneumonia_count": 40,
+    "patient_grouping": "one report UID per sample; longitudinal patient IDs unverified",
+    "seed": 42,
+    "sha256_overlap": 0,
+    "threshold_tuned_external": false
+  },
+  "dicom": {
+    "available": true,
+    "message": null
+  },
+  "xray_check": {
+    "available": true,
+    "message": null,
+    "notice": "Validation үлестірімінен ауытқу эвристикасы. Рентген екенін дәлелдемейді."
+  },
+  "mcnemar": {
+    "available": true,
+    "method": "exact McNemar (two-sided binomial)",
+    "n": 618,
+    "cnn_only_correct": 19,
+    "mobilenet_only_correct": 128,
+    "p_value": 4.832382023295393e-21,
+    "alpha": 0.05,
+    "significant": true,
+    "notice": "Жұптық тест, осы ішкі test жиынына қатысты. Пациент суреттері тәуелсіз болмауы мүмкін.",
+    "model_ids": {
+      "CNN": "19f707027db4",
+      "MobileNetV2": "ea584b998a45"
+    },
+    "config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174"
+  },
+  "ready": true,
+  "message": null,
+  "config": {
+    "classes": [
+      "NORMAL",
+      "PNEUMONIA"
+    ],
+    "image_size": [
+      224,
+      224
+    ],
+    "threshold": 0.745,
+    "seed": 42,
+    "selected_stage": "fine",
+    "tensorflow_version": "2.21.0",
+    "dataset": "paultimothymooney/chest-xray-pneumonia",
+    "use": "educational prototype; not clinical diagnosis",
+    "grouping": "filename-derived surrogate IDs, not verified patient metadata",
+    "calibration": {
+      "method": "temperature",
+      "T": 0.9799594303292329
+    },
+    "model_calibrations": {
+      "MobileNetV2": {
+        "method": "temperature",
+        "T": 0.9799594303292329
+      },
+      "CNN": {
+        "method": "temperature",
+        "T": 0.6820277027003551
+      }
+    },
+    "ensemble": {
+      "weights": {
+        "CNN": 0.001005948939264576,
+        "MobileNetV2": 0.9989940510607355
+      },
+      "threshold": 0.745,
+      "validation_count": 952,
+      "selection": "validation NLL, weights bounded [0.001,0.999]; recall>=0.90 then specificity then F1",
+      "model_ids": {
+        "CNN": "19f707027db4",
+        "MobileNetV2": "ea584b998a45"
+      }
+    }
+  },
+  "metrics": [
+    {
+      "model": "CNN",
+      "threshold": 0.47500000000000003,
+      "accuracy": 0.7152103559870551,
+      "precision": 0.7080867850098619,
+      "recall": 0.9276485788113695,
+      "specificity": 0.3593073593073593,
+      "f1": 0.8031319910514542,
+      "roc_auc": 0.8211349374140072,
+      "average_precision": 0.8929576990291581,
+      "TN": 83.0,
+      "FP": 148.0,
+      "FN": 28.0,
+      "TP": 359.0
+    },
+    {
+      "model": "MobileNetV2",
+      "threshold": 0.745,
+      "accuracy": 0.8915857605177994,
+      "precision": 0.8773584905660378,
+      "recall": 0.9612403100775194,
+      "specificity": 0.7748917748917749,
+      "f1": 0.9173859432799013,
+      "roc_auc": 0.9580746557490744,
+      "average_precision": 0.9682350864220023,
+      "TN": 179.0,
+      "FP": 52.0,
+      "FN": 15.0,
+      "TP": 372.0
+    },
+    {
+      "model": "Ensemble",
+      "threshold": 0.745,
+      "accuracy": 0.8915857605177994,
+      "precision": 0.8773584905660378,
+      "recall": 0.9612403100775194,
+      "specificity": 0.7748917748917749,
+      "f1": 0.9173859432799013,
+      "roc_auc": 0.9582760047876326,
+      "average_precision": 0.9695154176089966,
+      "TN": 179.0,
+      "FP": 52.0,
+      "FN": 15.0,
+      "TP": 372.0
+    }
+  ],
+  "model_id": "ea584b998a45",
+  "comparison_ready": true,
+  "cnn_threshold": 0.47500000000000003,
+  "comparison_message": null,
+  "tensorflow_version": "2.21.0",
+  "calibration": {
+    "method": "temperature",
+    "T": 0.9799594303292329
+  }
+}

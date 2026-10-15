@@ -1,0 +1,6 @@
+{
+  "stopped": true,
+  "removed": true,
+  "command": "docker stop tynys-test",
+  "removal": "docker run --rm automatically removed container after stop; no redundant docker rm needed."
+}
