@@ -58,7 +58,7 @@ function showAttention(r){
   const check=r.xray_check;
   $('xray-warning').hidden=false;
   $('xray-warning').classList.toggle('flagged',check?.available&&check.is_xray===false);
-  $('xray-warning').textContent=check?.available?(check.is_xray===false?'Бұл сурет рентгенге ұқсамайды — болжам сенімсіз болуы мүмкін. OOD тек үлестірімге ұқсастықты тексереді.':'OOD: validation үлестірімінен айқын ауытқу табылмады. Бұл рентген екенін дәлелдемейді.'):(check?.message||'OOD тексеруі қолжетімсіз.');
+  $('xray-warning').textContent=check?.available?(check.is_xray===false?'Сурет модель тексерілген деректерден ерекшеленеді (OOD). Рентген суреттерінде де осындай ескерту шығуы мүмкін; болжамды сақтықпен бағалаңыз.':'OOD: validation үлестірімінен айқын ауытқу табылмады. Бұл рентген екенін дәлелдемейді.'):(check?.message||'OOD тексеруі қолжетімсіз.');
   showComparison(r);
   const explanation=r.explanation;
   $('attention-tools').hidden=!explanation?.available;
@@ -95,7 +95,7 @@ $('download-result').addEventListener('click',()=>{
   const lines=['TYNYS — РЕНТГЕНДІ КЛАССИФИКАЦИЯЛАУ',new Date().toLocaleString('kk-KZ',{timeZone:'Asia/Qyzylorda'}),''];
   for(const r of results){
     const explanation=explainResult(r);
-    lines.push(`Файл: ${r.filename}`,`Модель санаты: ${r.model_class}`,`Пневмония санатының баллы: ${r.pneumonia_score}`,`Шешім шегі: ${r.threshold}`,`Модель ID: ${r.model_id}`,`Калибрлеу: ${r.calibration?'T='+r.calibration.T:'қолданылмаған'}`,r.xray_check?.available?(r.xray_check.is_xray?'OOD: validation үлестіріміне ұқсас.':'Бұл сурет рентгенге ұқсамайды — болжам сенімсіз болуы мүмкін.'):(r.xray_check?.message||'OOD қолжетімсіз.'),'',
+    lines.push(`Файл: ${r.filename}`,`Модель санаты: ${r.model_class}`,`Пневмония санатының баллы: ${r.pneumonia_score}`,`Шешім шегі: ${r.threshold}`,`Модель ID: ${r.model_id}`,`Калибрлеу: ${r.calibration?'T='+r.calibration.T:'қолданылмаған'}`,r.xray_check?.available?(r.xray_check.is_xray?'OOD: validation үлестіріміне ұқсас.':'Сурет модель тексерілген деректерден ерекшеленеді (OOD). Рентген суреттерінде де осындай ескерту шығуы мүмкін; болжамды сақтықпен бағалаңыз.'):(r.xray_check?.message||'OOD қолжетімсіз.'),'',
       explanation.title,explanation.reason,'',
       'Модель баллды қалай есептейді?',explanation.method,'',
       'Бұл нәтиже нені білдіреді?',explanation.meaning,'',

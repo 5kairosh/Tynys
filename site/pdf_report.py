@@ -101,7 +101,7 @@ def make_report(items):
                         margin, 410, usable, size=8, color=MUTED)
         check = r.get('xray_check',{})
         if check.get('available') and check.get('is_xray') is False:
-            top = paragraph(c, 'Бұл сурет рентгенге ұқсамайды — болжам сенімсіз болуы мүмкін.',margin,top-4,usable,size=8,color=HexColor('#926b2c'))
+            top = paragraph(c, 'Сурет модель тексерілген деректерден ерекшеленеді (OOD). Рентген суреттерінде де осындай ескерту шығуы мүмкін; болжамды сақтықпен бағалаңыз.',margin,top-4,usable,size=8,color=HexColor('#926b2c'))
         elif not check.get('available'):
             top = paragraph(c, 'OOD тексеруі қолжетімсіз.',margin,top-4,usable,size=7,color=MUTED)
         if r.get('calibration'):

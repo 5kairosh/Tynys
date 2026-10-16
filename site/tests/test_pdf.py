@@ -28,4 +28,4 @@ def test_pdf(count,ood_warning,model_class):
     assert 'mock-model-123' in reader.pages[0].extract_text()
     assert 'Ensemble' in reader.pages[0].extract_text()
     if ood_warning:
-        assert 'рентгенге ұқсамайды' in reader.pages[0].extract_text()
+        assert 'Рентген суреттерінде де' in reader.pages[0].extract_text()
