@@ -1,0 +1,24 @@
+{
+  "name": "Tynys defense demo",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "remoteUser": "tynys",
+  "overrideCommand": true,
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+  "forwardPorts": [7860],
+  "portsAttributes": {
+    "7860": {
+      "label": "Tynys demo",
+      "onAutoForward": "notify",
+      "protocol": "http"
+    }
+  },
+  "postStartCommand": "python .devcontainer/start.py",
+  "waitFor": "postStartCommand"
+}
