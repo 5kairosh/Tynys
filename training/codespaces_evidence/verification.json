@@ -1,0 +1,81 @@
+{
+  "url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev",
+  "checked_at": "2026-10-16T10:17:46.396153+00:00",
+  "synthetic_inputs_only": true,
+  "checks": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/static/app.js",
+      "status": 200
+    },
+    {
+      "path": "/static/style.css",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "file": "demo.png",
+      "status": 200,
+      "elapsed_s": 2.31,
+      "comparison": true,
+      "gradcam": true,
+      "ood": true
+    },
+    {
+      "file": "large.jpg",
+      "status": 200,
+      "elapsed_s": 2.98,
+      "comparison": true,
+      "gradcam": true,
+      "ood": true
+    },
+    {
+      "file": "demo.dcm",
+      "status": 200,
+      "elapsed_s": 1.17,
+      "comparison": true,
+      "gradcam": true,
+      "ood": true
+    },
+    {
+      "file": "ct.dcm",
+      "status": 400,
+      "elapsed_s": 1.01
+    },
+    {
+      "file": "bad.jpg",
+      "status": 400,
+      "elapsed_s": 0.83
+    },
+    {
+      "report": 200,
+      "pages": 2
+    }
+  ],
+  "platform": "GitHub Codespaces",
+  "codespace": "effective-space-winner-q74xxqj555vj39qq9",
+  "source_commit": "d5b38c457f528e16e908e367889711bfbfc8c201",
+  "machine": {
+    "cpus": 2,
+    "ram_gb": 8,
+    "disk_gb": 32
+  },
+  "visibility": "public",
+  "model_id": "ea584b998a45",
+  "config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
+  "browser_checks": {
+    "batch_png_dicom": true,
+    "gradcam_toggle": true,
+    "png_download": true,
+    "txt_download_two_files": true,
+    "pdf_download_two_pages": true,
+    "history_reopen": true,
+    "history_clear": true
+  }
+}
