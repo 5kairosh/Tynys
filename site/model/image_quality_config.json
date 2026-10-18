@@ -1,0 +1,13 @@
+{
+  "policy": "image_quality_v1",
+  "feature_schema": "gray_lanczos512_center90_laplacian4_over_robust_contrast_squared_v1",
+  "detail_threshold": 0.0017761404087327697,
+  "reference_percentile": 1.0,
+  "reference_count": 952,
+  "eligible_count": 947,
+  "manifest_sha256": "89fabc56d594e82ee26c6eaf3bc4b73e7a22d14df621a2c90cbe3abfdf7268d3",
+  "fitted_at": "2026-10-18T12:29:29.152299+00:00",
+  "clinically_validated": false,
+  "quality_ground_truth_available": false,
+  "notice": "Lower 1st percentile of eligible validation detail measurements. This is not a validated blur decision or a measured false-positive rate."
+}

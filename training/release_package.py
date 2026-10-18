@@ -28,6 +28,7 @@ def main():
         assert source.is_relative_to(ROOT.resolve()),name
         if source.is_file():allowed.append((name,source))
     assert any(name=='site/model/ood_params.npz' for name,_ in allowed)
+    assert any(name=='site/model/image_quality_config.json' for name,_ in allowed)
     assert any(name=='training/multilabel_colab_kz.ipynb' for name,_ in allowed)
     manifest={'commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         'excluded':'OpenI source images, OpenI-trained weights/error pixels, all training caches, venv, Git and uploaded patient images.',

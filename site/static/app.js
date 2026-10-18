@@ -28,7 +28,7 @@ $('header-status').textContent=status.ready?'Модель дайын':'Моде�
 }
 window.addEventListener('online',()=>loadStatus());
 window.addEventListener('focus',()=>loadStatus());
-function resetResult(){$('empty-result').hidden=false;$('result-content').hidden=true;$('result-tag').textContent='КҮТУДЕ';$('attention-tools').hidden=true;$('attention-unavailable').hidden=true;$('comparison-panel').hidden=true;results=[];}
+function resetResult(){$('empty-result').hidden=false;$('result-content').hidden=true;$('result-tag').textContent='КҮТУДЕ';$('attention-tools').hidden=true;$('attention-unavailable').hidden=true;$('comparison-panel').hidden=true;$('quality-panel').hidden=true;results=[];}
 function selectFiles(files){if(busy)return;error('');const list=Array.from(files);if(!list.length)return;if(list.length>10){error('Бір ретте 10 суретке дейін таңдаңыз.');return;}for(const f of list){if(!/\.(jpe?g|png|dcm)$/i.test(f.name)){error('Тек JPG, JPEG, PNG немесе DICOM таңдаңыз.');return;}if(f.size>12*1024*1024){error('Әр суреттің көлемі 12 МБ-тан аспауы керек.');return;}if(!f.size){error('Бос файлды жүктеу мүмкін емес.');return;}}selected=list;activeHistoryId=null;renderHistory();resetResult();if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(selected[0]);$('preview-image').src=previewUrl;const isDicom=/\.dcm$/i.test(selected[0].name);$('preview-image').hidden=isDicom;$('dicom-placeholder').hidden=!isDicom;$('preview').hidden=false;$('dropzone').hidden=true;$('file-info').hidden=false;$('file-name').textContent=selected[0].name;$('file-size').textContent=(selected[0].size/1024).toFixed(0)+' КБ'+(selected.length>1?` · ${selected.length} сурет таңдалды`:'');$('file-list').textContent=selected.length>1?selected.slice(1).map(f=>f.name).join(' · '):'';updateButton();}
 $('image-input').addEventListener('change',e=>selectFiles(e.target.files));
 $('dropzone').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('image-input').click();}});
@@ -61,8 +61,9 @@ function explainResult(r){
 
 function showResult(r){
   if(r.preview){$('preview-image').src=r.preview;$('preview-image').hidden=false;$('dicom-placeholder').hidden=true;}
-  const pn=r.model_class==='PNEUMONIA',review=needsReview(r);$('empty-result').hidden=true;$('result-content').hidden=false;$('result-tag').textContent=review?'БАҒАЛАУ ШЕКТЕЛГЕН':'ДАЙЫН';$('result-category').textContent=review?'ҚОРЫТЫНДЫ БЕРІЛМЕДІ':r.model_class;$('result-category').classList.toggle('pneumonia',pn||review);$('result-title').textContent=review?assessmentFor(r).title:pn?'Пневмония санатына жіктелді':'Қалыпты санатқа жіктелді';$('result-explanation').textContent=explainResult(r).reason;$('assessment-note').hidden=!review;$('assessment-note').textContent=review?assessmentFor(r).notice:'';$('score-value').textContent=decimal(r.pneumonia_score);$('calibration-note').textContent=r.calibration?`Validation-да калибрленген балл (T=${decimal(r.calibration.T)}). Клиникалық ықтималдық ретінде тексерілмеген.`:'Калибрлеу қолданылмаған (T=1).';$('score-fill').style.width=(r.pneumonia_score*100)+'%';$('score-fill').style.background=pn||review?'#ba9651':'var(--green)';$('threshold-marker').style.left=(r.threshold*100)+'%';$('threshold-label').textContent='Шек: '+decimal(r.threshold);$('result-time').textContent=`${r.width} × ${r.height} px · ${r.elapsed_ms} мс`;$('result-model').textContent='MobileNetV2';showAttention(r);const container=$('batch-results');container.replaceChildren();if(results.length>1)for(const item of results){const row=document.createElement('div'),name=document.createElement('span'),label=document.createElement('strong');name.textContent=item.filename;label.textContent=resultLabel(item)+' · '+decimal(item.pneumonia_score);row.append(name,label);container.append(row);}}
+  const pn=r.model_class==='PNEUMONIA',review=needsReview(r);$('empty-result').hidden=true;$('result-content').hidden=false;$('result-tag').textContent=review?'БАҒАЛАУ ШЕКТЕЛГЕН':'ДАЙЫН';$('result-category').textContent=review?'ҚОРЫТЫНДЫ БЕРІЛМЕДІ':r.model_class;$('result-category').classList.toggle('pneumonia',pn||review);$('result-title').textContent=review?assessmentFor(r).title:pn?'Пневмония санатына жіктелді':'Қалыпты санатқа жіктелді';$('result-explanation').textContent=explainResult(r).reason;$('assessment-note').hidden=!review;$('assessment-note').textContent=review?assessmentFor(r).notice:'';$('score-value').textContent=decimal(r.pneumonia_score);$('calibration-note').textContent=r.calibration?`Validation-да калибрленген балл (T=${decimal(r.calibration.T)}). Клиникалық ықтималдық ретінде тексерілмеген.`:'Калибрлеу қолданылмаған (T=1).';$('score-fill').style.width=(r.pneumonia_score*100)+'%';$('score-fill').style.background=pn||review?'#ba9651':'var(--green)';$('threshold-marker').style.left=(r.threshold*100)+'%';$('threshold-label').textContent='Шек: '+decimal(r.threshold);$('result-time').textContent=`${r.width} × ${r.height} px · ${r.elapsed_ms} мс`;$('result-model').textContent='MobileNetV2';showAttention(r);const container=$('batch-results');container.replaceChildren();if(results.length>1)for(const item of results){const row=document.createElement('div'),name=document.createElement('span'),label=document.createElement('strong');name.textContent=item.filename;label.textContent=resultLabel(item)+' · '+decimal(item.pneumonia_score)+(item.quality?.status==='warning'?' · Сапа ескертуі':!item.quality?.available?' · Сапа тексерілмеді':'');row.append(name,label);container.append(row);}}
 function showAttention(r){
+  showQuality(r);
   const check=r.xray_check;
   $('xray-warning').hidden=false;
   $('xray-warning').classList.toggle('flagged',needsReview(r));
@@ -78,6 +79,24 @@ function showAttention(r){
     $('attention-unavailable').textContent=explanation?.message||'Жылу картасы қолжетімсіз.';
     $('preview-image').src=r.preview||previewUrl;
   }
+}
+function qualityLines(r){
+  const q=r.quality;
+  if(!q?.available)return ['Сурет сапасын тексеру орындалмады.'];
+  return [q.summary,...q.warnings.map(w=>`${w.title}. ${w.action}`),q.notice,'Сапа тексеруі модель баллын өзгертпейді.'];
+}
+function showQuality(r){
+  const q=r.quality,warning=!q?.available||q.status==='warning';
+  $('quality-panel').hidden=false;
+  $('quality-panel').classList.toggle('flagged',warning);
+  $('quality-tag').textContent=!q?.available?'ТЕКСЕРІЛМЕДІ':warning?'НАЗАР АУДАРЫҢЫЗ':'ЕСКЕРТУ ЖОҚ';
+  $('quality-summary').textContent=q?.available?q.summary:'Сурет сапасын тексеру орындалмады.';
+  const list=$('quality-warnings');list.replaceChildren();
+  for(const item of q?.warnings||[]){
+    const row=document.createElement('li'),title=document.createElement('strong'),action=document.createElement('span');
+    title.textContent=item.title;action.textContent=item.action;row.append(title,action);list.append(row);
+  }
+  $('quality-notice').textContent=(q?.notice||'Техникалық сапаны бөлек тексеріңіз; кеуденің толық көрінуі расталмаған.')+' Сапа тексеруі модель баллын өзгертпейді.';
 }
 function setAttentionView(show){
   const r=results[0];
@@ -107,6 +126,7 @@ $('download-result').addEventListener('click',()=>{
       explanation.title,explanation.reason,'',
       'Модель баллды қалай есептейді?',explanation.method,'',
       'Бұл нәтиже нені білдіреді?',explanation.meaning,'',
+      'Сурет сапасы — бөлек техникалық тексеру',...qualityLines(r),'',
       'Суреттегі модель назары',r.explanation?.available?`Grad-CAM картасы ${r.explanation.target_class} санатына есептелді. Қызыл-сары аймақтар осы санатқа оң ықпал еткен жуық белсенділікті көрсетеді. Белгіленген суретті сайттағы бөлек батырмамен жүктеуге болады.`:(r.explanation?.message||'Жылу картасы қолжетімсіз.'),'',
       'Түсіндірудің шектеуі',explanation.limit,'',
       needsReview(r)?'Техникалық баллдар — қорытынды емес':'Модельдердің осы суреттегі болжамдары',...(r.comparison?.available?r.comparison.models.map(m=>`${m.name}: ${m.model_class}; балл: ${m.pneumonia_score}; шешім шегі: ${m.threshold}`):[r.comparison?.message||'Салыстыру қолжетімсіз.']),
@@ -179,6 +199,7 @@ function renderHistory(){
     const details=document.createElement('span');details.className='history-item-details';
     details.textContent=`${resultLabel(entry.result)} · балл ${decimal(entry.result.pneumonia_score)} · ${entry.time.toLocaleTimeString('kk-KZ',{timeZone:'Asia/Qyzylorda',hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
     const comparison=document.createElement('small');comparison.textContent=entry.result.comparison?.available?(entry.result.comparison.agreement?'Модельдер: болжамдар сәйкес':'Модельдер: болжамдар әртүрлі'):'MobileNetV2 нәтижесі';
+    comparison.textContent+=' · Сапа: '+(!entry.result.quality?.available?'тексерілмеді':entry.result.quality.status==='warning'?`${entry.result.quality.warnings.length} ескерту`:'ескерту жоқ');
     content.append(filename,details,comparison);
     const button=document.createElement('button');button.type='button';button.className='history-open';button.textContent=entry.id===activeHistoryId?'Ашық':'Қайта ашу';button.setAttribute('aria-label',`${entry.file.name} нәтижесін қайта ашу`);button.disabled=busy;button.addEventListener('click',()=>openHistoryEntry(entry.id));
     row.append(thumbnail,content,button);list.append(row);

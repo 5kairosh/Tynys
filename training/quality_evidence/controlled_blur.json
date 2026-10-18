@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-10-18T12:32:21.500832+00:00",
+  "reference_images": 20,
+  "sha256_verified": 20,
+  "transformation": "thumbnail longest side 512, RGB GaussianBlur radius=4",
+  "original_low_detail_warnings": 0,
+  "added_blur_low_detail_warnings": 19,
+  "detail_measure_decreased": 20,
+  "selection": "first 20 validation SHA256 values in sorted order",
+  "independent_of_reference_fitting": false,
+  "clinically_validated": false,
+  "notice": "Controlled artificial degradation of reference images only. No clinical image-quality labels or clinical sensitivity/specificity estimates."
+}

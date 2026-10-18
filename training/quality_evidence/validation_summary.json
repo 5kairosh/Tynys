@@ -1,0 +1,35 @@
+{
+  "checked_at": "2026-10-18T12:30:56.025296+00:00",
+  "policy": "image_quality_v1",
+  "quality_source_sha256": "8e698ac00065e78c1197123562dbbf5e275d1004fd5d8dbc02d5f4d2792ef71f",
+  "manifest_sha256": "89fabc56d594e82ee26c6eaf3bc4b73e7a22d14df621a2c90cbe3abfdf7268d3",
+  "count": 952,
+  "sha256_verified": 952,
+  "classes": {
+    "NORMAL": 270,
+    "PNEUMONIA": 682
+  },
+  "with_warning": 18,
+  "without_warning": 934,
+  "warning_fraction": 0.018907563025210083,
+  "warning_counts": {
+    "low_detail": 10,
+    "unusual_shape": 8,
+    "low_resolution": 5
+  },
+  "thresholds": {
+    "minimum_side_px": 224,
+    "dark_p95": 0.18,
+    "bright_p05": 0.82,
+    "minimum_p95_p05_contrast": 0.1,
+    "minimum_aspect_ratio": 0.45,
+    "maximum_aspect_ratio": 2.2,
+    "minimum_normalized_laplacian_variance": 0.0017761404087327697
+  },
+  "detail_reference_fitted": true,
+  "reference_percentile": 1.0,
+  "clinically_validated": false,
+  "quality_ground_truth_available": false,
+  "false_positive_rate": null,
+  "notice": "Warning frequency on the reference data only. The detail cutoff is fitted at the fixed lower 1st percentile of eligible validation measurements; other thresholds are engineering constants. No image-quality ground truth: sensitivity, specificity and false-positive rate cannot be estimated."
+}

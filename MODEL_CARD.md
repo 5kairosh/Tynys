@@ -109,6 +109,23 @@ Space интернетке осы тапсырмада жарияланған ж
 
 ## English summary
 
+### Advisory image-quality checks (2026-10-18)
+
+`image_quality_v1` measures grayscale pixel brightness, robust contrast, original resolution,
+aspect ratio and normalized Laplacian detail on a thumbnail of at most 512 pixels per side.
+The central 90% is inspected. Only the detail cutoff is reference fitted: the lower 1st percentile
+of 947 eligible measurements from all 952 SHA-verified validation images (0.0017761404087327697).
+Other limits are engineering constants. Configuration: `site/model/image_quality_config.json`.
+
+Warnings are advisory and appear in the UI, per-file history/batch entries, TXT and PDF reports.
+They do not change model pixels, weights, calibration, the 0.745 decision threshold or the OOD guard.
+For DICOM, only the rendered PNG is measured; original acquisition/exposure quality is not assessed.
+Missing/broken quality parameters produce an unavailable state, not a quality pass.
+Image-quality labels are unavailable: reference warning frequency is not false-positive rate,
+sensitivity, specificity or clinical validation. Anatomical coverage/cropping and X-ray authenticity
+are not detected. Users must inspect anatomical coverage themselves. Reproduction and limits:
+`training/QUALITY_CHECK_KZ.txt`.
+
 ### OOD display guard (2026-10-18)
 
 `ood_guard_v1` withholds the headline NORMAL/PNEUMONIA classification when the existing

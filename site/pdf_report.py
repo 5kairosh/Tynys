@@ -97,15 +97,24 @@ def make_report(items):
         paragraph(c, 'Түпнұсқа рентген', margin, 624, image_width, size=9, bold=True)
         explanation = r.get('explanation', {})
         paragraph(c, 'Grad-CAM: '+r['model_class'], margin+image_width+gap, 624, image_width, size=9, bold=True)
-        fitted_image(c, original, margin, 424, image_width, 180)
+        fitted_image(c, original, margin, 450, image_width, 154)
         if explanation.get('available'):
             overlay = base64.b64decode(explanation['overlay'].split(',',1)[1])
-            fitted_image(c, overlay, margin+image_width+gap, 424, image_width, 180)
+            fitted_image(c, overlay, margin+image_width+gap, 450, image_width, 154)
         else:
             paragraph(c, explanation.get('message','Жылу картасы қолжетімсіз.'),
                       margin+image_width+gap, 505, image_width, size=9, color=MUTED)
         top = paragraph(c, 'Сары-қызыл түс таңдалған санатқа оң ықпал еткен жуық белсенділікті көрсетеді. Бұл ауру ошағы немесе оның шекарасы емес.',
-                        margin, 410, usable, size=8, color=MUTED)
+                        margin, 436, usable, size=8, color=MUTED)
+        quality = r.get('quality', {})
+        top = paragraph(c, 'Сурет сапасы: '+(quality.get('summary', 'Тексеру орындалмады.')),
+                        margin, top-5, usable, size=8, bold=True)
+        if quality.get('available'):
+            titles = '; '.join(w['title'] for w in quality['warnings'])
+            if titles:
+                top = paragraph(c, titles+'.', margin, top-3, usable, size=8, color=HexColor('#926b2c'))
+        top = paragraph(c, 'Сапа тексеруі - техникалық эвристика; модель баллын өзгертпейді. Кеуденің толық көрінуі расталмайды.',
+                        margin, top-3, usable, size=7, color=MUTED)
         if review:
             top = paragraph(c, assessment['message']+' '+assessment['notice'],margin,top-4,usable,size=8,color=HexColor('#926b2c'))
         if r.get('calibration'):

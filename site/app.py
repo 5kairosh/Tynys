@@ -21,6 +21,7 @@ from starlette.concurrency import run_in_threadpool
 
 from calibration import calibrate_score, validate_calibration
 from assessment import assess_input, POLICY
+from image_quality import check_image_quality, unavailable_quality, quality_status
 from ensemble import ensemble_score, validate_ensemble
 from ood import OODDetector
 from dicom_input import dicom_to_png, dicom_status
@@ -139,7 +140,7 @@ class Engine:
             return {"available":False,"message":"Ensemble конфигурациясы немесе CNN қолжетімсіз. Негізгі модель жұмыс істейді."}
 
     def status(self):
-        return {"assessment_policy": {"name": POLICY, "clinically_validated": False}, "ensemble": self.ensemble_status(), "external_validation": self.external_status(), "dicom": dicom_status(), "xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
+        return {"quality_check": quality_status(), "assessment_policy": {"name": POLICY, "clinically_validated": False}, "ensemble": self.ensemble_status(), "external_validation": self.external_status(), "dicom": dicom_status(), "xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
                 "config": self.config, "metrics": self.metrics,
                 "model_id": self.fingerprint,
                 "comparison_ready": self.cnn_model is not None,
@@ -234,6 +235,13 @@ class Engine:
                 # normalization. MobileNet Rescaling is already inside the model.
                 original_image = tf.io.decode_image(data, channels=3, expand_animations=False)
                 original_image.set_shape([None, None, 3])
+                try:
+                    quality = check_image_quality(original_image.numpy())
+                    if is_dicom:
+                        quality['notice'] += ' DICOM үшін тек түрлендірілген PNG пиксельдері тексерілді; бастапқы экспозиция бағаланбайды.'
+                except Exception:
+                    logging.exception('Advisory image quality check unavailable')
+                    quality = unavailable_quality()
                 image = tf.image.resize_with_pad(tf.cast(original_image, tf.float32), *self.config["image_size"])
                 raw_score = float(self.model(image[None, ...], training=False).numpy()[0, 0])
                 score = calibrate_score(raw_score, self.config.get("calibration"))
@@ -285,7 +293,7 @@ class Engine:
             raise HTTPException(422, "Суретті модельмен өңдеу мүмкін болмады.") from exc
         if not math.isfinite(score) or not 0 <= score <= 1:
             raise HTTPException(500, "Модель жарамсыз балл берді.")
-        return {"assessment": assess_input(xray_check),
+        return {"assessment": assess_input(xray_check), "quality": quality,
                 "model_class": self.config["classes"][int(score >= threshold)],
                 "input_format": "DICOM" if is_dicom else "image",
                 "preview": "data:image/png;base64,"+base64.b64encode(data).decode("ascii") if is_dicom else None,

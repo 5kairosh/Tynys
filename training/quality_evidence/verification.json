@@ -1,0 +1,47 @@
+{
+  "checked_at": "2026-10-18T12:34:44.605153+00:00",
+  "policy": "image_quality_v1",
+  "local_pytest": {
+    "passed": 89,
+    "warnings": 1,
+    "duration_seconds": 28.69,
+    "command": "site/.venv/Scripts/python -m pytest site/tests training/tests -q"
+  },
+  "local_live": {
+    "port": 7864,
+    "synthetic_cases": {
+      "synthetic-sharp.png": [],
+      "synthetic-blurred.png": [
+        "low_detail"
+      ],
+      "synthetic-dark.png": [
+        "low_contrast",
+        "very_dark"
+      ],
+      "synthetic-bright.png": [
+        "low_contrast",
+        "very_bright"
+      ],
+      "synthetic-small-dark-wide.png": [
+        "low_contrast",
+        "low_resolution",
+        "unusual_shape",
+        "very_dark"
+      ]
+    },
+    "history_reopen_verified": true,
+    "new_selection_hides_stale_quality": true,
+    "no_warning_ui_verified": true,
+    "txt_download_verified": true,
+    "pdf_download_verified": true,
+    "pdf_pages": 2,
+    "pdf_visually_rendered": true,
+    "browser_console_errors": 0
+  },
+  "model_config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
+  "quality_config_sha256": "b4bcc2ec6a65dc30fa0d0c1a75286557bd7497d71a7e6ea604ae220b06d1335c",
+  "model_threshold": 0.745,
+  "clinically_validated": false,
+  "anatomical_crop_checked": false,
+  "remote_deployment_verified": false
+}

@@ -31,6 +31,7 @@ def test_protocol(client):
     assert prediction.status_code==200,prediction.text
     r=prediction.json()
     assert 'xray_check' in r and r['comparison']['available']
+    assert r['quality']['available'] and r['quality']['policy'] == 'image_quality_v1'
     from app import engine
     tf=engine.tf
     x=tf.io.decode_image(raw,channels=3,expand_animations=False)
@@ -42,6 +43,8 @@ def test_protocol(client):
     converted=client.post('/api/predict',files={'file':('sample.dcm',dicom())})
     assert converted.status_code==200,converted.text
     assert converted.json()['preview'].startswith('data:image/png;base64,')
+    assert converted.json()['quality']['available']
+    assert 'түрлендірілген PNG' in converted.json()['quality']['notice']
     report=client.post('/api/report',files=[('files',('a.png',raw)),('files',('b.dcm',dicom()))])
     assert report.status_code==200,report.text
     assert len(PdfReader(io.BytesIO(report.content)).pages)==2
