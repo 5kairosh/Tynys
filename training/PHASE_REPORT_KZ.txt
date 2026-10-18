@@ -145,3 +145,18 @@ API/job log дәлелдері:training/ci_evidence/. Токендер файл�
 README/CI badge/статус/10-слайд/айтылым жаңартылды.
 Тесттен кейінгі құжаттама commit-і release manifest-ке енгізіледі.
 HF Space жариялауы орындалған жоқ.
+
+
+2026-10-18 — КЕМШІЛІКТЕРДІ ТҮЗЕТУ, 1-КЕЗЕҢ
+OOD ауытқуы немесе қолжетімсіз тексеру кезінде санат бойынша қорытынды берілмейді.
+Жаңа күй: «Сенімді бағалау мүмкін емес». Сайт, тарих, TXT/PDF бірдей күйді көрсетеді.
+Баллдар мен техникалық санаттар сақталады; күмәнді суретте түпнұсқа әдепкіде ашылады.
+Модель, калибрлеу және шектер өзгермеген. Бұл сақтық ережесінің қамтуы,
+таңдамалы қатесі және клиникалық сапасы әлі бағаланбаған.
+Жергілікті: 65 тест өтті, 1 StarletteDeprecationWarning, 37,24 с.
+GitHub CI: success; https://github.com/5kairosh/Tynys/actions/runs/39125943690
+Тексерілген code commit: eed3b495a684a09a883235ed4d152b82bc3ed999.
+Codespaces: /api/status ready=true, comparison_ready=true, ood_guard_v1.
+Синтетикалық PNG: HTTP 200, review_required; PDF HTTP 200, 2 бет.
+Браузерде жаңа күй, тарихтан ашу, TXT/PDF жүктеу және PDF орналасуы тексерілді.
+Дәлел: training/guard_evidence/verification.json. Қалған жоспар: PROJECT_LIMITATIONS_KZ.txt.

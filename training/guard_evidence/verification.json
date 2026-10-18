@@ -26,5 +26,27 @@
   "model_threshold": 0.745,
   "clinically_validated": false,
   "coverage_evaluated": false,
-  "selective_risk_evaluated": false
+  "selective_risk_evaluated": false,
+  "remote": {
+    "url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev",
+    "source_commit": "eed3b495a684a09a883235ed4d152b82bc3ed999",
+    "ready": true,
+    "policy": "ood_guard_v1",
+    "prediction_http": 200,
+    "review_required": true,
+    "pdf_http": 200,
+    "pdf_pages": 2,
+    "synthetic_input_only": true,
+    "public_port_verified": true,
+    "browser_review_required_verified": true,
+    "browser_screenshot": "outputs/tynys-guard-stage1-online.png"
+  },
+  "ci": {
+    "run_id": 39125943690,
+    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39125943690",
+    "source_commit": "eed3b495a684a09a883235ed4d152b82bc3ed999",
+    "status": "success",
+    "checked_at": "2026-10-18T12:13:30.463998+00:00",
+    "note": "Run success verified via public API. The 65-test count above is from local pytest; hosted step text was unavailable."
+  }
 }
