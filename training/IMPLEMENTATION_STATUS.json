@@ -218,6 +218,9 @@
     "reference_with_warning": 18,
     "quality_ground_truth_available": false,
     "local_tests": 89,
-    "remote_deployment_verified": false
+    "remote_deployment_verified": true,
+    "deployed_source_commit": "a86a02c53774e631fc37c3bc13b69ee52c3d62b3",
+    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39127904736",
+    "ci_status": "success"
   }
 }

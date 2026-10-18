@@ -43,5 +43,72 @@
   "model_threshold": 0.745,
   "clinically_validated": false,
   "anatomical_crop_checked": false,
-  "remote_deployment_verified": false
+  "remote_deployment_verified": true,
+  "remote": {
+    "checked_at": "2026-10-18T12:36:30.342405+00:00",
+    "url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev",
+    "source_commit": "a86a02c53774e631fc37c3bc13b69ee52c3d62b3",
+    "ready": true,
+    "quality_status": {
+      "available": true,
+      "policy": "image_quality_v1",
+      "clinically_validated": false,
+      "reference_count": 952,
+      "detail_threshold": 0.0017761404087327697
+    },
+    "synthetic_cases": {
+      "synthetic-sharp.png": {
+        "http": 200,
+        "warnings": []
+      },
+      "synthetic-blurred.png": {
+        "http": 200,
+        "warnings": [
+          "low_detail"
+        ]
+      },
+      "synthetic-dark.png": {
+        "http": 200,
+        "warnings": [
+          "low_contrast",
+          "very_dark"
+        ]
+      },
+      "synthetic-bright.png": {
+        "http": 200,
+        "warnings": [
+          "low_contrast",
+          "very_bright"
+        ]
+      },
+      "synthetic-small-dark-wide.png": {
+        "http": 200,
+        "warnings": [
+          "low_contrast",
+          "low_resolution",
+          "unusual_shape",
+          "very_dark"
+        ]
+      }
+    },
+    "cr_dicom_http": 200,
+    "ct_dicom_http": 400,
+    "text_jpg_http": 400,
+    "pdf_http": 200,
+    "pdf_pages": 2,
+    "synthetic_uploads_only": true,
+    "browser_quality_warning_verified": true,
+    "browser_txt_download_verified": true,
+    "browser_console_errors": 0,
+    "screenshot": "training/quality_evidence/ui_online.jpg",
+    "synthetic_pdf_example": "training/quality_evidence/synthetic_report.pdf"
+  },
+  "ci": {
+    "run_id": 39127904736,
+    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39127904736",
+    "source_commit": "a86a02c53774e631fc37c3bc13b69ee52c3d62b3",
+    "status": "success",
+    "checked_at": "2026-10-18T12:40:01.955202+00:00",
+    "note": "Success verified via GitHub API; 89-test count is the local pytest result."
+  }
 }

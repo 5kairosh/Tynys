@@ -30,6 +30,8 @@ OOD ауытқуы байқалса немесе тексеру орындалм
 төменгі 1-процентиль арқылы есептелген. Ескертулер сайтта, тарихта және TXT/PDF-те көрсетіледі.
 Бұл тексеру модель баллын өзгертпейді және рентгенді, анатомиялық қиылуды не клиникалық сапаны растамайды.
 Сипаттама: `training/QUALITY_CHECK_KZ.txt`; параметр: `site/model/image_quality_config.json`.
+Жергілікті 89 тест өтті. [Осы кодтың CI тексеруі сәтті](https://github.com/5kairosh/Tynys/actions/runs/39127904736) (code commit `a86a02c53774e631fc37c3bc13b69ee52c3d62b3`).
+Онлайн PNG/DICOM/PDF тексеру дәлелі: `training/quality_evidence/verification.json`.
 
 Hugging Face Docker Space-қа осы репозиторий мазмұнын салыңыз. Түбірдегі Dockerfile қолданылады.
 Жергілікті іске қосу: `site/start.bat`. Hugging Face Space-қа жарияланған жоқ; Codespaces демонстрациясы төменде.

@@ -74,7 +74,7 @@ CPU тексеруі өтті. CUDA жоқтығы/cuInit 303 хабарлама
 2. Репозиторий түбіріне Dockerfile мен README.md, сондай-ақ site бумасын салыңыз.
    README.md YAML басында `sdk: docker` және `app_port: 7860` сақталуы керек.
 3. site/model ішінде екі binary .keras модель, model_config.json, test_metrics.csv,
-   ood_params.npz, mcnemar.json және external_validation.json бірге болуы керек.
+   ood_params.npz, mcnemar.json, external_validation.json және image_quality_config.json бірге болуы керек.
 4. Build біткен соң Space Logs пен `/api/status` тексеріңіз. Контейнер 0.0.0.0:7860 тыңдайды.
    Venv, cache, пайдаланушы суреттері, OpenI суреттері мен multi-label салмақтарын жүктемеңіз.
 
