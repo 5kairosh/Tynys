@@ -6,6 +6,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 
 from PIL import Image
+from assessment import assess_input
 from reportlab.lib.colors import HexColor
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
@@ -58,6 +59,8 @@ def make_report(items):
     date = datetime.now(timezone(timedelta(hours=5))).strftime('%d.%m.%Y %H:%M')
     for index, (original, r) in enumerate(items, 1):
         positive = r['model_class'] == 'PNEUMONIA'
+        assessment = assess_input(r.get('xray_check'))
+        review = assessment['status'] == 'review_required'
         c.setFillColor(GREEN)
         c.setFont('TynysBold', 27)
         c.drawString(margin, page_height-58, 'tynys.')
@@ -73,17 +76,21 @@ def make_report(items):
         if len(filename) > 90:
             filename = filename[:87]+'...'
         paragraph(c, 'Файл: '+filename, margin, 746, usable, size=9)
-        paragraph(c, 'Модель санаты', margin, 713, usable, size=8, color=MUTED)
+        paragraph(c, 'Бағалау күйі' if review else 'Модель санаты', margin, 713, usable, size=8, color=MUTED)
         c.setFillColor(GREEN if not positive else HexColor('#926b2c'))
-        c.setFont('TynysBold', 20)
-        c.drawString(margin, 674, r['model_class'])
+        if review:
+            paragraph(c, assessment['title'], margin, 695, 246, size=14, bold=True)
+            paragraph(c, 'Техникалық санат: '+r['model_class'], margin, 650, usable, size=8, color=MUTED)
+        else:
+            c.setFont('TynysBold', 20)
+            c.drawString(margin, 674, r['model_class'])
         c.setFillColor(INK)
         c.setFont('TynysBold', 11)
         c.drawString(300, 692, 'Балл: '+decimal(r['pneumonia_score']))
         c.setFont('TynysSans', 9)
         c.drawString(300, 674, 'Шешім шегі: '+decimal(r['threshold']))
         paragraph(c, f'MobileNetV2  /  {r["width"]} × {r["height"]} px  /  модель ID: {r["model_id"]}',
-                  margin, 654, usable, size=8, color=MUTED)
+                  margin, 636 if review else 654, usable, size=8, color=MUTED)
 
         gap = 16
         image_width = (usable-gap)/2
@@ -99,23 +106,20 @@ def make_report(items):
                       margin+image_width+gap, 505, image_width, size=9, color=MUTED)
         top = paragraph(c, 'Сары-қызыл түс таңдалған санатқа оң ықпал еткен жуық белсенділікті көрсетеді. Бұл ауру ошағы немесе оның шекарасы емес.',
                         margin, 410, usable, size=8, color=MUTED)
-        check = r.get('xray_check',{})
-        if check.get('available') and check.get('is_xray') is False:
-            top = paragraph(c, 'Сурет модель тексерілген деректерден ерекшеленеді (OOD). Рентген суреттерінде де осындай ескерту шығуы мүмкін; болжамды сақтықпен бағалаңыз.',margin,top-4,usable,size=8,color=HexColor('#926b2c'))
-        elif not check.get('available'):
-            top = paragraph(c, 'OOD тексеруі қолжетімсіз.',margin,top-4,usable,size=7,color=MUTED)
+        if review:
+            top = paragraph(c, assessment['message']+' '+assessment['notice'],margin,top-4,usable,size=8,color=HexColor('#926b2c'))
         if r.get('calibration'):
             top = paragraph(c, 'Validation калибрлеуі: T='+decimal(r['calibration']['T'])+'. Клиникалық ықтималдық ретінде тексерілмеген.',margin,top-3,usable,size=7,color=MUTED)
-        top = paragraph(c, 'Неге бұл санат таңдалды?', margin, top-13, usable, size=11, bold=True)
+        top = paragraph(c, 'Техникалық санат қалай есептелді?' if review else 'Неге бұл санат таңдалды?', margin, top-10, usable, size=10, bold=True)
         relation = 'шекке тең немесе одан жоғары' if positive else 'шектен төмен'
         sign = '>=' if positive else '<'
         reason = (f'Модель баллы {decimal(r["pneumonia_score"],6)}, ал сақталған шек {decimal(r["threshold"],6)}. '
                   f'Балл {relation} ({decimal(r["pneumonia_score"],6)} {sign} {decimal(r["threshold"],6)}), '
                   f'сондықтан модель {r["model_class"]} санатын таңдады. Жіктеу толық дәлдіктегі баллмен жасалады.')
-        top = paragraph(c, reason, margin, top-9, usable, size=9)
+        top = paragraph(c, reason, margin, top-7, usable, size=8)
         comparison = r.get('comparison', {})
         if comparison.get('available'):
-            top = paragraph(c, 'Осы суреттегі модельдер', margin, top-11, usable, size=10, bold=True)
+            top = paragraph(c, 'Техникалық баллдар — қорытынды емес' if review else 'Осы суреттегі модельдер', margin, top-8, usable, size=9, bold=True)
             for model in comparison['models']:
                 text = f'{model["name"]}: {model["model_class"]} / балл: {decimal(model["pneumonia_score"])} / шек: {decimal(model["threshold"])}'
                 top = paragraph(c, text, margin, top-3, usable, size=8)
@@ -124,6 +128,8 @@ def make_report(items):
         top = paragraph(c, 'Нәтижені түсіндіру', margin, top-12, usable, size=11, bold=True)
         meaning = ('Модель суретті пневмония санатына жатқызды. Бұл адамның пневмониямен ауырғанын өздігінен растамайды.'
                    if positive else 'Модель баллы пневмония санатын таңдау шегіне жетпеді. Бұл пневмонияның жоқтығын немесе адамның толық сау екенін дәлелдемейді.')
+        if review:
+            meaning = 'Санат бойынша қорытынды берілмеді. Модельдер бір санатты таңдаса да, бұл ескерту жойылмайды.'
         top = paragraph(c, meaning, margin, top-9, usable, size=9)
         top = paragraph(c, 'Шектеуі', margin, top-12, usable, size=10, bold=True)
         top = paragraph(c, 'Grad-CAM соңғы 7 × 7 белгілер картасынан үлкейтіледі. Карта дәл шекара, клиникалық дәлел немесе нақты медициналық белгі атауын бермейді. Балл диагноздың сенімділік пайызы емес.',

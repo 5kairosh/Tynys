@@ -37,35 +37,43 @@ for(const type of ['dragleave','drop'])$('dropzone').addEventListener(type,e=>{e
 $('dropzone').addEventListener('drop',e=>selectFiles(e.dataTransfer.files));
 $('remove-image').addEventListener('click',()=>{if(busy)return;activeHistoryId=null;renderHistory();selected=[];if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;$('preview-image').removeAttribute('src');$('preview').hidden=true;$('dropzone').hidden=false;$('file-info').hidden=true;$('file-list').textContent='';$('image-input').value='';resetResult();error('');updateButton();});
 
+function assessmentFor(r){
+  if(r.assessment?.policy==='ood_guard_v1'&&['classified','review_required'].includes(r.assessment.status))return r.assessment;
+  return {status:'review_required',title:'Сенімді бағалау мүмкін емес',message:'Бағалау күйі алынбады. Санат бойынша қорытынды берілмейді. Сайтты жаңартып, қайта талдаңыз.',notice:'Төмендегі модель баллдары тек техникалық нәтиже.'};
+}
+const needsReview=r=>assessmentFor(r).status==='review_required';
+const resultLabel=r=>needsReview(r)?assessmentFor(r).title:r.model_class;
+
 function explainResult(r){
+  const assessment=assessmentFor(r),review=needsReview(r);
   const positive=r.pneumonia_score>=r.threshold;
   const label=positive?'PNEUMONIA':'NORMAL';
   const relation=positive?'осы шекке тең немесе одан жоғары':'осы шектен төмен';
   const comparison=`${decimal(r.pneumonia_score,6)} ${positive?'≥':'<'} ${decimal(r.threshold,6)}`;
   return {
-    title:positive?'Неге PNEUMONIA деп жіктеді?':'Неге NORMAL деп жіктеді?',
-    reason:`Модель суретке ${decimal(r.pneumonia_score,6)} балл берді. Сақталған шешім шегі — ${decimal(r.threshold,6)}. Балл ${relation} (${comparison}). Сондықтан жіктеу ережесі ${label} санатын таңдады. Салыстыру толық дәлдіктегі баллмен жасалады.`,
+    title:review?'Неге санат бойынша қорытынды берілмеді?':positive?'Неге PNEUMONIA деп жіктеді?':'Неге NORMAL деп жіктеді?',
+    reason:review?assessment.message:`Модель суретке ${decimal(r.pneumonia_score,6)} балл берді. Сақталған шешім шегі — ${decimal(r.threshold,6)}. Балл ${relation} (${comparison}). Сондықтан жіктеу ережесі ${label} санатын таңдады. Салыстыру толық дәлдіктегі баллмен жасалады.`,
     method:'MobileNetV2 осы суретті 224 × 224 өлшемінде өңдеп, үйрету кезінде NORMAL және PNEUMONIA суреттерінен үйренген белгілер бойынша бір балл есептейді. Балл validation жиынында таңдалған шекпен салыстырылады.',
-    meaning:positive?'Бұл модельдің осы суретті пневмония санатына жатқызғанын білдіреді. Нәтиже адамның пневмониямен ауырғанын өздігінен растамайды.':'Бұл модельдің осы суретке берген баллы пневмония санатын таңдау шегіне жетпегенін білдіреді. Нәтиже пневмонияның жоқтығын немесе адамның толық сау екенін дәлелдемейді.',
+    meaning:review?assessment.notice:positive?'Бұл модельдің осы суретті пневмония санатына жатқызғанын білдіреді. Нәтиже адамның пневмониямен ауырғанын өздігінен растамайды.':'Бұл модельдің осы суретке берген баллы пневмония санатын таңдау шегіне жетпегенін білдіреді. Нәтиже пневмонияның жоқтығын немесе адамның толық сау екенін дәлелдемейді.',
     limit:'Grad-CAM таңдалған санатқа оң ықпал еткен белгілердің жуық аймақтарын көрсетеді. Карта 7 × 7 белгілерден үлкейтіледі, сондықтан дәл шекара немесе ауру ошағын көрсетпейді. Ол нақты медициналық белгілердің атауын анықтамайды. Суреттің медициналық түсіндірмесін маман береді.'
   };
 }
 
 function showResult(r){
   if(r.preview){$('preview-image').src=r.preview;$('preview-image').hidden=false;$('dicom-placeholder').hidden=true;}
-  const pn=r.model_class==='PNEUMONIA';$('empty-result').hidden=true;$('result-content').hidden=false;$('result-tag').textContent='ДАЙЫН';$('result-category').textContent=r.model_class;$('result-category').classList.toggle('pneumonia',pn);$('result-title').textContent=pn?'Пневмония санатына жіктелді':'Қалыпты санатқа жіктелді';$('result-explanation').textContent=explainResult(r).reason;$('score-value').textContent=decimal(r.pneumonia_score);$('calibration-note').textContent=r.calibration?`Validation-да калибрленген балл (T=${decimal(r.calibration.T)}). Клиникалық ықтималдық ретінде тексерілмеген.`:'Калибрлеу қолданылмаған (T=1).';$('score-fill').style.width=(r.pneumonia_score*100)+'%';$('score-fill').style.background=pn?'#ba9651':'var(--green)';$('threshold-marker').style.left=(r.threshold*100)+'%';$('threshold-label').textContent='Шек: '+decimal(r.threshold);$('result-time').textContent=`${r.width} × ${r.height} px · ${r.elapsed_ms} мс`;$('result-model').textContent='MobileNetV2';showAttention(r);const container=$('batch-results');container.replaceChildren();if(results.length>1)for(const item of results){const row=document.createElement('div'),name=document.createElement('span'),label=document.createElement('strong');name.textContent=item.filename;label.textContent=item.model_class+' · '+decimal(item.pneumonia_score);row.append(name,label);container.append(row);}}
+  const pn=r.model_class==='PNEUMONIA',review=needsReview(r);$('empty-result').hidden=true;$('result-content').hidden=false;$('result-tag').textContent=review?'БАҒАЛАУ ШЕКТЕЛГЕН':'ДАЙЫН';$('result-category').textContent=review?'ҚОРЫТЫНДЫ БЕРІЛМЕДІ':r.model_class;$('result-category').classList.toggle('pneumonia',pn||review);$('result-title').textContent=review?assessmentFor(r).title:pn?'Пневмония санатына жіктелді':'Қалыпты санатқа жіктелді';$('result-explanation').textContent=explainResult(r).reason;$('assessment-note').hidden=!review;$('assessment-note').textContent=review?assessmentFor(r).notice:'';$('score-value').textContent=decimal(r.pneumonia_score);$('calibration-note').textContent=r.calibration?`Validation-да калибрленген балл (T=${decimal(r.calibration.T)}). Клиникалық ықтималдық ретінде тексерілмеген.`:'Калибрлеу қолданылмаған (T=1).';$('score-fill').style.width=(r.pneumonia_score*100)+'%';$('score-fill').style.background=pn||review?'#ba9651':'var(--green)';$('threshold-marker').style.left=(r.threshold*100)+'%';$('threshold-label').textContent='Шек: '+decimal(r.threshold);$('result-time').textContent=`${r.width} × ${r.height} px · ${r.elapsed_ms} мс`;$('result-model').textContent='MobileNetV2';showAttention(r);const container=$('batch-results');container.replaceChildren();if(results.length>1)for(const item of results){const row=document.createElement('div'),name=document.createElement('span'),label=document.createElement('strong');name.textContent=item.filename;label.textContent=resultLabel(item)+' · '+decimal(item.pneumonia_score);row.append(name,label);container.append(row);}}
 function showAttention(r){
   const check=r.xray_check;
   $('xray-warning').hidden=false;
-  $('xray-warning').classList.toggle('flagged',check?.available&&check.is_xray===false);
+  $('xray-warning').classList.toggle('flagged',needsReview(r));
   $('xray-warning').textContent=check?.available?(check.is_xray===false?'Сурет модель тексерілген деректерден ерекшеленеді (OOD). Рентген суреттерінде де осындай ескерту шығуы мүмкін; болжамды сақтықпен бағалаңыз.':'OOD: validation үлестірімінен айқын ауытқу табылмады. Бұл рентген екенін дәлелдемейді.'):(check?.message||'OOD тексеруі қолжетімсіз.');
   showComparison(r);
   const explanation=r.explanation;
   $('attention-tools').hidden=!explanation?.available;
   $('attention-unavailable').hidden=!!explanation?.available;
   if(explanation?.available){
-    $('attention-caption').textContent=`Grad-CAM (MobileNetV2): ${explanation.target_class} шешіміне оң ықпал еткен жуық аймақтар. Бұл ауру ошағы немесе оның шекарасы емес.`;
-    setAttentionView(true);
+    $('attention-caption').textContent=(needsReview(r)?'Қорытынды берілмеді. Карта тек техникалық санатқа есептелген. ':'')+`Grad-CAM (MobileNetV2): ${explanation.target_class} санатына оң ықпал еткен жуық аймақтар. Бұл ауру ошағы немесе оның шекарасы емес.`;
+    setAttentionView(!needsReview(r));
   }else{
     $('attention-unavailable').textContent=explanation?.message||'Жылу картасы қолжетімсіз.';
     $('preview-image').src=r.preview||previewUrl;
@@ -95,13 +103,13 @@ $('download-result').addEventListener('click',()=>{
   const lines=['TYNYS — РЕНТГЕНДІ КЛАССИФИКАЦИЯЛАУ',new Date().toLocaleString('kk-KZ',{timeZone:'Asia/Qyzylorda'}),''];
   for(const r of results){
     const explanation=explainResult(r);
-    lines.push(`Файл: ${r.filename}`,`Модель санаты: ${r.model_class}`,`Пневмония санатының баллы: ${r.pneumonia_score}`,`Шешім шегі: ${r.threshold}`,`Модель ID: ${r.model_id}`,`Калибрлеу: ${r.calibration?'T='+r.calibration.T:'қолданылмаған'}`,r.xray_check?.available?(r.xray_check.is_xray?'OOD: validation үлестіріміне ұқсас.':'Сурет модель тексерілген деректерден ерекшеленеді (OOD). Рентген суреттерінде де осындай ескерту шығуы мүмкін; болжамды сақтықпен бағалаңыз.'):(r.xray_check?.message||'OOD қолжетімсіз.'),'',
+    lines.push(`Файл: ${r.filename}`,`Нәтиже: ${resultLabel(r)}`,`${needsReview(r)?'Техникалық модель санаты (қорытынды емес)':'Модель санаты'}: ${r.model_class}`,`Пневмония санатының баллы: ${r.pneumonia_score}`,`Шешім шегі: ${r.threshold}`,`Модель ID: ${r.model_id}`,`Калибрлеу: ${r.calibration?'T='+r.calibration.T:'қолданылмаған'}`,assessmentFor(r).message,'',
       explanation.title,explanation.reason,'',
       'Модель баллды қалай есептейді?',explanation.method,'',
       'Бұл нәтиже нені білдіреді?',explanation.meaning,'',
       'Суреттегі модель назары',r.explanation?.available?`Grad-CAM картасы ${r.explanation.target_class} санатына есептелді. Қызыл-сары аймақтар осы санатқа оң ықпал еткен жуық белсенділікті көрсетеді. Белгіленген суретті сайттағы бөлек батырмамен жүктеуге болады.`:(r.explanation?.message||'Жылу картасы қолжетімсіз.'),'',
       'Түсіндірудің шектеуі',explanation.limit,'',
-      'Модельдердің осы суреттегі болжамдары',...(r.comparison?.available?r.comparison.models.map(m=>`${m.name}: ${m.model_class}; балл: ${m.pneumonia_score}; шешім шегі: ${m.threshold}`):[r.comparison?.message||'Салыстыру қолжетімсіз.']),
+      needsReview(r)?'Техникалық баллдар — қорытынды емес':'Модельдердің осы суреттегі болжамдары',...(r.comparison?.available?r.comparison.models.map(m=>`${m.name}: ${m.model_class}; балл: ${m.pneumonia_score}; шешім шегі: ${m.threshold}`):[r.comparison?.message||'Салыстыру қолжетімсіз.']),
       r.comparison?.available?(r.comparison.agreement?'Модельдер бір санатты таңдады.':'Модельдер әртүрлі санат таңдады.'):'','Модель баллдары калибрленген клиникалық сенімділік емес. Бірінің баллы жоғары болуы оның дұрыс екенін дәлелдемейді.','',
       '------------------------------------------------------------','');
   }
@@ -138,13 +146,14 @@ function showComparison(r){
   const cnn=comparison.models.find(m=>m.name==='CNN');
   const mobile=comparison.models.find(m=>m.name==='MobileNetV2');
   const ensemble=comparison.models.find(m=>m.name==='Ensemble');
+  const review=needsReview(r);
   for(const [label,key] of [['Болжам санаты','model_class'],['Пневмония санатының баллы','pneumonia_score'],['Өз шешім шегі','threshold']]){
     const row=document.createElement('tr');
-    const title=document.createElement('th');title.scope='row';title.textContent=label;row.append(title);
+    const title=document.createElement('th');title.scope='row';title.textContent=review&&key==='model_class'?'Техникалық санат (қорытынды емес)':label;row.append(title);
     for(const model of [cnn,mobile,ensemble]){const cell=document.createElement('td');if(!model){cell.textContent='Қолжетімсіз';}else if(key==='model_class'){const tag=document.createElement('span');tag.className='comparison-category '+(model[key]==='PNEUMONIA'?'pneumonia':'normal');tag.textContent=model[key];cell.append(tag);}else{cell.textContent=decimal(model[key],6);}row.append(cell);}body.append(row);
   }
-  verdict.textContent=comparison.agreement?'Болжамдар сәйкес':'Болжамдар әртүрлі';verdict.className=comparison.agreement?'agree':'different';
-  $('comparison-note').textContent=(comparison.agreement?'Модельдер осы суретке бір санат таңдады.':'Модельдер осы суретке әртүрлі санат таңдады.')+(comparison.ensemble?.available?' Ensemble салмақтары validation-да таңдалған.':(' '+(comparison.ensemble?.message||'')))+' Модель баллдары клиникалық сенімділік пайызы емес. Бірінің баллы жоғары болуы оның дұрыс екенін дәлелдемейді.';
+  verdict.textContent=review?'Қорытынды берілмеді':comparison.agreement?'Болжамдар сәйкес':'Болжамдар әртүрлі';verdict.className=!review&&comparison.agreement?'agree':'different';
+  $('comparison-note').textContent=(review?'Төменде тек техникалық санаттар көрсетілген. Модельдердің келісуі OOD ескертуін жоймайды. ':'')+(comparison.agreement?'Модельдер осы суретке бір санат таңдады.':'Модельдер осы суретке әртүрлі санат таңдады.')+(comparison.ensemble?.available?' Ensemble салмақтары validation-да таңдалған.':(' '+(comparison.ensemble?.message||'')))+' Модель баллдары клиникалық сенімділік пайызы емес. Бірінің баллы жоғары болуы оның дұрыс екенін дәлелдемейді.';
 }
 
 
@@ -168,7 +177,7 @@ function renderHistory(){
     const content=document.createElement('div');content.className='history-item-content';
     const filename=document.createElement('strong');filename.textContent=entry.file.name;filename.title=entry.file.name;
     const details=document.createElement('span');details.className='history-item-details';
-    details.textContent=`${entry.result.model_class} · балл ${decimal(entry.result.pneumonia_score)} · ${entry.time.toLocaleTimeString('kk-KZ',{timeZone:'Asia/Qyzylorda',hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
+    details.textContent=`${resultLabel(entry.result)} · балл ${decimal(entry.result.pneumonia_score)} · ${entry.time.toLocaleTimeString('kk-KZ',{timeZone:'Asia/Qyzylorda',hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
     const comparison=document.createElement('small');comparison.textContent=entry.result.comparison?.available?(entry.result.comparison.agreement?'Модельдер: болжамдар сәйкес':'Модельдер: болжамдар әртүрлі'):'MobileNetV2 нәтижесі';
     content.append(filename,details,comparison);
     const button=document.createElement('button');button.type='button';button.className='history-open';button.textContent=entry.id===activeHistoryId?'Ашық':'Қайта ашу';button.setAttribute('aria-label',`${entry.file.name} нәтижесін қайта ашу`);button.disabled=busy;button.addEventListener('click',()=>openHistoryEntry(entry.id));

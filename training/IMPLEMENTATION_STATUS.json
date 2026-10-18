@@ -184,5 +184,22 @@
         "count": 92
       }
     ]
+  },
+  "assessment_guard": {
+    "implemented": true,
+    "policy": "ood_guard_v1",
+    "clinically_validated": false,
+    "coverage_evaluated": false,
+    "selective_risk_evaluated": false,
+    "model_and_thresholds_changed": false,
+    "local_tests": 65,
+    "tested_surfaces": [
+      "API",
+      "web",
+      "history",
+      "TXT",
+      "PDF"
+    ],
+    "remote_deployment_verified": false
   }
 }

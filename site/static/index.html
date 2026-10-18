@@ -66,6 +66,7 @@
           <div id="result-content" hidden>
             <div class="result-category" id="result-category"></div>
             <h3 class="result-title" id="result-title"></h3><p id="result-explanation" class="result-explanation"></p>
+            <p id="assessment-note" class="calibration-note" hidden></p>
             <div class="score-heading"><span>Пневмония санатының баллы</span><strong id="score-value"></strong></div>
             <p id="xray-warning" class="xray-warning" role="status" hidden></p><p id="calibration-note" class="calibration-note"></p><div class="score-track"><div id="score-fill"></div><span id="threshold-marker"></span></div>
             <div class="score-labels"><span>0,000</span><span id="threshold-label"></span><span>1,000</span></div>
@@ -93,7 +94,7 @@
 
     <section class="method-section" id="about">
       <div class="section-heading"><div><div class="eyebrow">02 / ӘДІС</div><h2>Күрделі модель.<br><em>Түсінікті қадамдар.</em></h2></div><p>Colab-тағы модель мен өңдеу әдісі<br>осы сайтта да қолданылады.</p></div>
-      <div class="method-grid"><article><span class="step-number">01</span><h3>Суретті дайындау</h3><p>Рентген үш арнамен оқылып, пропорциясын сақтай отырып 224 × 224 өлшеміне келеді.</p></article><article><span class="step-number">02</span><h3>Белгілерді тану</h3><p>Үйретілген MobileNetV2 желісі сурет белгілерін өңдеп, пневмония санатына балл береді.</p></article><article><span class="step-number">03</span><h3>Нәтижені көрсету</h3><p>Балл модельдің сақталған шешім шегімен салыстырылып, NORMAL немесе PNEUMONIA шығады.</p></article></div>
+      <div class="method-grid"><article><span class="step-number">01</span><h3>Суретті дайындау</h3><p>Рентген үш арнамен оқылып, пропорциясын сақтай отырып 224 × 224 өлшеміне келеді.</p></article><article><span class="step-number">02</span><h3>Белгілерді тану</h3><p>Үйретілген MobileNetV2 желісі сурет белгілерін өңдеп, пневмония санатына балл береді.</p></article><article><span class="step-number">03</span><h3>Нәтижені көрсету</h3><p>Балл сақталған шекпен салыстырылады. OOD тексеруі ауытқуды көрсетсе не орындалмаса, санат бойынша қорытынды берілмейді.</p></article></div>
     </section>
 
     <section class="research-section" id="research">

@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-10-18T12:06:36.058002+00:00",
+  "policy": "ood_guard_v1",
+  "scope": "conservative display guard; not validated clinical/selective classification",
+  "local_pytest": {
+    "passed": 65,
+    "warnings": 1,
+    "duration_seconds": 37.24,
+    "command": "site/.venv/Scripts/python -m pytest site/tests training/tests -q"
+  },
+  "live_local": {
+    "port": 7862,
+    "ready": true,
+    "comparison_ready": true,
+    "synthetic_input_only": true,
+    "web_title": "Сенімді бағалау мүмкін емес",
+    "original_preview_default": true,
+    "history_reopen_verified": true,
+    "txt_download_verified": true,
+    "pdf_download_verified": true,
+    "pdf_pages": 1,
+    "pdf_visually_rendered": true,
+    "browser_console_errors": 0
+  },
+  "model_config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
+  "model_threshold": 0.745,
+  "clinically_validated": false,
+  "coverage_evaluated": false,
+  "selective_risk_evaluated": false
+}

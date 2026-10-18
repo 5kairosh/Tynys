@@ -109,6 +109,21 @@ Space интернетке осы тапсырмада жарияланған ж
 
 ## English summary
 
+### OOD display guard (2026-10-18)
+
+`ood_guard_v1` withholds the headline NORMAL/PNEUMONIA classification when the existing
+distribution check flags an input or is unavailable/incomplete. The UI, session history,
+TXT and PDF show «Сенімді бағалау мүмкін емес»; scores and model classes remain available
+as technical outputs. Grad-CAM is optional, with the original image shown by default
+for these inputs. The API adds `assessment.status` (`classified` or `review_required`),
+`reason`, `policy` and `clinically_validated: false`; existing model scores/classes remain unchanged.
+
+This is a conservative presentation rule, not a validated selective classifier, an X-ray
+authenticator or a clinical confidence estimate. It does not change model weights, calibration,
+the 0.745 decision threshold or the validation OOD threshold. Existing internal/external
+metrics measure the original forced binary predictions; coverage and selective error rates
+for this guard have not been evaluated. A passed OOD check does not establish correctness.
+
 Educational binary NORMAL/PNEUMONIA classifier. Calibration is fitted on all 952 SHA-verified
 validation images. T(MobileNetV2)=0.97995943, threshold=0.745.
 Current internal and external results are listed above. OOD parameters are fitted on validation

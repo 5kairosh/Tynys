@@ -29,3 +29,6 @@ def test_pdf(count,ood_warning,model_class):
     assert 'Ensemble' in reader.pages[0].extract_text()
     if ood_warning:
         assert 'Рентген суреттерінде де' in reader.pages[0].extract_text()
+        assert 'Сенімді бағалау мүмкін емес' in reader.pages[0].extract_text()
+    else:
+        assert 'Сенімді бағалау мүмкін емес' not in reader.pages[0].extract_text()
