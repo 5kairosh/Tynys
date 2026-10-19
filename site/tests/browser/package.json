@@ -1,0 +1,6 @@
+{
+  "name": "tynys-history-browser-tests",
+  "private": true,
+  "scripts": {"test": "node --test history.test.cjs"},
+  "devDependencies": {"playwright": "1.62.1"}
+}

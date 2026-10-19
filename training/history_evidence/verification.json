@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-10-19T04:00:20.835984+00:00",
+  "backend_pytest": {
+    "passed": 89,
+    "warnings": 1,
+    "duration_seconds": 48.1
+  },
+  "browser_tests": {
+    "passed": 16,
+    "failed": 0,
+    "duration_ms": 31778.2236,
+    "scope": "Chromium + real IndexedDB; synthetic inference API. Consent, reload, DICOM File restoration, deletion, cross-tab generation, expiry, caps, quota failures, blocked storage, API-unavailable history, text-safe rendering and profile isolation."
+  },
+  "live_local": {
+    "port": 7865,
+    "actual_models": true,
+    "synthetic_input_only": true,
+    "opt_in_verified": true,
+    "reload_restore_verified": true,
+    "same_displayed_score": true,
+    "quality_warning_preserved": true,
+    "ood_assessment_preserved": true,
+    "restored_original_pdf_http": 200,
+    "restored_original_pdf_pages": 1,
+    "browser_console_errors": 0
+  },
+  "model_config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
+  "remote_deployment_verified": false
+}

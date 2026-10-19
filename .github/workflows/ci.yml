@@ -15,3 +15,18 @@ jobs:
       - run: python -m venv .venv
       - run: .venv/bin/pip install -r training/requirements-training.txt pytest pypdf httpx
       - run: .venv/bin/python -m pytest site/tests training/tests -q
+  browser-history:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: site/tests/browser/package-lock.json
+      - run: npm ci
+        working-directory: site/tests/browser
+      - run: npx playwright install --with-deps chromium
+        working-directory: site/tests/browser
+      - run: npm test
+        working-directory: site/tests/browser

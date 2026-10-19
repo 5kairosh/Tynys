@@ -6,6 +6,7 @@
   <title>Tynys — рентгенге жаңа көзқарас</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230c766c'/%3E%3Cpath d='M29 16h6v13h13v6H35v13h-6V35H16v-6h13z' fill='white'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/history-storage.js" defer></script>
   <script src="/static/app.js" defer></script>
 </head>
 <body>
@@ -79,6 +80,7 @@
             <div class="result-meta"><span id="result-time"></span><span id="result-model"></span></div>
             <button class="button secondary download-result" id="download-result">Қорытындыны жүктеу <span>↓</span></button>
             <button class="button secondary download-pdf" id="download-pdf">PDF есепті жүктеу <span>↓</span></button>
+            <p class="history-pdf-note">PDF жүктеу суретті серверге қайта жіберіп, қазіргі модельмен қайта талдайды.</p>
             <div id="batch-results" class="batch-results"></div>
           </div>
           <div class="result-notice"><span>i</span><p>Бұл — суреттің модельдік классификациясы. Балл диагноздың сенімділік пайызы емес. <strong>NORMAL жауабы барлық ауруды жоққа шығармайды.</strong></p></div>
@@ -90,7 +92,12 @@
         <p id="comparison-note"></p>
       </section>
       <section class="history-panel" aria-labelledby="history-title">
-        <div class="history-heading"><div><h3 id="history-title">Талдау тарихы <span id="history-count">0</span></h3><p>Осы бет ашық тұрғандағы соңғы 20 сурет. Бетті жаңартқанда тарих жойылады.</p></div><button id="clear-history" class="history-clear" type="button" disabled>Тарихты тазалау</button></div>
+        <div class="history-heading"><div><h3 id="history-title">Талдау тарихы <span id="history-count">0</span></h3><p id="history-description">Соңғы 20 талдау. Әдепкіде тарих тек осы бет ашық тұрғанда сақталады.</p></div><button id="clear-history" class="history-clear" type="button" disabled>Тарихты тазалау</button></div>
+        <div class="history-storage">
+          <label class="history-consent"><input id="save-history" type="checkbox" aria-describedby="history-consent-detail" disabled><span>Тарихты осы браузерде сақтауға келісемін</span></label>
+          <p id="history-consent-detail">Қоссаңыз, осы беттегі және кейінгі талдаулардың түпнұсқа файлдары мен нәтижелері сақталады: ең көбі 20 талдау, 80 МБ. DICOM метадеректері де файлда қалады. 7 күннен асқан жазбалар сайтты ашқанда не келесі тексеруде жойылады. Осы браузерді пайдаланатын басқа адамдар тарихты көре алады. Сақтауды өшірсеңіз, сақталған көшірмелер жойылады.</p>
+          <p id="history-storage-status" role="status" aria-live="polite">Браузердегі сақтау күйі тексерілуде…</p>
+        </div>
         <p id="history-empty" class="history-empty">Тексерілген суреттер осы жерде пайда болады.</p>
         <ol id="history-list" class="history-list" aria-label="Тексерілген рентгендер"></ol>
         <p id="history-feedback" class="history-feedback" role="status" aria-live="polite"></p>

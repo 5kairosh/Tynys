@@ -222,5 +222,23 @@
     "deployed_source_commit": "a86a02c53774e631fc37c3bc13b69ee52c3d62b3",
     "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39127904736",
     "ci_status": "success"
+  },
+  "persistent_history": {
+    "implemented": true,
+    "default_enabled": false,
+    "storage": "browser IndexedDB",
+    "max_entries": 20,
+    "max_bytes": 83886080,
+    "retention_days": 7,
+    "expired_cleanup": "on open, focus and active interval; not while site is closed",
+    "server_persistence": false,
+    "per_entry_delete": true,
+    "disable_deletes_saved_copies": true,
+    "generation_guard": true,
+    "accounts": false,
+    "application_encryption": false,
+    "remote_deployment_verified": false,
+    "local_browser_tests": 16,
+    "local_backend_tests": 89
   }
 }

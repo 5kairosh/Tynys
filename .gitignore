@@ -5,3 +5,4 @@ training/cache/
 training/artifacts/
 training/outputs/multilabel/private/
 *.log
+**/node_modules/
