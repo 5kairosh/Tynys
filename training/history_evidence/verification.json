@@ -25,5 +25,52 @@
     "browser_console_errors": 0
   },
   "model_config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
-  "remote_deployment_verified": false
+  "remote_deployment_verified": true,
+  "remote": {
+    "frontend_source_commit": "f423420a308cd6dbf81eaec092af0109e515aacd",
+    "public_status_http": 200,
+    "ready": true,
+    "comparison_ready": true,
+    "model_threshold": 0.745,
+    "asset_sha256": {
+      "site/static/history-storage.js": "d9e7f5a7b82eba8eeb260f8bae96d6be2470ca0a7b0bb40b7d179e193dc2e3d6",
+      "site/static/app.js": "9768524cfda906b2cefea30143c1c336744d74262fb801bee51b6c071787c7de",
+      "site/static/style.css": "398bfeaeab5e81293981515241f8c0436bfe5c132baf6537617b050191120363",
+      "site/static/index.html": "3238d68ae99ce7e8590b7ee60ffde41d9532845469ad17746c802f1617d0c1e5"
+    },
+    "checked_at": "2026-10-19T04:07:50.874998+00:00",
+    "public_url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/",
+    "browser_opt_out_initially_verified": true,
+    "synthetic_png_and_cr_dicom": true,
+    "reload_history_count": 2,
+    "restored_dicom_original_pdf_http": 200,
+    "restored_dicom_original_pdf_pages": 1,
+    "individual_delete_verified": true,
+    "two_tab_updates_verified": true,
+    "clear_and_reload_empty_verified": true,
+    "consent_disabled_after_test": true,
+    "browser_console_errors": 0,
+    "screenshot": "training/history_evidence/ui_online.jpg",
+    "medical_uploads_used": false
+  },
+  "ci": {
+    "run_id": 39197545496,
+    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39197545496",
+    "source_commit": "f423420a308cd6dbf81eaec092af0109e515aacd",
+    "status": "success",
+    "jobs": [
+      {
+        "name": "browser-history",
+        "conclusion": "success",
+        "url": "https://github.com/5kairosh/Tynys/actions/runs/39197545496/job/117883458545"
+      },
+      {
+        "name": "pytest",
+        "conclusion": "success",
+        "url": "https://github.com/5kairosh/Tynys/actions/runs/39197545496/job/117883459244"
+      }
+    ],
+    "checked_at": "2026-10-19T04:07:53.572963+00:00",
+    "note": "Run and both jobs verified with GitHub API. Counts above are local test results; same test commands ran remotely."
+  }
 }

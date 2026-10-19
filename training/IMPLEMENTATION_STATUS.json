@@ -237,8 +237,11 @@
     "generation_guard": true,
     "accounts": false,
     "application_encryption": false,
-    "remote_deployment_verified": false,
+    "remote_deployment_verified": true,
     "local_browser_tests": 16,
-    "local_backend_tests": 89
+    "local_backend_tests": 89,
+    "deployed_frontend_source_commit": "f423420a308cd6dbf81eaec092af0109e515aacd",
+    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39197545496",
+    "ci_status": "success"
   }
 }
