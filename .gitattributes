@@ -1,5 +1,6 @@
 # Evaluation evidence binds this configuration to its exact SHA-256 bytes.
 # Preserve the validated file on Windows and Linux; do not normalize its EOLs.
-site/model/model_config.json -text
+# The configuration is hash-bound byte-for-byte, including Windows CRLF.
+site/model/model_config.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 # PDF streams and byte offsets must survive checkout without EOL conversion.
 *.pdf binary

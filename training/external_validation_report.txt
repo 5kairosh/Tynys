@@ -1,18 +1,4 @@
-Сыртқы валидация орындалды. Шек өзгертілмеді.
-{
-  "model": "MobileNetV2",
-  "cohort": "external",
-  "count": 200,
-  "threshold": 0.745,
-  "accuracy": 0.55,
-  "precision": 0.23958333333333334,
-  "recall": 0.575,
-  "specificity": 0.54375,
-  "f1": 0.3382352941176471,
-  "roc_auc": 0.54421875,
-  "TN": 87,
-  "FP": 73,
-  "FN": 17,
-  "TP": 23
-}
-MeSH белгілері клиникалық gold standard емес. Дереккөз және пациент ID түрі external_predictions.csv ішінде. SHA-256 тек байт бойынша көшірмені анықтайды.
+6-кезең, 2026-10-21. OpenI200 бұрын қаралған benchmark, жаңа клиникалық validation емес.
+NORMAL160 / PNEUMONIA40; accuracy64.5%, sensitivity72.5%, specificity62.5%; TN100 FP60 FN11 TP29.
+OpenI үйретуге/шек таңдауға қолданылған жоқ. Әлсіз MeSH белгілері клиникалық gold standard емес.
+Толық: training/GENERALIZATION_STAGE6_KZ.txt

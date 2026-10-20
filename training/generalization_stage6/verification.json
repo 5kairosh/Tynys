@@ -1,0 +1,47 @@
+{
+  "stage": 6,
+  "checked_at": "2026-10-20T20:05:00.099681+00:00",
+  "model_id": "a79fe71a67fc",
+  "ood_parameter_id": "b0c5e869838e",
+  "pytest": {
+    "passed": 150,
+    "warnings": 13,
+    "seconds": 41.99,
+    "note": "One Starlette plus twelve Keras/NumPy dependency deprecations."
+  },
+  "browser": {
+    "passed": 29,
+    "seconds": 48.39,
+    "runtime": "Real Chromium and IndexedDB; inference stubbed in browser regressions"
+  },
+  "local_main": {
+    "url": "http://127.0.0.1:7860/",
+    "ready": true,
+    "current_model_bound_audit_available": true
+  },
+  "live_model_evidence": "training/generalization_stage6/live_bundle.json",
+  "live_browser": {
+    "two_real_source_examples": true,
+    "txt_both_branches": true,
+    "pdf_pages": 2,
+    "persistent_consent": false,
+    "existing_user_history_changed": false,
+    "pdf_rendered_and_visually_reviewed": true
+  },
+  "synthetic_controls": {
+    "flagged": 6,
+    "total": 6,
+    "clinical_non_xray_validation": false
+  },
+  "first_single_head_rejected": true,
+  "new_router_gate_passed": true,
+  "new_confirmation_nih_patients": 400,
+  "rsna_also_a_development_source": true,
+  "new_institution_validation": false,
+  "old_benchmarks_previously_inspected": true,
+  "clinical_validation": false,
+  "remote_verified": false,
+  "ci_verified": false,
+  "presentation_updated": false,
+  "docker_rebuilt": false
+}

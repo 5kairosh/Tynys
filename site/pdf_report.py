@@ -89,7 +89,10 @@ def make_report(items):
         c.drawString(300, 692, 'Балл: '+decimal(r['pneumonia_score']))
         c.setFont('TynysSans', 9)
         c.drawString(300, 674, 'Шешім шегі: '+decimal(r['threshold']))
-        paragraph(c, f'MobileNetV2  /  {r["width"]} × {r["height"]} px  /  модель ID: {r["model_id"]}',
+        routing = r.get('domain_routing', {})
+        model_label = ('MobileNetV2 · RSNA тармағы' if routing.get('selected_expert') == 'rsna_adapted'
+                       else 'MobileNetV2 · бастапқы тармақ') if routing.get('available') else 'MobileNetV2'
+        paragraph(c, f'{model_label}  /  {r["width"]} × {r["height"]} px  /  модель ID: {r["model_id"]}',
                   margin, 636 if review else 654, usable, size=8, color=MUTED)
 
         gap = 16

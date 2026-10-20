@@ -97,8 +97,11 @@ def evaluation_status(model_dir, model_id, ood_available):
             raise ValueError('Evaluation belongs to different source/model/parameters.')
         if value['thresholds_tuned_on_evaluation'] is not False:
             raise ValueError('Holdout must not tune thresholds.')
-        for key in ('internal_test', 'external_openi'):
-            validate_cohort(value['cohorts'][key])
+        required = {'internal_test', 'external_openi'}
+        if not required.issubset(value['cohorts']) or not set(value['cohorts']).issubset(required | {'rsna_confirmation'}):
+            raise ValueError('Unknown or missing evaluation cohort.')
+        for cohort in value['cohorts'].values():
+            validate_cohort(cohort)
         return {'available': True, **value}
     except (OSError, ValueError, KeyError, TypeError, OverflowError):
         return unavailable

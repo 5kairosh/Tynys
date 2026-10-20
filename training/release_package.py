@@ -34,6 +34,10 @@ def main():
     assert any(name=='site/static/selective-evaluation.js' for name,_ in allowed)
     assert any(name=='training/ood_stage5/protocol.json' for name,_ in allowed)
     assert any(name=='training/ood_stage5/fit_report.json' for name,_ in allowed)
+    for required in ('site/static/generalization-evaluation.js','site/static/research/generalization-stage6.json',
+                     'training/generalization_stage6/routing_protocol.json','training/generalization_stage6/routing_evaluation.json',
+                     'training/generalization_stage6/DATA_ATTRIBUTION.md','training/GENERALIZATION_STAGE6_KZ.txt'):
+        assert any(name==required for name,_ in allowed),required
     assert any(name=='training/multilabel_colab_kz.ipynb' for name,_ in allowed)
     manifest={'commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         'excluded':'OpenI source images, OpenI-trained weights/error pixels, all training caches, venv, Git and uploaded patient images.',

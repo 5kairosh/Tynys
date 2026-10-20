@@ -226,8 +226,8 @@ test('zero coverage never renders perfect or zero selective accuracy',()=>contex
     cohort.withheld={...cohort.baseline};cohort.coverage=0;cohort.withheld_rate=1;
   }
   await auditStatus(page,report);await ready(page);
-  assert.equal(await page.getByText('Бағалау мүмкін емес',{exact:true}).count(),2);
-  assert.equal(await page.getByText('Қорытынды берілген сурет жоқ',{exact:true}).count(),2);
+  assert.equal(await page.getByText('Бағалау мүмкін емес',{exact:true}).count(),Object.keys(report.cohorts).length);
+  assert.equal(await page.getByText('Қорытынды берілген сурет жоқ',{exact:true}).count(),Object.keys(report.cohorts).length);
   assert.match(await page.locator('#selective-finding').innerText(),/Шектеу анықталды/);
 }));
 test('unavailable audit cannot block image upload or analysis',()=>contextTest(async(context,page)=>{
@@ -237,10 +237,10 @@ test('unavailable audit cannot block image upload or analysis',()=>contextTest(a
   await upload(page);assert.match(await page.locator('#result-title').innerText(),/Сенімді бағалау/);
 }));
 test('audit remains usable on narrow screens without horizontal overflow',()=>contextTest(async(context,page)=>{
-  await page.setViewportSize({width:390,height:844});await auditStatus(page,await actualAudit());await ready(page);
+  const report=await actualAudit();await page.setViewportSize({width:390,height:844});await auditStatus(page,report);await ready(page);
   await page.locator('#selective-title').scrollIntoViewIfNeeded();
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth));
-  assert.equal(await page.locator('.audit-card').count(),2);
+  assert.equal(await page.locator('#selective-cards .audit-card').count(),Object.keys(report.cohorts).length);
 }));
 
 test('status refresh preserves an opened audit explanation',()=>contextTest(async(context,page)=>{
@@ -270,8 +270,55 @@ test('legacy saved result keeps its original guard outcome after v2 upgrade',()=
 }));
 test('v2 report discloses train calibration roles and previous-policy coverage',()=>contextTest(async(context,page)=>{
   await auditStatus(page,await actualAudit());await ready(page);
-  assert.match(await page.locator('#ood-calibration-detail').innerText(),/3801 train/);
-  assert.match(await page.locator('#ood-calibration-detail').innerText(),/952 validation/);
-  assert.match(await page.locator('[data-cohort="internal_test"] .audit-change').innerText(),/бұрын 6,31%/);
-  assert.match(await page.locator('[data-cohort="external_openi"] .audit-change').innerText(),/бұрын 0,00%/);
+  assert.match(await page.locator('#ood-calibration-detail').innerText(),/5401 train/);
+  assert.match(await page.locator('#ood-calibration-detail').innerText(),/1352 validation/);
+  assert.match(await page.locator('[data-cohort="internal_test"] .audit-change').innerText(),/бұрын 96,76%/);
+  assert.match(await page.locator('[data-cohort="external_openi"] .audit-change').innerText(),/бұрын 16,00%/);
+}));
+
+async function actualGeneralization(){return JSON.parse(await fs.readFile(path.join(STATIC,'research/generalization-stage6.json'),'utf8'));}
+async function generalizationStatus(page,report){
+  await page.route('**/api/status',route=>route.fulfill({json:{ready:true,model_id:report.active_model.id,config:{threshold:report.active_model.threshold},calibration:{T:report.active_model.temperature},metrics:[]}}));
+}
+test('stage6 shows both gains and internal tradeoff and downloads the frozen evidence',()=>contextTest(async(context,page)=>{
+  const report=await actualGeneralization(),before=predictCount;await generalizationStatus(page,report);await ready(page);
+  await page.waitForFunction(()=>!document.getElementById('generalization-download').disabled);
+  assert.equal(await page.locator('#generalization-cards .audit-card').count(),3);
+  for(const key of ['rsna_confirmation','external_openi','internal_test']){
+    const v=report.cohorts[key];assert.match(await page.locator(`#generalization-cards [data-cohort="${key}"]`).innerText(),new RegExp(`${v.baseline.errors} → ${v.candidate.errors} / ${v.candidate.count}`));
+  }
+  assert.match(await page.locator('.study-tradeoff').innerText(),/бір қате артық/);
+  const pending=page.waitForEvent('download');await page.locator('#generalization-download').click();const d=await pending;
+  assert.deepEqual(JSON.parse(await fs.readFile(await d.path(),'utf8')),report);assert.equal(predictCount,before);
+  await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth));
+}));
+test('missing external study cannot block analysis',()=>contextTest(async(context,page)=>{
+  const report=await actualGeneralization();await generalizationStatus(page,report);
+  await page.route('**/static/research/**',route=>route.fulfill({status:404,body:'missing'}));await ready(page);
+  await page.waitForFunction(()=>document.getElementById('generalization-status').textContent.includes('қолжетімсіз'));
+  await upload(page);assert.match(await page.locator('#result-title').innerText(),/Сенімді бағалау/);
+}));
+test('source branch survives saved history and TXT export without re-inference',()=>contextTest(async(context,page)=>{
+  const r=prediction('routed.png');r.domain_routing={available:true,selected_expert:'rsna_adapted',rsna_domain_score:.99,notice:'Дереккөзге ұқсастық; диагноз емес.'};
+  await page.route('**/api/predict',route=>route.fulfill({json:r}));await ready(page);await page.locator('#save-history').check();await upload(page,'routed.png');
+  assert.match(await page.locator('#routing-note').innerText(),/RSNA/);const before=predictCount;
+  await page.reload({waitUntil:'domcontentloaded'});await count(page,1);await page.locator('.history-open').click();
+  assert.equal(predictCount,before);assert.match(await page.locator('#routing-note').innerText(),/RSNA/);
+  const pending=page.waitForEvent('download');await page.locator('#download-result').click();const d=await pending;
+  assert.match(await fs.readFile(await d.path(),'utf8'),/Модель тармағы: rsna_adapted/);
+}));
+test('a mismatched study cannot advertise old performance for another model',()=>contextTest(async(context,page)=>{
+  await ready(page);await page.waitForFunction(()=>document.getElementById('generalization-status').textContent.includes('сәйкес емес'));
+  assert.equal(await page.locator('#generalization-download').isDisabled(),true);assert.equal(await page.locator('#generalization-cards .audit-card').count(),0);
+  await upload(page);assert.equal(await page.locator('#score-value').innerText(),'0,900');
+}));
+
+test('stage6 evidence recovers after server disconnect without reload or inference',()=>contextTest(async(context,page)=>{
+  const report=await actualGeneralization();let online=true;
+  await page.route('**/api/status',route=>route.fulfill({json:online?{ready:true,model_id:report.active_model.id,config:{threshold:report.active_model.threshold},calibration:{T:report.active_model.temperature},metrics:[]}:{ready:false,metrics:[]}}));
+  await ready(page);await page.waitForFunction(()=>!document.getElementById('generalization-download').disabled);const before=predictCount;
+  online=false;let response=page.waitForResponse('**/api/status');await page.evaluate(()=>window.dispatchEvent(new Event('online')));await response;
+  await page.waitForFunction(()=>document.getElementById('generalization-download').disabled);assert.equal(await page.locator('#generalization-cards .audit-card').count(),0);
+  online=true;response=page.waitForResponse('**/api/status');await page.evaluate(()=>window.dispatchEvent(new Event('online')));await response;
+  await page.waitForFunction(()=>!document.getElementById('generalization-download').disabled);assert.equal(await page.locator('#generalization-cards .audit-card').count(),3);assert.equal(predictCount,before);
 }));

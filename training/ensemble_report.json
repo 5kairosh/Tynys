@@ -1,33 +1,34 @@
 {
+  "stage": 6,
   "ensemble": {
     "weights": {
-      "CNN": 0.001005948939264576,
-      "MobileNetV2": 0.9989940510607355
+      "CNN": 0.004961958506162733,
+      "MobileNetV2": 0.9950380414938372
     },
-    "threshold": 0.745,
-    "validation_count": 952,
-    "selection": "validation NLL, weights bounded [0.001,0.999]; recall>=0.90 then specificity then F1",
+    "threshold": 0.5,
+    "validation_count": 1352,
+    "selection": "domain/class balanced validation NLL; weights [0.001,0.999]; common operating margin threshold 0.5 fixed",
     "model_ids": {
       "CNN": "19f707027db4",
-      "MobileNetV2": "ea584b998a45"
+      "MobileNetV2": "a79fe71a67fc"
     }
   },
-  "validation_NLL": 0.08825657966338867,
-  "validation_NLL_mean": 0.1520464175947288,
+  "fitted_on": "1352 development validation only, domain/class balanced NLL",
   "test": {
     "model": "Ensemble",
-    "threshold": 0.745,
-    "accuracy": 0.8915857605177994,
-    "precision": 0.8773584905660378,
-    "recall": 0.9612403100775194,
-    "specificity": 0.7748917748917749,
-    "f1": 0.9173859432799013,
-    "roc_auc": 0.9582760047876326,
-    "average_precision": 0.9695154176089966,
-    "TN": 179,
-    "FP": 52,
-    "FN": 15,
-    "TP": 372
+    "threshold": "0.5",
+    "accuracy": "0.889967637540453",
+    "precision": "0.8752941176470588",
+    "recall": "0.9612403100775194",
+    "specificity": "0.7705627705627706",
+    "f1": "0.916256157635468",
+    "roc_auc": "0.9579963533451905",
+    "average_precision": "0.9679659582956992",
+    "TN": "178",
+    "FP": "53",
+    "FN": "15",
+    "TP": "372"
   },
-  "external_tuning": false
+  "evaluation_used_to_fit": false,
+  "historical_report": "training/generalization_stage6/baseline_ensemble_report.json"
 }

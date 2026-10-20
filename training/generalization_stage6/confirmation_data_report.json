@@ -1,0 +1,12 @@
+{
+  "rsna_total_unique_nih_patients": 2800,
+  "train": 1600,
+  "validation": 400,
+  "prior_holdout": 400,
+  "new_confirmation": 400,
+  "confirmation_patient_overlap": 0,
+  "confirmation_hash_overlap": 0,
+  "new_confirmation_fresh_for_6B": true,
+  "rsna_source_used_in_development": true,
+  "new_institution_validation": false
+}

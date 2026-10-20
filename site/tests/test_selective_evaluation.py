@@ -63,7 +63,7 @@ def test_published_report_matches_each_per_image_record_and_old_baseline():
     assert report['bindings'] == artifact_bindings(MODEL)
     for source, digest in report['source_sha256'].items():
         assert hashlib.sha256((ROOT / source).read_bytes().replace(b'\r\n', b'\n')).hexdigest() == digest
-    for cohort, count in [('internal_test', 618), ('external_openi', 200)]:
+    for cohort, count in [('internal_test', 618), ('external_openi', 200), ('rsna_confirmation', 400)]:
         with (ROOT / 'training/selective_evaluation' / (cohort + '.csv')).open(encoding='utf-8') as stream:
             rows = list(csv.DictReader(stream))
         assert len(rows) == len({r['sha256'] for r in rows}) == count
@@ -74,9 +74,9 @@ def test_published_report_matches_each_per_image_record_and_old_baseline():
             assert report['cohorts'][cohort][key] == value
         validate_cohort(report['cohorts'][cohort])
     internal = report['cohorts']['internal_test']['baseline']
-    assert [internal[k] for k in ('TN', 'FP', 'FN', 'TP')] == [179, 52, 15, 372]
+    assert [internal[k] for k in ('TN', 'FP', 'FN', 'TP')] == [178, 53, 15, 372]
     external = report['cohorts']['external_openi']['baseline']
-    assert [external[k] for k in ('TN', 'FP', 'FN', 'TP')] == [87, 73, 17, 23]
+    assert [external[k] for k in ('TN', 'FP', 'FN', 'TP')] == [100, 60, 11, 29]
 
 
 def test_current_report_is_available_from_real_status(client):

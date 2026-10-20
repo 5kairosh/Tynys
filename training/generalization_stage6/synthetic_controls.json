@@ -1,0 +1,45 @@
+{
+  "checked_at": "2026-10-20T20:00:50.413918+00:00",
+  "flagged": 6,
+  "total": 6,
+  "clinical_non_xray_validation": false,
+  "fitted_using_controls": false,
+  "cases": [
+    {
+      "control": "black",
+      "review_required": true,
+      "distance": 69.05582366685444,
+      "threshold": 38.37188343647505
+    },
+    {
+      "control": "white",
+      "review_required": true,
+      "distance": 81.36091569970533,
+      "threshold": 38.37188343647505
+    },
+    {
+      "control": "rgb_noise",
+      "review_required": true,
+      "distance": 111.82627142942549,
+      "threshold": 38.37188343647505
+    },
+    {
+      "control": "red",
+      "review_required": true,
+      "distance": 86.20841766068915,
+      "threshold": 38.37188343647505
+    },
+    {
+      "control": "gradient",
+      "review_required": true,
+      "distance": 80.4137661066984,
+      "threshold": 38.37188343647505
+    },
+    {
+      "control": "checkerboard",
+      "review_required": true,
+      "distance": 85.37348343898388,
+      "threshold": 38.37188343647505
+    }
+  ]
+}

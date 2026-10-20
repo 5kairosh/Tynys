@@ -1,23 +1,29 @@
 {
   "calibration": {
     "fitted": true,
-    "runtime_temperature": 0.9799594303292329,
-    "validation_count": 952,
-    "threshold": 0.745
+    "runtime_temperature": 1.1374971593841223,
+    "validation_count": 1352,
+    "threshold": 0.5,
+    "stage": 6
   },
   "ood": {
     "available": true,
     "method": "train_validation_mahalanobis_v2",
-    "reference_train_count": 3801,
-    "calibration_validation_count": 952,
-    "threshold": 38.25761417386084,
+    "reference_train_count": 5401,
+    "calibration_validation_count": 1352,
+    "threshold": 38.37188343647505,
     "target_acceptance": 0.95,
-    "parameter_id": "2401a7df566f",
+    "parameter_id": "b0c5e869838e",
     "non_xray_validated": false,
-    "formal_coverage_guarantee": false
+    "formal_coverage_guarantee": false,
+    "development_sources": [
+      "Kaggle",
+      "RSNA"
+    ],
+    "evaluation_used_to_fit": false
   },
   "external_validation": {
-    "completed": true,
+    "available": true,
     "models": [
       {
         "model": "CNN",
@@ -32,71 +38,64 @@
         "TN": 3,
         "FP": 157,
         "FN": 0,
-        "TP": 40,
-        "cohort": "external",
-        "count": 200
+        "TP": 40
       },
       {
         "model": "MobileNetV2",
-        "threshold": 0.745,
-        "accuracy": 0.55,
-        "precision": 0.23958333333333334,
-        "recall": 0.575,
-        "specificity": 0.54375,
-        "f1": 0.3382352941176471,
-        "roc_auc": 0.54421875,
-        "average_precision": 0.2402071891445132,
-        "TN": 87,
-        "FP": 73,
-        "FN": 17,
-        "TP": 23,
-        "cohort": "external",
-        "count": 200
+        "threshold": 0.5,
+        "accuracy": 0.645,
+        "precision": 0.3258426966292135,
+        "recall": 0.725,
+        "specificity": 0.625,
+        "f1": 0.4496124031007752,
+        "roc_auc": 0.755,
+        "average_precision": 0.44061541679207994,
+        "TN": 100,
+        "FP": 60,
+        "FN": 11,
+        "TP": 29
       },
       {
         "model": "Ensemble",
-        "threshold": 0.745,
-        "accuracy": 0.55,
-        "precision": 0.23958333333333334,
-        "recall": 0.575,
-        "specificity": 0.54375,
-        "f1": 0.3382352941176471,
-        "roc_auc": 0.5440625,
-        "average_precision": 0.2401527968329583,
-        "TN": 87,
-        "FP": 73,
-        "FN": 17,
-        "TP": 23,
-        "cohort": "external",
-        "count": 200
+        "threshold": 0.5,
+        "accuracy": 0.645,
+        "precision": 0.3258426966292135,
+        "recall": 0.725,
+        "specificity": 0.625,
+        "f1": 0.4496124031007752,
+        "roc_auc": 0.75453125,
+        "average_precision": 0.4322036971314329,
+        "TN": 100,
+        "FP": 60,
+        "FN": 11,
+        "TP": 29
       }
     ],
-    "available": true,
     "metrics": {
       "model": "MobileNetV2",
-      "cohort": "external",
+      "threshold": 0.5,
+      "accuracy": 0.645,
+      "precision": 0.3258426966292135,
+      "recall": 0.725,
+      "specificity": 0.625,
+      "f1": 0.4496124031007752,
+      "roc_auc": 0.755,
+      "average_precision": 0.44061541679207994,
+      "TN": 100,
+      "FP": 60,
+      "FN": 11,
+      "TP": 29,
       "count": 200,
-      "threshold": 0.745,
-      "accuracy": 0.55,
-      "precision": 0.23958333333333334,
-      "recall": 0.575,
-      "specificity": 0.54375,
-      "f1": 0.3382352941176471,
-      "roc_auc": 0.54421875,
-      "TN": 87,
-      "FP": 73,
-      "FN": 17,
-      "TP": 23
+      "cohort": "external"
     },
-    "model_id": "ea584b998a45",
-    "config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
+    "model_id": "a79fe71a67fc",
+    "config_sha256": "63c6e98cc7713993778fb8b44430a8ebb6b334bac66be5ec0f815ea45f63eb4c",
     "source": "OpenI Indiana, NLM API",
     "normal_count": 160,
     "pneumonia_count": 40,
     "patient_grouping": "one report UID per sample; longitudinal patient IDs unverified",
-    "seed": 42,
-    "sha256_overlap": 0,
-    "threshold_tuned_external": false
+    "threshold_tuned_external": false,
+    "previously_inspected": true
   },
   "docker": {
     "built": true,
@@ -111,36 +110,44 @@
     "container_removed": true,
     "traceback_found": false,
     "cuda_notice": "TensorFlow logs missing CUDA drivers and cuInit 303; CPU inference and all required HTTP/PDF checks passed.",
-    "checked_at": "2026-10-15T18:15:16.5476644+05:00"
+    "checked_at": "2026-10-15T18:15:16.5476644+05:00",
+    "current_stage6_build_run_verified": false
   },
   "ci": {
     "configured": true,
-    "remote_run": true,
-    "repo_url": "https://github.com/5kairosh/Tynys",
-    "run_id": 39481020833,
-    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
-    "status": "success",
-    "checked_at": "2026-10-20T19:12:38.994887+00:00",
-    "source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6"
+    "remote_run": false,
+    "status": "pending",
+    "previous_verified_run": {
+      "configured": true,
+      "remote_run": true,
+      "repo_url": "https://github.com/5kairosh/Tynys",
+      "run_id": 39481020833,
+      "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
+      "status": "success",
+      "checked_at": "2026-10-20T19:12:38.994887+00:00",
+      "source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6"
+    }
   },
   "tests": {
-    "local_passed": 135,
-    "browser_passed": 24,
-    "stage5_evidence": "training/ood_stage5/verification.json"
+    "local_passed": 150,
+    "browser_passed": 29,
+    "stage5_evidence": "training/ood_stage5/verification.json",
+    "current_stage": 6
   },
   "ensemble": {
-    "fitted": true,
     "weights": {
-      "CNN": 0.001005948939264576,
-      "MobileNetV2": 0.9989940510607355
+      "CNN": 0.004961958506162733,
+      "MobileNetV2": 0.9950380414938372
     },
-    "threshold": 0.745,
-    "validation_count": 952,
-    "selection": "validation NLL, weights bounded [0.001,0.999]; recall>=0.90 then specificity then F1",
+    "threshold": 0.5,
+    "validation_count": 1352,
+    "selection": "domain/class balanced validation NLL; weights [0.001,0.999]; common operating margin threshold 0.5 fixed",
     "model_ids": {
       "CNN": "19f707027db4",
-      "MobileNetV2": "ea584b998a45"
-    }
+      "MobileNetV2": "a79fe71a67fc"
+    },
+    "fitted": true,
+    "stage": 6
   },
   "multilabel": {
     "completed": true,
@@ -197,7 +204,7 @@
     "clinically_validated": false,
     "coverage_evaluated": true,
     "selective_risk_evaluated": true,
-    "local_tests": 135,
+    "local_tests": 150,
     "tested_surfaces": [
       "API",
       "web",
@@ -205,14 +212,15 @@
       "TXT",
       "PDF"
     ],
-    "remote_deployment_verified": true,
+    "remote_deployment_verified": false,
     "deployed_source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6",
     "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
     "ci_status": "success",
     "evaluation_artifact": "site/model/selective_evaluation.json",
     "error_reduction_demonstrated": false,
-    "model_and_classifier_threshold_changed": false,
-    "ood_parameters_changed": true
+    "model_and_classifier_threshold_changed": true,
+    "ood_parameters_changed": true,
+    "active_stage": 6
   },
   "image_quality": {
     "implemented": true,
@@ -259,36 +267,43 @@
     "policy": "ood_guard_v2",
     "cohorts": {
       "internal_test": {
-        "accepted": 598,
+        "accepted": 608,
         "total": 618,
-        "coverage": 0.9676375404530745,
-        "accepted_errors": 66
+        "coverage": 0.9838187702265372,
+        "accepted_errors": 68
       },
       "external_openi": {
-        "accepted": 32,
+        "accepted": 167,
         "total": 200,
-        "coverage": 0.16,
-        "accepted_errors": 20
+        "coverage": 0.835,
+        "accepted_errors": 53
+      },
+      "rsna_confirmation": {
+        "accepted": 348,
+        "total": 400,
+        "coverage": 0.87,
+        "accepted_errors": 45
       }
     },
     "error_reduction_demonstrated": false,
     "clinically_validated": false,
     "report": "site/model/selective_evaluation.json",
-    "documentation": "training/OOD_STAGE5_KZ.txt",
+    "documentation": "training/GENERALIZATION_STAGE6_KZ.txt",
     "local_tests": {
-      "pytest_passed": 135,
-      "browser_passed": 24
+      "pytest_passed": 150,
+      "browser_passed": 29
     },
     "evidence": "training/ood_stage5/verification.json",
-    "remote_deployment_verified": true,
+    "remote_deployment_verified": false,
     "deployed_source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6",
     "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
     "ci_status": "success",
-    "model_and_classifier_threshold_changed": false,
+    "model_and_classifier_threshold_changed": true,
     "ood_parameters_changed": true,
-    "classifier_threshold_changed": false,
+    "classifier_threshold_changed": true,
     "ood_threshold_changed": true,
-    "historical_stage4_documentation": "training/SELECTIVE_EVALUATION_KZ.txt"
+    "historical_stage4_documentation": "training/SELECTIVE_EVALUATION_KZ.txt",
+    "active_stage": 6
   },
   "ood_stage5": {
     "implemented": true,
@@ -320,5 +335,105 @@
     "ci_status": "success",
     "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
     "evidence": "training/ood_stage5/verification.json"
+  },
+  "generalization_stage6": {
+    "implemented": true,
+    "promoted_locally": true,
+    "first_candidate_rejected": true,
+    "routing_gate_passed": true,
+    "fresh_confirmation_count": 400,
+    "rsna_source_used_in_development": true,
+    "new_institution_validation": false,
+    "rsna_total_patients": 2800,
+    "train_count": 5401,
+    "validation_count": 1352,
+    "model_id": "a79fe71a67fc",
+    "ood_parameter_id": "b0c5e869838e",
+    "metrics": {
+      "rsna_confirmation": {
+        "count": 400,
+        "normal": 200,
+        "positive": 200,
+        "accuracy": 0.88,
+        "balanced_accuracy": 0.88,
+        "sensitivity": 0.84,
+        "specificity": 0.92,
+        "precision": 0.9130434782608695,
+        "f1": 0.875,
+        "roc_auc": 0.937925,
+        "average_precision": 0.9428828071605702,
+        "TN": 184,
+        "FP": 16,
+        "FN": 32,
+        "TP": 168,
+        "errors": 48,
+        "threshold": 0.5
+      },
+      "rsna_prior_holdout": {
+        "count": 400,
+        "normal": 200,
+        "positive": 200,
+        "accuracy": 0.8575,
+        "balanced_accuracy": 0.8574999999999999,
+        "sensitivity": 0.855,
+        "specificity": 0.86,
+        "precision": 0.8592964824120602,
+        "f1": 0.8571428571428571,
+        "roc_auc": 0.9346250000000002,
+        "average_precision": 0.9358841119985216,
+        "TN": 172,
+        "FP": 28,
+        "FN": 29,
+        "TP": 171,
+        "errors": 57,
+        "threshold": 0.5
+      },
+      "internal_test": {
+        "count": 618,
+        "normal": 231,
+        "positive": 387,
+        "accuracy": 0.889967637540453,
+        "balanced_accuracy": 0.865901540320145,
+        "sensitivity": 0.9612403100775194,
+        "specificity": 0.7705627705627706,
+        "precision": 0.8752941176470588,
+        "f1": 0.916256157635468,
+        "roc_auc": 0.9578061903643299,
+        "average_precision": 0.9680444625121727,
+        "TN": 178,
+        "FP": 53,
+        "FN": 15,
+        "TP": 372,
+        "errors": 68,
+        "threshold": 0.5
+      },
+      "external_openi": {
+        "count": 200,
+        "normal": 160,
+        "positive": 40,
+        "accuracy": 0.645,
+        "balanced_accuracy": 0.675,
+        "sensitivity": 0.725,
+        "specificity": 0.625,
+        "precision": 0.3258426966292135,
+        "f1": 0.4496124031007752,
+        "roc_auc": 0.755,
+        "average_precision": 0.44061541679207994,
+        "TN": 100,
+        "FP": 60,
+        "FN": 11,
+        "TP": 29,
+        "errors": 71,
+        "threshold": 0.5
+      }
+    },
+    "protocols": [
+      "protocol.json",
+      "routing_protocol.json"
+    ],
+    "documentation": "training/GENERALIZATION_STAGE6_KZ.txt",
+    "clinical_validation": false,
+    "remote_verified": false,
+    "ci_verified": false
   }
 }

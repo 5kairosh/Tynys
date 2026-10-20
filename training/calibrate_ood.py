@@ -78,6 +78,8 @@ def main():
     model_path, config_path = model_dir / 'pneumonia_mobilenetv2.keras', model_dir / 'model_config.json'
     model_sha, config_sha = sha(model_path), sha(config_path)
     config = json.loads(config_path.read_text(encoding='utf-8'))
+    if config.get('routing', {}).get('head') == 'domain_routed_head':
+        raise ValueError('This is the historical Kaggle-only fitter. Refusing to overwrite Stage6 combined-source OOD. See training/GENERALIZATION_STAGE6_KZ.txt and its frozen replay commits.')
     frames, local_paths = {}, {}
     for name in ('train', 'validation'):
         frames[name] = read_rows(ROOT / 'training/manifests' / (name + '_manifest.csv'))

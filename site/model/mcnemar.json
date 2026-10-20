@@ -3,14 +3,14 @@
   "method": "exact McNemar (two-sided binomial)",
   "n": 618,
   "cnn_only_correct": 19,
-  "mobilenet_only_correct": 128,
-  "p_value": 4.832382023295393e-21,
+  "mobilenet_only_correct": 127,
+  "p_value": 8.426668768018537e-21,
   "alpha": 0.05,
   "significant": true,
   "notice": "Жұптық тест, осы ішкі test жиынына қатысты. Пациент суреттері тәуелсіз болмауы мүмкін.",
   "model_ids": {
     "CNN": "19f707027db4",
-    "MobileNetV2": "ea584b998a45"
+    "MobileNetV2": "a79fe71a67fc"
   },
-  "config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174"
+  "config_sha256": "63c6e98cc7713993778fb8b44430a8ebb6b334bac66be5ec0f815ea45f63eb4c"
 }

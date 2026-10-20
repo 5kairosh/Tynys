@@ -19,11 +19,12 @@ function renderSelectiveEvaluation(report){
   try{
     for(const [key,title,description] of [
       ['internal_test','Ішкі тест · Kaggle','Тест деректері. Топтар файл атынан алынған; ресми пациент ID емес.'],
-      ['external_openi','Сыртқы тексеру · OpenI','Басқа дереккөз. Бір есеп ID-іне бір сурет; пациенттің қайталанбауы расталмаған.']]){
+      ['external_openi','Сыртқы тексеру · OpenI','Басқа дереккөз. Бір есеп ID-іне бір сурет; пациенттің қайталанбауы расталмаған.'],
+      ...(report.cohorts.rsna_confirmation?[['rsna_confirmation','RSNA · жаңа 400 пациент','RSNA оң санаты — өкпе күңгірттенуі. Бұл клиникалық диагноз емес.']]:[])]){
       const value=report.cohorts[key],all=value.baseline,accepted=value.accepted,withheld=value.withheld;
       const card=element('article','','audit-card');card.dataset.cohort=key;
-      card.append(element('h4',title),element('p',`${all.count} сурет · NORMAL ${all.normal} · PNEUMONIA ${all.pneumonia}`,'audit-count'));
-      const before=report.comparison_to_stage4?.cohorts?.[key];
+      card.append(element('h4',title),element('p',`${all.count} сурет · NORMAL ${all.normal} · ${key==='rsna_confirmation'?'RSNA_LUNG_OPACITY':'PNEUMONIA'} ${all.pneumonia}`,'audit-count'));
+      const before=(report.comparison_to_stage5||report.comparison_to_stage4)?.cohorts?.[key];
       if(before)card.append(element('p',`Қамту: бұрын ${pct(before.coverage)} (${before.accepted.count}/${all.count}) → қазір ${pct(value.coverage)}.`,'audit-change'));
       const headline=element('div','','audit-coverage');headline.append(element('strong',pct(value.coverage)),element('span',`Қамту: ${accepted.count} / ${all.count} суретке қорытынды берілді`));card.append(headline);
       const bar=element('div','','audit-bar');bar.setAttribute('role','img');bar.setAttribute('aria-label',`Қорытынды берілді: ${accepted.count}; берілмеді: ${withheld.count}`);

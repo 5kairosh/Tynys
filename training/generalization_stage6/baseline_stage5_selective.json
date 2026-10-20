@@ -1,0 +1,110 @@
+{
+  "policy": "ood_guard_v2",
+  "ood_threshold": 38.25761417386084,
+  "cohorts": {
+    "internal_test": {
+      "baseline": {
+        "count": 618,
+        "normal": 231,
+        "pneumonia": 387,
+        "TN": 179,
+        "FP": 52,
+        "FN": 15,
+        "TP": 372,
+        "errors": 67,
+        "accuracy": 0.8915857605177994,
+        "error_rate": 0.10841423948220065,
+        "sensitivity": 0.9612403100775194,
+        "specificity": 0.7748917748917749
+      },
+      "accepted": {
+        "count": 598,
+        "normal": 229,
+        "pneumonia": 369,
+        "TN": 177,
+        "FP": 52,
+        "FN": 14,
+        "TP": 355,
+        "errors": 66,
+        "accuracy": 0.8896321070234113,
+        "error_rate": 0.11036789297658862,
+        "sensitivity": 0.962059620596206,
+        "specificity": 0.7729257641921398
+      },
+      "withheld": {
+        "count": 20,
+        "normal": 2,
+        "pneumonia": 18,
+        "TN": 2,
+        "FP": 0,
+        "FN": 1,
+        "TP": 17,
+        "errors": 1,
+        "accuracy": 0.95,
+        "error_rate": 0.05,
+        "sensitivity": 0.9444444444444444,
+        "specificity": 1.0
+      },
+      "coverage": 0.9676375404530745,
+      "withheld_rate": 0.032362459546925564,
+      "reasons": {
+        "within_reference": 598,
+        "ood_shift": 20,
+        "ood_unavailable": 0
+      },
+      "max_archived_score_delta": 1.1328808297017545e-05
+    },
+    "external_openi": {
+      "baseline": {
+        "count": 200,
+        "normal": 160,
+        "pneumonia": 40,
+        "TN": 87,
+        "FP": 73,
+        "FN": 17,
+        "TP": 23,
+        "errors": 90,
+        "accuracy": 0.55,
+        "error_rate": 0.45,
+        "sensitivity": 0.575,
+        "specificity": 0.54375
+      },
+      "accepted": {
+        "count": 32,
+        "normal": 29,
+        "pneumonia": 3,
+        "TN": 9,
+        "FP": 20,
+        "FN": 0,
+        "TP": 3,
+        "errors": 20,
+        "accuracy": 0.375,
+        "error_rate": 0.625,
+        "sensitivity": 1.0,
+        "specificity": 0.3103448275862069
+      },
+      "withheld": {
+        "count": 168,
+        "normal": 131,
+        "pneumonia": 37,
+        "TN": 78,
+        "FP": 53,
+        "FN": 17,
+        "TP": 20,
+        "errors": 70,
+        "accuracy": 0.5833333333333334,
+        "error_rate": 0.4166666666666667,
+        "sensitivity": 0.5405405405405406,
+        "specificity": 0.5954198473282443
+      },
+      "coverage": 0.16,
+      "withheld_rate": 0.84,
+      "reasons": {
+        "within_reference": 32,
+        "ood_shift": 168,
+        "ood_unavailable": 0
+      },
+      "max_archived_score_delta": 3.041047548113518e-06
+    }
+  }
+}

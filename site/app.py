@@ -68,6 +68,7 @@ class Engine:
         self.cnn_fingerprint = None
         self.comparison_error = None
         self.ood = OODDetector()
+        self._logit_head = None
 
     def load(self):
         with self.lock:
@@ -86,6 +87,7 @@ class Engine:
                         for row in csv.DictReader(stream):
                             metrics.append({k: (v if k == "model" else float(v)) for k, v in row.items()})
                 self.tf, self.model, self.config, self.metrics = tf, model, config, metrics
+                self._logit_head = None
                 self.fingerprint = hashlib.sha256((MODEL_DIR / "pneumonia_mobilenetv2.keras").read_bytes()).hexdigest()[:12]
                 self.error = None
                 self.ood.load(MODEL_DIR/"ood_params.npz", self.fingerprint,
@@ -168,16 +170,25 @@ class Engine:
             x = layer(x, training=False)
         feature_maps = layers[base_index](x, training=False)
         dense = layers[-1]
-        if not isinstance(dense, tf.keras.layers.Dense) or dense.units != 1:
-            raise ValueError('Grad-CAM expects the trained one-unit sigmoid head.')
+        routed = isinstance(dense, tf.keras.Model) and dense.name == 'domain_routed_head'
+        if routed:
+            if self._logit_head is None:
+                self._logit_head = tf.keras.Model(dense.input, dense.get_layer('probability').input)
+        elif not isinstance(dense, tf.keras.layers.Dense) or dense.units != 1:
+            raise ValueError('Grad-CAM expects a known sigmoid classification head.')
         with tf.GradientTape() as tape:
             tape.watch(feature_maps)
             head = feature_maps
             for layer in layers[base_index + 1:-1]:
                 head = layer(head, training=False)
-            logits = tf.linalg.matmul(head, dense.kernel)
-            if dense.use_bias:
-                logits = logits + dense.bias
+            if routed:
+                # Hard routing is piecewise constant: differentiate the selected
+                # expert's actual pre-sigmoid decision margin. No surrogate map.
+                logits = self._logit_head(head, training=False)
+            else:
+                logits = tf.linalg.matmul(head, dense.kernel)
+                if dense.use_bias:
+                    logits = logits + dense.bias
             target = logits[:, 0] if positive else -logits[:, 0]
         gradients = tape.gradient(target, feature_maps)
         if gradients is None:
@@ -248,6 +259,7 @@ class Engine:
                 raw_score = float(self.model(image[None, ...], training=False).numpy()[0, 0])
                 score = calibrate_score(raw_score, self.config.get("calibration"))
                 threshold = float(self.config["threshold"])
+                routing = {'available': False}
                 xray_check = self.ood.status()
                 if xray_check['available']:
                     try:
@@ -258,6 +270,12 @@ class Engine:
                                 break
                         vector = tf.reduce_mean(x,axis=(1,2)).numpy()[0]
                         xray_check = self.ood.check(vector)
+                        head = self.model.layers[-1]
+                        if isinstance(head,tf.keras.Model) and head.name == 'domain_routed_head':
+                            domain_logit = float(head.get_layer('source_domain_logit')(vector[None,...],training=False).numpy()[0,0])
+                            routing = {'available':True,'selected_expert':'rsna_adapted' if domain_logit>=0 else 'baseline',
+                                       'rsna_domain_score':1/(1+math.exp(-max(-60,min(60,domain_logit)))),
+                                       'notice':'Бұл үйрету дереккөздеріне ұқсастық бойынша тармақ таңдау. Пациент жасын, диагнозын немесе болжамның дұрыстығын анықтамайды.'}
                     except Exception:
                         logging.exception('OOD warning unavailable')
                         xray_check = {'available':False,'message':'OOD қашықтығын есептеу мүмкін болмады.'}
@@ -295,7 +313,7 @@ class Engine:
             raise HTTPException(422, "Суретті модельмен өңдеу мүмкін болмады.") from exc
         if not math.isfinite(score) or not 0 <= score <= 1:
             raise HTTPException(500, "Модель жарамсыз балл берді.")
-        return {"assessment": assess_input(xray_check), "quality": quality,
+        return {"assessment": assess_input(xray_check), "quality": quality, "domain_routing": routing,
                 "model_class": self.config["classes"][int(score >= threshold)],
                 "input_format": "DICOM" if is_dicom else "image",
                 "preview": "data:image/png;base64,"+base64.b64encode(data).decode("ascii") if is_dicom else None,

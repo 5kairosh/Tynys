@@ -36,6 +36,7 @@ def main():
     model_dir = ROOT / 'site/model'
     bindings = artifact_bindings(model_dir)
     config = json.loads((model_dir / 'model_config.json').read_text(encoding='utf-8'))
+    stage6 = config.get('routing', {}).get('head') == 'domain_routed_head'
     detector = OODDetector()
     detector.load(model_dir / 'ood_params.npz', bindings['model'][:12])
     if not detector.status()['available']:
@@ -49,6 +50,15 @@ def main():
     assert [(r['sha256'], r['label']) for r in internal] == [(r['sha256'], r['label']) for r in frames['test']]
     external = read_rows(ROOT / 'training/external_predictions.csv')
     cohorts = {'internal_test': internal, 'external_openi': external}
+    if stage6:
+        rsna = read_rows(ROOT/'training/generalization_stage6/holdout_confirmation_manifest.csv')
+        predictions = read_rows(ROOT/'training/generalization_stage6/rsna_confirmation_routed_predictions.csv')
+        assert [r['sha256'] for r in rsna] == [r['sha256'] for r in predictions]
+        assert len({r['patient_group'] for r in rsna}) == len(rsna) == 400
+        development = [r for split in ('train','validation','holdout')
+                       for r in read_rows(ROOT/'training/generalization_stage6'/(split+'_manifest.csv'))]
+        assert not {r['patient_group'] for r in rsna} & {r['patient_group'] for r in development}
+        cohorts['rsna_confirmation'] = [{**r,'MobileNetV2_score':p['candidate_score']} for r,p in zip(rsna,predictions)]
     all_internal = {r['sha256'] for rows in frames.values() for r in rows}
     assert not all_internal & {r['sha256'] for r in external}
     paths = {}
@@ -59,7 +69,9 @@ def main():
         paths[name] = []
         for row in rows:
             path = (ROOT / 'training/cache/test' / (row['sha256'] + Path(row['path']).suffix)
-                    if name == 'internal_test' else ROOT / 'training/cache/openi' / (hashlib.sha256(row['url'].encode()).hexdigest() + '.png'))
+                    if name == 'internal_test' else
+                    ROOT/'training/cache/external_stage6/images'/(row['source_id']+'.png') if name=='rsna_confirmation' else
+                    ROOT / 'training/cache/openi' / (hashlib.sha256(row['url'].encode()).hexdigest() + '.png'))
             if hashlib.sha256(path.read_bytes()).hexdigest() != row['sha256']:
                 raise ValueError('Image SHA-256 mismatch: ' + str(path))
             paths[name].append(path)
@@ -138,17 +150,20 @@ def main():
     report = {'schema': SCHEMA, 'policy': POLICY, 'clinically_validated': False,
               'thresholds_tuned_on_evaluation': False, 'bindings': bindings,
               'classification_threshold': config['threshold'], 'ood_threshold': detector.params[2],
-              'ood_fitted_on': 'train reference; cutoff on separate validation (prespecified 95% target)',
+              'ood_fitted_on': 'Kaggle + RSNA train reference; separate development validation cutoff; target .95' if stage6 else 'train reference; cutoff on separate validation (prespecified 95% target)',
               'ood_calibration': detector.metadata,
               'evaluation_cohorts_previously_inspected': True,
-              'comparison_to_stage4': {k: v for k,v in json.loads((ROOT/'training/ood_stage5/baseline_stage4/summary.json').read_text(encoding='utf-8')).items() if k in ('policy','ood_threshold','cohorts')},
+              ('comparison_to_stage5' if stage6 else 'comparison_to_stage4'): {k: v for k,v in json.loads((ROOT/('training/generalization_stage6/baseline_stage5_selective.json' if stage6 else 'training/ood_stage5/baseline_stage4/summary.json')).read_text(encoding='utf-8')).items() if k in ('policy','ood_threshold','cohorts')},
               'preprocessing': 'decode_image RGB; float32; resize_with_pad 224x224; trained model preprocessing',
-              'model': 'MobileNetV2', 'cohorts': summaries,
+              'model': 'MobileNetV2 domain-routed experts' if stage6 else 'MobileNetV2', 'cohorts': summaries,
               'source_hash_encoding': 'SHA256 of UTF-8 text with CRLF normalized to LF',
               'source_sha256': {str(path.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
                   for path in [ROOT/'training/manifests/test_manifest.csv', ROOT/'training/manifests/test_predictions.csv',
-                               ROOT/'training/external_predictions.csv', Path(__file__), ROOT/'training/ood_stage5/protocol.json',
-                               ROOT/'training/ood_stage5/fit_report.json', *sorted(output.glob('*.csv'))]},
+                               ROOT/'training/external_predictions.csv', Path(__file__),
+                               *( [ROOT/'training/generalization_stage6'/n for n in
+                                   ('routing_protocol.json','routing_fit_report.json','routing_evaluation.json','ood_fit_report.json','holdout_confirmation_manifest.csv')]
+                                 if stage6 else [ROOT/'training/ood_stage5/protocol.json', ROOT/'training/ood_stage5/fit_report.json']),
+                               *sorted(output.glob('*.csv'))]},
               'limitations': ['Fixed-policy descriptive audit; no causal/clinical reliability claim.',
                   'Accepted-subset accuracy has a different denominator from full-cohort accuracy.',
                   'OOD acceptance is not X-ray authentication or a guarantee of correctness.',
@@ -158,6 +173,12 @@ def main():
                   'Validation calibrated the cutoff and was used for classifier selection: no formal coverage guarantee.',
                   'Test/OpenI were previously inspected in stage 4. This is a descriptive recheck, not a fresh confirmatory study.'],
               'tensorflow_version': tf.__version__}
+    if stage6:
+        report['fresh_confirmation_cohort'] = 'rsna_confirmation: 400 distinct NIH patients; only this cohort was fresh for the 6B design.'
+        report['limitations'].extend([
+            'RSNA positive labels are radiographic lung opacity, not confirmed clinical pneumonia.',
+            'RSNA is also a development source: its fresh patients are not validation at a new institution.',
+            'OpenI accepted error counts rose with coverage; do not claim fewer absolute erroneous displayed conclusions or clinical safety.'])
     if artifact_bindings(model_dir) != bindings:
         raise ValueError('Source/parameters changed during evaluation; refusing stale publication.')
     destination = model_dir / 'selective_evaluation.json'

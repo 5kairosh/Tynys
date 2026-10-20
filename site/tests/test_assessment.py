@@ -41,7 +41,7 @@ def test_api_and_pdf_agree_without_changing_scores(client, monkeypatch, within_r
     assert (result['assessment']['status'] == 'review_required') is review
     assert result['assessment']['clinically_validated'] is False
     assert result['model_class'] == ('PNEUMONIA' if result['pneumonia_score'] >= result['threshold'] else 'NORMAL')
-    assert result['threshold'] == .745
+    assert result['threshold'] == engine.config['threshold']
     assert result['comparison']['available']
     assert result['comparison']['models'][1]['pneumonia_score'] == result['pneumonia_score']
     report = client.post('/api/report', files=[('files', ('a.png', raw)), ('files', ('b.png', raw))])

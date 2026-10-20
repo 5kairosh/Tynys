@@ -4,79 +4,74 @@ tags: [medical-imaging, image-classification, tensorflow, mobilenetv2]
 library_name: keras
 ---
 
-# Tynys модель картасы
+# Tynys модель картасы — 6-кезең, 2026-10-21
 
-## Архитектура және деректер
+Оқу зерттеу прототипі. NORMAL/PNEUMONIA санаттары клиникалық диагноз емес;
+NORMAL барлық ауруды жоққа шығармайды. Балл ауру ықтималдығы немесе сенімділік пайызы емес.
 
-MobileNetV2 (ImageNet), GlobalAveragePooling, Dropout, sigmoid Dense(1).
-Алдымен head, кейін соңғы 30 қабаттың BatchNormalization емес қабаттарын fine-tuning.
-CNN: Conv2D 32/64/128, MaxPooling, GAP, Dropout, Dense(1).
-[Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia).
-Train 3801, validation 952, test 618. 5856 жарамды сурет, тазалаудан кейін 5371.
-Файл атауы топтары ресми patient ID емес. SHA-256 тек байт бойынша көшірмені тексереді.
+## Архитектура және таңдау
 
-## Қазіргі ішкі метрикалар, calibration fitted
+Frozen MobileNetV2 (ImageNet, бұрын Kaggle-да fine-tuning), GAP1280, екі frozen Dense
+expert, source-domain logistic router C0.001. Kaggle бастапқы expert сақталған,
+RSNA expert жаңа train-де үйретілген. Тармақ source-logit>=0 ережесімен таңдалады.
+Әр expert operating margin-і common threshold0.5-ке келтірілген; соңғы T1.1374971593841223
+тек validation NLL-мен fit болған. Барлығы стандартты Keras layers/ops .keras ішінде;
+safe_mode=True, custom objects/Lambda жоқ. Router жас/диагноз/дұрыстықты анықтамайды.
+CNN бастапқы салмағы мен T0.6820277027003551 сақталған; ensemble1352 validation-да қайта fit.
+Модель SHA256: a79fe71a67fc4e100a5cbde8624fb9286e663bd59e4beb74984810b3f2ba4e43.
 
-CNN: шек 0.475, accuracy 71.52%, precision 70.81%, recall 92.76%, specificity 35.93%, F1 0.8031, ROC-AUC 0.8211; TN 83, FP 148, FN 28, TP 359.
-MobileNetV2: шек 0.745, accuracy 89.16%, precision 87.74%, recall 96.12%, specificity 77.49%, F1 0.9174, ROC-AUC 0.9581; TN 179, FP 52, FN 15, TP 372.
-Ensemble: шек 0.745, accuracy 89.16%, precision 87.74%, recall 96.12%, specificity 77.49%, F1 0.9174, ROC-AUC 0.9583; TN 179, FP 52, FN 15, TP 372.
+## Деректер және жаңа тексеру
 
-MobileNetV2: T=0.97995943, validation NLL 0.08822560 → 0.08820212.
-CNN: T=0.68202770, validation NLL 0.29725222 → 0.27995523.
-Validation толық 952/952. Қазіргі шектер validation-да recall≥0.90 шартынан қайта таңдалған.
-Test fitting үшін қолданылған жоқ. MobileNetV2 90% accuracy мақсатына жетпеді.
+Kaggle3801 train/952 validation/618 test; RSNA1600 train/400 validation/400 prior
+holdout/400 new confirmation. NIH mapping пациенттері split-терге қайталанбайды.
+Барлық2800 RSNA пациентінен бір сурет, source ZIP CRC және PNG SHA тексерілген.
+Calculated Normal vs Lung Opacity ғана; басқа abnormal findings NORMAL емес.
+Оң RSNA белгісі — пневмонияға күдікті күңгірттену, клиникалық расталған пневмония емес.
+RSNA үйретуге қатысқан дереккөз: confirmation жаңа пациенттерде, жаңа мекемеде емес.
+OpenI200 тек evaluation, әлсіз report MeSH. Kaggle/OpenI және алғашқы RSNA400 бұрын
+қаралған; тек соңғы400 RSNA пациенті 6B дизайны үшін жаңа болды. Қайта tuning жоқ.
+6A ішкі balanced accuracy талабынан өтпей енгізілмеді; 6B екінші жаңа holdout алды.
 
-## Қазіргі сыртқы метрикалар
+## Қазіргі барлық суретке техникалық болжам нәтижесі
 
-OpenI Indiana NLM API, 200 сурет (160 NORMAL, 40 PNEUMONIA), seed 42.
-CNN: шек 0.475, accuracy 21.50%, precision 20.30%, recall 100.00%, specificity 1.88%, F1 0.3376, ROC-AUC 0.4706; TN 3, FP 157, FN 0, TP 40.
-MobileNetV2: шек 0.745, accuracy 55.00%, precision 23.96%, recall 57.50%, specificity 54.37%, F1 0.3382, ROC-AUC 0.5442; TN 87, FP 73, FN 17, TP 23.
-Ensemble: шек 0.745, accuracy 55.00%, precision 23.96%, recall 57.50%, specificity 54.37%, F1 0.3382, ROC-AUC 0.5441; TN 87, FP 73, FN 17, TP 23.
-Таңдау бұрынғы cohort-пен бірдей, сыртқы шек өзгертілмеді. SHA-256 қиылысы жоқ.
-Бір есеп UID-іне бір сурет. Longitudinal patient identity толық расталмаған.
-MeSH белгілері клиникалық gold standard емес, проекцияны PA деп кепілдемейміз.
+- RSNA жаңа400: accuracy88%, balanced accuracy88%, sensitivity84%, specificity92%,
+  AUC0.937925; TN184 FP16 FN32 TP168. Бастапқы68%, қате128→48.
+  Жұптық bootstrap gain95% аралығы +15…+25 пайыздық тармақ (10000 resamples).
+- OpenI200: accuracy64.5%, balanced accuracy67.5%, sensitivity72.5%, specificity62.5%,
+  AUC0.755; TN100 FP60 FN11 TP29. Бастапқы55%, қате90→71. Қайта тексеру ғана.
+- Kaggle618: accuracy88.9968%, sensitivity96.124%, specificity77.056%, AUC0.957806;
+  TN178 FP53 FN15 TP372. Бұрынғы89.1586%, қате67→68. Ішкі сәл төмендеу жасырылмаған.
 
-## OOD және түсіндірме
+RSNA квотасы50/50: accuracy клиникадағы prevalence-ті бағаламайды. Мекемелер,
+құрылғылар және популяциялар бойынша клиникалық сапа расталмаған. OpenI қатесі әлі35.5%.
 
-Train 3801-ден reference covariance; бөлек validation 952-ден cutoff 38.25761417; 1280 белгі.
-Параметрлер дайын, non-X-ray сапасы бөлек бағаланған жоқ. OOD ауытқуы болса не тексерілмесе, сайт санат бойынша қорытынды бермейді.
-Grad-CAM 7×7 картадан жуық аймақты көрсетеді, зақым шекарасын анықтамайды.
-Калибрлеу клиникалық ықтималдықты дәлелдемейді. NORMAL барлық ауруды жоққа шығармайды.
+## OOD, қамту және түсіндірме
 
-## McNemar және ensemble
+Train5401 reference / бөлек validation1352 cutoff; covariance shrinkage0.1,
+95% target, rank1286, cutoff38.37188343647505. Formal coverage guarantee жоқ.
+Evaluation суреттері threshold fit-ке кірмейді. OOD X-ray authentication емес.
+Қорытынды: Kaggle608/618, қате68/608; OpenI167/200, қате53/167;
+RSNA348/400, қате45/348. Бұл denominator all-cohort accuracy-мен бірдей емес.
+Ескі OpenI accepted32 ішіндегі20 қате орнына енді167 ішіндегі53 қате бар:
+абсолют қате қорытынды азайды немесе клиникалық қауіпсіздік артты деуге болмайды.
 
-CNN-only correct 19, MobileNetV2-only correct 128,
-exact two-sided p=4.8323820233e-21. Пациент суреттерінің тәуелсіздігі толық расталмаған.
-Ensemble: validation-да таңдалған салмақтар {"CNN": 0.001005948939264576, "MobileNetV2": 0.9989940510607355}, шек 0.745. Сыртқы белгілер таңдау үшін қолданылған жоқ.
+Grad-CAM дәл таңдалған expert margin-інің градиентіне есептеледі. Ол router таңдауының
+себебін түсіндірмейді; ауру ошағы/шекарасы/диагноз дәлелі емес. Техникалық image-quality
+warnings диагнозды, анатомиялық қамтуды немесе X-ray түпнұсқалығын растамайды.
+Тармақ сайт/TXT/PDF-те көрсетіледі. Ескі opt-in history қайта есептелмейді.
 
-## Кіріс, қолдану шектеулері және лицензия
+## Дәлел және атрибуция
 
-decode_image, float32, resize_with_pad(224,224), модель. Rescaling ішінде.
-DICOM CR/DX кірісі жадта percentile PNG-ге айналады. DICOM clinical validation жасалмаған.
-Оқу прототипі. Диагноз, ем таңдау немесе пациент туралы автоматты шешім үшін қолданылмайды.
-Сервер суреттерді тұрақты қоймада сақтамайды. Тарих әдепкіде бет жадында;
-пайдаланушы келісімімен браузердің IndexedDB қоймасында түпнұсқа файл мен нәтиже
-сақталады (20 талдау, 80 МиБ, 7 күн; ескіргені келесі тексеруде жойылады).
-Ортақ браузерде тарих көрінеді. Толық жою және келісімді өшіру бар.
-Қосымша шифрлау/аккаунт жоқ; сипаттама: training/HISTORY_KZ.txt.
-Модель салмақтарына автоматты жаңа лицензия берілмейді, дереккөз шарттары тексерілуі керек.
-OpenI: CC BY-NC-ND 4.0. Суреттер архивке/репозиторийге кірмейді.
-
-## Жеке multi-label эксперименті
-
-MULTI-LABEL — ЖЕКЕ ОҚУ ЭКСПЕРИМЕНТІ
-{"train": {"images": 434, "groups": 233, "positive_counts": {"pneumonia": 54, "atelectasis": 151, "cardiomegaly": 141}}, "validation": {"images": 91, "groups": 49, "positive_counts": {"pneumonia": 10, "atelectasis": 30, "cardiomegaly": 28}}, "test": {"images": 92, "groups": 49, "positive_counts": {"pneumonia": 10, "atelectasis": 29, "cardiomegaly": 29}}}
-pneumonia: шек 0.26, AUC 0.5378, F1 0.2308, sensitivity 30.00%, specificity 84.15%; TN 69, FP 13, FN 7, TP 3.
-atelectasis: шек 0.17, AUC 0.6196, F1 0.4828, sensitivity 96.55%, specificity 6.35%; TN 4, FP 59, FN 1, TP 28.
-cardiomegaly: шек 0.18, AUC 0.5632, F1 0.4894, sensitivity 79.31%, specificity 33.33%; TN 21, FP 42, FN 6, TP 23.
-ImageNet MobileNetV2 + GAP + үш sigmoid Dense(1), BCE. Соңғы 30 қабат, BN мұздатылған. Таңдалған кезең: fine.
-Шектер тек validation F1 арқылы. MeSH report-level әлсіз белгілер, жоқ белгі weak negative деп алынған.
-Report ID longitudinal пациент ID емес; frontal/lateral аралас. Шағын квоталық жиын жалпы популяцияны көрсетпейді.
-Binary сыртқы cohort-пен сурет қиылысы: 71; бұл жаңа тәуелсіз binary тексеру емес.
-OpenI суреттерін, үйретілген салмақтарын және қате суреттерін таратуға болмайды: олар тек жергілікті private/cache бумасында, Git/ZIP-ке кірмейді.
-Сайтқа қосылған жоқ. Қайта орындау: training/multilabel_colab_kz.ipynb немесе training/multilabel_experiment.py.
-Толық сандар: training/outputs/multilabel/per_label_metrics.csv және experiment_report.json.
-
+150 pytest +29 Chromium/IndexedDB жергілікті тесті өтті. Нақты Kaggle/RSNA source-та
+толық API паритеті және екі expert Grad-CAM reconstruction-ы тексерілді. PDF2бет визуалды тексерілді.
+CI/онлайн үшін training/generalization_stage6/verification.json соңғы күйін қараңыз.
+Әдіс/протокол/шектеу: training/GENERALIZATION_STAGE6_KZ.txt.
+Source terms/citations: training/generalization_stage6/DATA_ATTRIBUTION.md.
+NIH Clinical Center; Wang et al., CVPR2017; RSNA/STR; Shih et al., Radiology AI2019,
+https://doi.org/10.1148/ryai.2019180041 . OpenI evaluation-only, оның суреті/салмағы таратылмайды.
+Сурет/GAP/DICOM кэштері, private және пайдаланушы суреттері Git/ZIP-ке кірмейді.
+Бастапқы модель картасы: training/generalization_stage6/baseline_MODEL_CARD.md (тарихи).
+Бастапқы Colab notebook және презентация6-кезең моделін қамтымайды.
 
 ## Deployment
 
@@ -111,60 +106,5 @@ Space интернетке осы тапсырмада жарияланған ж
 [Hugging Face Docker Spaces](https://huggingface.co/docs/hub/spaces-sdks-docker).
 
 
-## English summary
 
-### Advisory image-quality checks (2026-10-18)
-
-`image_quality_v1` measures grayscale pixel brightness, robust contrast, original resolution,
-aspect ratio and normalized Laplacian detail on a thumbnail of at most 512 pixels per side.
-The central 90% is inspected. Only the detail cutoff is reference fitted: the lower 1st percentile
-of 947 eligible measurements from all 952 SHA-verified validation images (0.0017761404087327697).
-Other limits are engineering constants. Configuration: `site/model/image_quality_config.json`.
-
-Warnings are advisory and appear in the UI, per-file history/batch entries, TXT and PDF reports.
-They do not change model pixels, weights, calibration, the 0.745 decision threshold or the OOD guard.
-For DICOM, only the rendered PNG is measured; original acquisition/exposure quality is not assessed.
-Missing/broken quality parameters produce an unavailable state, not a quality pass.
-Image-quality labels are unavailable: reference warning frequency is not false-positive rate,
-sensitivity, specificity or clinical validation. Anatomical coverage/cropping and X-ray authenticity
-are not detected. Users must inspect anatomical coverage themselves. Reproduction and limits:
-`training/QUALITY_CHECK_KZ.txt`.
-
-### OOD display guard (2026-10-18)
-
-`ood_guard_v1` withholds the headline NORMAL/PNEUMONIA classification when the existing
-distribution check flags an input or is unavailable/incomplete. The UI, session history,
-TXT and PDF show «Сенімді бағалау мүмкін емес»; scores and model classes remain available
-as technical outputs. Grad-CAM is optional, with the original image shown by default
-for these inputs. The API adds `assessment.status` (`classified` or `review_required`),
-`reason`, `policy` and `clinically_validated: false`; existing model scores/classes remain unchanged.
-
-This is a conservative presentation rule, not a validated selective classifier, an X-ray
-authenticator or a clinical confidence estimate. It does not change model weights, calibration,
-the 0.745 decision threshold or the validation OOD threshold. Existing internal/external
-metrics measure the original forced binary predictions. The fixed-policy audit (2026-10-20)
-accepted 39/618 internal test images (6 errors/39), and 0/200 external OpenI images.
-External selective accuracy is undefined. This audit does not demonstrate error reduction. A passed OOD check does not establish correctness.
-
-Educational binary NORMAL/PNEUMONIA classifier. Calibration is fitted on all 952 SHA-verified
-validation images. T(MobileNetV2)=0.97995943, threshold=0.745.
-Current internal and external results are listed above. OOD reference geometry is fitted on train; its cutoff is calibrated on separate validation.
-Non-X-ray detection performance is unvalidated. No clinical approval is claimed.
-
-## 4-КЕЗЕҢ — САҚТЫҚ ЕРЕЖЕСІНІҢ НАҚТЫ ҚАМТУЫ МЕН ҚАТЕЛІГІ
-Сайттың «Зерттеу нәтижесі» бөліміне ішкі test 618 / сыртқы OpenI 200 жеке
-есептері және JSON жүктеу қосылды. Ішкі қамту 39/618 (6,31%), қабылданған топ
-қатесі 6/39 (15,38%); OpenI 0/200, сондықтан таңдамалы accuracy есептелмейді.
-Қателікті азайту расталған жоқ. Модель мен шектер өзгермеді.
-Әдіс, шектеу, қайта орындау: training/SELECTIVE_EVALUATION_KZ.txt.
-
-## 5-КЕЗЕҢ — ҚАЗІРГІ OOD ЕРЕЖЕСІ (2026-10-20)
-OOD geometry: train 3801; cutoff: бөлек validation 952, алдын ала 95% target.
-OOD шегі 38,25761417386084. Классификация шегі 0,745, модель/T өзгермеді.
-Ішкі test қамтуы 39/618 → 598/618 (96,76%), тоқтатылғаны 579 → 20.
-Қабылданған топ accuracy 88,96%; барлық test accuracy 89,16% өзгерген жоқ.
-OpenI қамтуы 0 → 32/200; сол 32 суреттің 20-сы қате. OOD-тан өту дұрыс
-классификацияға кепіл емес. Қалған 168 сыртқы сурет тоқтатылды.
-Test/OpenI бұрын қаралған; жаңа тәуелсіз клиникалық тексеру деп саналмайды.
-Сипаттама/қайта орындау: training/OOD_STAGE5_KZ.txt.
-Сайт ескі тарихқа «OOD ережесі жаңарған» ескертуін береді; ескі санат өзгертілмейді.
+2026-10-21: жоғарыдағы Docker тексеруі тарихи. 6-кезең image build/run қайта тексерілмеді.

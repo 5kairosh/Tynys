@@ -1,0 +1,31 @@
+{
+  "gate_passed": true,
+  "candidate_model_sha256": "a79fe71a67fc4e100a5cbde8624fb9286e663bd59e4beb74984810b3f2ba4e43",
+  "config_sha256": "63c6e98cc7713993778fb8b44430a8ebb6b334bac66be5ec0f815ea45f63eb4c",
+  "ood_parameter_id": "b0c5e869838e",
+  "ensemble": {
+    "weights": {
+      "CNN": 0.004961958506162733,
+      "MobileNetV2": 0.9950380414938372
+    },
+    "threshold": 0.5,
+    "validation_count": 1352,
+    "selection": "domain/class balanced validation NLL; weights [0.001,0.999]; common operating margin threshold 0.5 fixed",
+    "model_ids": {
+      "CNN": "19f707027db4",
+      "MobileNetV2": "a79fe71a67fc"
+    }
+  },
+  "files": {
+    "site/model/cnn_best.keras": "19f707027db4d0313cd89523dd2a9b44093805cfa6412d1f27258db7be95c4fb",
+    "site/model/external_validation.json": "79a7618ade93168af70dbd507f0581a1d2642a4a6bb64c1e169cd9186d91a562",
+    "site/model/mcnemar.json": "f190083327b878049bf73270cf942ea360d16fd9436e620a8cad7de49cf87c5b",
+    "site/model/model_config.json": "63c6e98cc7713993778fb8b44430a8ebb6b334bac66be5ec0f815ea45f63eb4c",
+    "site/model/ood_params.npz": "b0c5e869838ed25b5b1c720e5015ccbb6e8f6654e2a5b098f25bee2502cafa47",
+    "site/model/pneumonia_mobilenetv2.keras": "a79fe71a67fc4e100a5cbde8624fb9286e663bd59e4beb74984810b3f2ba4e43",
+    "site/model/selective_evaluation.json": "a27582f5537b113f28c7feb799354f966b091801e6c06a81e8d712dfeb2b6427",
+    "site/model/test_metrics.csv": "b6af34eb8341767e085c00691976b74d63692a971de5064a9ee96bd3d132cc72",
+    "training/external_predictions.csv": "3b6313d59fcc848383d3cc118a5981b23b473e9225eda56cc041ddb739cafd63",
+    "training/manifests/test_predictions.csv": "d36e7303537575bbb3be694a3d05a0a8f6de47cc10ea140601fed1428a6affd8"
+  }
+}

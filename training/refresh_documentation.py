@@ -10,6 +10,8 @@ ROOT=Path(__file__).resolve().parents[1]
 def main():
     model=ROOT/'site/model'
     config=json.loads((model/'model_config.json').read_text(encoding='utf-8'))
+    if config.get('routing',{}).get('head')=='domain_routed_head':
+        raise ValueError('Legacy documentation generator cannot describe Stage6 routed experts. Preserve current documents; see training/GENERALIZATION_STAGE6_KZ.txt.')
     calibration=json.loads((ROOT/'training/calibration_report.json').read_text(encoding='utf-8'))
     ood_fit=json.loads((ROOT/'training/ood_stage5/fit_report.json').read_text(encoding='utf-8'))
     assert ood_fit['parameter_sha256']==hashlib.sha256((model/'ood_params.npz').read_bytes()).hexdigest()

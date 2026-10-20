@@ -5,10 +5,11 @@
   <meta name="description" content="Tynys — өкпе рентгендерін NORMAL және PNEUMONIA санаттарына жіктейтін TensorFlow оқу жобасы.">
   <title>Tynys — рентгенге жаңа көзқарас</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230c766c'/%3E%3Cpath d='M29 16h6v13h13v6H35v13h-6V35H16v-6h13z' fill='white'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="/static/style.css?v=a70cc4d437bf">
+  <link rel="stylesheet" href="/static/style.css?v=e24a97fb46f5">
   <script src="/static/history-storage.js?v=d9e7f5a7b82e" defer></script>
-  <script src="/static/selective-evaluation.js?v=6d4df8481d0b" defer></script>
-  <script src="/static/app.js?v=f300ffd0648f" defer></script>
+  <script src="/static/selective-evaluation.js?v=efd211ea4a5a" defer></script>
+  <script src="/static/generalization-evaluation.js?v=106d8e4fa151" defer></script>
+  <script src="/static/app.js?v=7d0b70b8d916" defer></script>
 </head>
 <body>
 <div class="site-wrap">
@@ -76,7 +77,7 @@
             <h3 class="result-title" id="result-title"></h3><p id="result-explanation" class="result-explanation"></p>
             <p id="assessment-note" class="calibration-note" hidden></p>
             <div class="score-heading"><span>Пневмония санатының баллы</span><strong id="score-value"></strong></div>
-            <p id="xray-warning" class="xray-warning" role="status" hidden></p><p id="calibration-note" class="calibration-note"></p><div class="score-track"><div id="score-fill"></div><span id="threshold-marker"></span></div>
+            <p id="xray-warning" class="xray-warning" role="status" hidden></p><p id="calibration-note" class="calibration-note"></p><p id="routing-note" class="calibration-note" hidden></p><div class="score-track"><div id="score-fill"></div><span id="threshold-marker"></span></div>
             <div class="score-labels"><span>0,000</span><span id="threshold-label"></span><span>1,000</span></div>
             <div class="result-meta"><span id="result-time"></span><span id="result-model"></span></div>
             <button class="button secondary download-result" id="download-result">Қорытындыны жүктеу <span>↓</span></button>
@@ -107,15 +108,22 @@
     </section>
 
     <section class="method-section" id="about">
-      <div class="section-heading"><div><div class="eyebrow">02 / ӘДІС</div><h2>Күрделі модель.<br><em>Түсінікті қадамдар.</em></h2></div><p>Colab-тағы модель мен өңдеу әдісі<br>осы сайтта да қолданылады.</p></div>
+      <div class="section-heading"><div><div class="eyebrow">02 / ӘДІС</div><h2>Күрделі модель.<br><em>Түсінікті қадамдар.</em></h2></div><p>Бастапқы MobileNetV2 өңдеуі сақталған.<br>Жіктеу екі дереккөзге бейімделген.</p></div>
       <div class="method-grid"><article><span class="step-number">01</span><h3>Суретті дайындау</h3><p>Рентген үш арнамен оқылып, пропорциясын сақтай отырып 224 × 224 өлшеміне келеді.</p></article><article><span class="step-number">02</span><h3>Белгілерді тану</h3><p>Үйретілген MobileNetV2 желісі сурет белгілерін өңдеп, пневмония санатына балл береді.</p></article><article><span class="step-number">03</span><h3>Нәтижені көрсету</h3><p>Балл сақталған шекпен салыстырылады. OOD тексеруі ауытқуды көрсетсе не орындалмаса, санат бойынша қорытынды берілмейді.</p></article></div>
     </section>
 
     <section class="research-section" id="research">
       <div class="section-heading"><div><div class="eyebrow">03 / ЭКСПЕРИМЕНТ</div><h2>Сандар сөйлейді.</h2></div><p>Сайтқа қосылған модель архивіндегі<br>нақты тест нәтижелері.</p></div>
-      <div class="research-layout"><div class="research-main"><p id="external-note" class="external-note"></p><p id="mcnemar-note" class="calibration-note"></p><div class="table-scroll"><table><caption class="visually-hidden">CNN, MobileNetV2 және Ensemble салыстыру</caption><thead><tr><th>Көрсеткіш</th><th>CNN</th><th>MobileNetV2</th><th>Ensemble</th></tr></thead><tbody id="metrics-table"><tr><td colspan="4">Метрикалар жүктелуде…</td></tr></tbody></table></div><p class="research-footnote">Нәтижелер осы датасеттің тест жиынына қатысты. Өзге суреттердегі сапа бөлек бағалауды қажет етеді.</p></div><aside class="research-aside"><span class="mini-label">НЕГІЗГІ МОДЕЛЬ</span><h3>MobileNetV2</h3><p>ImageNet салмақтары.<br>Transfer Learning.<br>Fine-tuning.</p><div class="model-threshold"><span>Шешім шегі</span><strong id="research-threshold">—</strong></div><a href="https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia" target="_blank" rel="noopener noreferrer">Датасетті қарау ↗</a></aside></div>
+      <div class="research-layout"><div class="research-main"><p id="external-note" class="external-note"></p><p id="mcnemar-note" class="calibration-note"></p><div class="table-scroll"><table><caption class="visually-hidden">CNN, MobileNetV2 және Ensemble салыстыру</caption><thead><tr><th>Көрсеткіш</th><th>CNN</th><th>MobileNetV2</th><th>Ensemble</th></tr></thead><tbody id="metrics-table"><tr><td colspan="4">Метрикалар жүктелуде…</td></tr></tbody></table></div><p class="research-footnote">Нәтижелер осы датасеттің тест жиынына қатысты. Өзге суреттердегі сапа бөлек бағалауды қажет етеді.</p></div><aside class="research-aside"><span class="mini-label">НЕГІЗГІ МОДЕЛЬ</span><h3>MobileNetV2</h3><p>ImageNet салмақтары.<br>Transfer Learning.<br>Екі үйретілген тармақ.</p><div class="model-threshold"><span>Шешім шегі</span><strong id="research-threshold">—</strong></div><a href="https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia" target="_blank" rel="noopener noreferrer">Датасетті қарау ↗</a></aside></div>
+      <section id="generalization-study" class="selective-audit" aria-labelledby="generalization-title">
+        <div class="audit-heading"><div><div class="eyebrow">6-КЕЗЕҢ / СЫРТҚЫ ДЕРЕКТЕРГЕ БЕЙІМДЕУ</div><h3 id="generalization-title">Әртүрлі рентген. Бөлек тексеру.</h3></div><button id="generalization-download" type="button" class="button secondary" disabled>Тәжірибе есебі <span>↓</span></button></div>
+        <p class="audit-intro">Бастапқы және RSNA деректерімен бейімделген тармақ ортақ MobileNetV2 белгілерін қолданады. Модель кіріс суреттің үйрету деректеріне ұқсастығына қарай тармақ таңдайды. Бұл пациенттің жасын немесе диагнозын анықтайтын тексеру емес.</p>
+        <p id="generalization-status" role="status" class="audit-intro">Тәжірибе есебі тексерілуде…</p>
+        <div id="generalization-cards" class="audit-grid"></div>
+        <p class="study-limit audit-intro">RSNA үйретуге де қолданылды: бұл сол дереккөздегі жаңа пациенттер, жаңа мекеме тексеруі емес. Оң белгі — пневмонияға күдікті өкпе күңгірттенуі, клиникалық расталған диагноз емес. Жаңа тексерудегі санаттар тең іріктелген. OpenI мен ішкі тест бұрын қаралған; олардың нәтижесі қайта тексеру ретінде берілген. Жақсару барлық сыртқы рентгенге таралады деп айтуға болмайды.</p>
+      </section>
       <section class="selective-audit" aria-labelledby="selective-title">
-        <div class="audit-heading"><div><div class="eyebrow">5-КЕЗЕҢ / ҚАЙТА БАПТАЛҒАН OOD</div><h3 id="selective-title">Қанша суретке қорытынды берілді?</h3></div><button id="selective-download" type="button" class="button secondary" disabled>Есепті жүктеу <span>↓</span></button></div>
+        <div class="audit-heading"><div><div class="eyebrow">OOD / ҚАМТУ МЕН ҚАТЕЛІК</div><h3 id="selective-title">Қанша суретке қорытынды берілді?</h3></div><button id="selective-download" type="button" class="button secondary" disabled>Есепті жүктеу <span>↓</span></button></div>
         <p class="audit-intro">OOD ережесі күмәнді суретке санат бойынша қорытынды бермейді. Төменде осы бекітілген ереженің қамтуы мен қателігі өлшенді. Жоғарыдағы кесте барлық суретке екі санаттың бірін бергендегі нәтижені көрсетеді.</p>
         <p id="selective-status" role="status">Есеп тексерілуде…</p>
         <p id="ood-calibration-detail" class="audit-intro" hidden></p>
@@ -123,7 +131,7 @@
         <div id="selective-cards" class="audit-grid"></div>
         <p class="audit-limit">Қорытынды берілген суреттердегі accuracy тек сол топқа қатысты. Қорытынды берілмеген сурет дұрыс не қате жіктелді деп саналмайды. OOD-тан өту болжамның дұрыстығын растамайды. OpenI — әлсіз MeSH белгілері бар шағын іріктелген жиын; клиникалық сенімділік дәлелденбеген.</p>
       </section>
-      <details class="research-graphs"><summary>Colab-тағы нақты графиктерді қарау <span>+</span></summary><div class="graph-content"><figure><img src="/static/graphs/MobileNetV2_test_metrics.png" alt="MobileNetV2 тест қателері матрицасы, ROC және precision-recall қисықтары" loading="lazy"><figcaption>Test: қателер матрицасы, ROC және precision-recall</figcaption></figure><div class="graph-pair"><figure><img src="/static/graphs/mobilenet_fine_history.png" alt="Fine-tuning кезіндегі train және validation loss пен accuracy" loading="lazy"><figcaption>Fine-tuning үйрету тарихы</figcaption></figure><figure><img src="/static/graphs/class_distribution.png" alt="Train, validation және test класстарының сурет саны" loading="lazy"><figcaption>Деректердің бөлінуі</figcaption></figure></div></div></details>
+      <details class="research-graphs"><summary>Модельдің нақты графиктерін қарау <span>+</span></summary><div class="graph-content"><figure><img src="/static/graphs/MobileNetV2_test_metrics.png?v=4178d8ca56b4" alt="MobileNetV2 тест қателері матрицасы, ROC және precision-recall қисықтары" loading="lazy"><figcaption>Test: қателер матрицасы, ROC және precision-recall</figcaption></figure><div class="graph-pair"><figure><img src="/static/graphs/mobilenet_fine_history.png" alt="Fine-tuning кезіндегі train және validation loss пен accuracy" loading="lazy"><figcaption>Бастапқы Colab fine-tuning тарихы (тарихи)</figcaption></figure><figure><img src="/static/graphs/class_distribution.png" alt="Train, validation және test класстарының сурет саны" loading="lazy"><figcaption>Деректердің бөлінуі</figcaption></figure></div></div></details>
     </section>
     <section class="closing"><div class="eyebrow">БІЛІМНЕН БАСТАЛАТЫН МҮМКІНДІК</div><h2>Технология көмектеседі.<br><em>Шешімді маман қабылдайды.</em></h2><p>Tynys — TensorFlow және Keras негізіндегі оқу жобасы.<br>Қазіргі модель екі санатты ажыратады. Бірнеше ауру белгісін анықтау — келесі зерттеу кезеңі.</p><a href="#analysis" class="button secondary">Бір суретті тексеру <span>↗</span></a></section>
   </main>

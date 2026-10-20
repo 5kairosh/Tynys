@@ -1,0 +1,30 @@
+{
+  "schema": 2,
+  "method": "train_validation_mahalanobis_v2",
+  "reference_split": "train",
+  "reference_count": 5401,
+  "calibration_split": "validation",
+  "calibration_count": 1352,
+  "target_acceptance": 0.95,
+  "quantile_rank": 1286,
+  "model_sha256": "a79fe71a67fc4e100a5cbde8624fb9286e663bd59e4beb74984810b3f2ba4e43",
+  "config_sha256": "63c6e98cc7713993778fb8b44430a8ebb6b334bac66be5ec0f815ea45f63eb4c",
+  "protocol_sha256": "f9745801ec429e8269ffef8d82f925e86af2f6938cdf0440dc4dbd49e71c22b7",
+  "train_manifest_sha256": "e3028d01f513a813cd0f5ed219195eae022e38fdb415f7f516e14332db40fa73",
+  "validation_manifest_sha256": "3cc7709986ffc7fb4850f59ced5c790c2ad49e0b58648ce680306e03d4d60c5d",
+  "covariance_shrinkage": 0.1,
+  "test_or_external_used_to_fit": false,
+  "evaluation_cohorts_used_to_fit": false,
+  "development_sources": [
+    "Kaggle train/validation",
+    "RSNA train/validation"
+  ],
+  "clinical_or_formal_coverage_guarantee": false,
+  "threshold": 38.37188343647505,
+  "parameter_sha256": "b0c5e869838ed25b5b1c720e5015ccbb6e8f6654e2a5b098f25bee2502cafa47",
+  "calibration_accepted": 1286,
+  "per_source_acceptance": {
+    "kaggle": 0.9894957983193278,
+    "rsna": 0.86
+  }
+}

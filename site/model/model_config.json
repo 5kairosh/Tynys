@@ -7,21 +7,21 @@
     224,
     224
   ],
-  "threshold": 0.745,
+  "threshold": 0.5,
   "seed": 42,
-  "selected_stage": "fine",
+  "selected_stage": "domain_routed_frozen_experts",
   "tensorflow_version": "2.21.0",
-  "dataset": "paultimothymooney/chest-xray-pneumonia",
+  "dataset": "Kaggle Chest X-Ray Pneumonia + RSNA-STR 2018 development subset",
   "use": "educational prototype; not clinical diagnosis",
   "grouping": "filename-derived surrogate IDs, not verified patient metadata",
   "calibration": {
     "method": "temperature",
-    "T": 0.9799594303292329
+    "T": 1.1374971593841223
   },
   "model_calibrations": {
     "MobileNetV2": {
       "method": "temperature",
-      "T": 0.9799594303292329
+      "T": 1.1374971593841223
     },
     "CNN": {
       "method": "temperature",
@@ -30,15 +30,32 @@
   },
   "ensemble": {
     "weights": {
-      "CNN": 0.001005948939264576,
-      "MobileNetV2": 0.9989940510607355
+      "CNN": 0.004961958506162733,
+      "MobileNetV2": 0.9950380414938372
     },
-    "threshold": 0.745,
-    "validation_count": 952,
-    "selection": "validation NLL, weights bounded [0.001,0.999]; recall>=0.90 then specificity then F1",
+    "threshold": 0.5,
+    "validation_count": 1352,
+    "selection": "domain/class balanced validation NLL; weights [0.001,0.999]; common operating margin threshold 0.5 fixed",
     "model_ids": {
       "CNN": "19f707027db4",
-      "MobileNetV2": "ea584b998a45"
+      "MobileNetV2": "a79fe71a67fc"
     }
+  },
+  "development_sources": {
+    "Kaggle": {
+      "train": 3801,
+      "validation": 952
+    },
+    "RSNA": {
+      "train": 1600,
+      "validation": 400
+    }
+  },
+  "routing": {
+    "head": "domain_routed_head",
+    "source_logit_threshold": 0.0,
+    "selection": "training source similarity, not age or disease diagnosis",
+    "baseline_expert_model_sha256": "ea584b998a454d973acbbb676fa5e951fce1a79d6d615f2d6b07b40d57760172",
+    "rsna_expert_fit": "training/generalization_stage6/fit_report.json"
   }
 }

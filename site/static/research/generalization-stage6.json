@@ -1,0 +1,260 @@
+{
+  "stage": "6B",
+  "evaluated_at": "2026-10-20T19:35:26.001824+00:00",
+  "routing_fit_report_sha256": "ada50a2a6dafdd858914229067125926ecac84a551b2212aab070815604196ba",
+  "cohorts": {
+    "rsna_confirmation": {
+      "baseline": {
+        "count": 400,
+        "normal": 200,
+        "positive": 200,
+        "accuracy": 0.68,
+        "balanced_accuracy": 0.6799999999999999,
+        "sensitivity": 0.6,
+        "specificity": 0.76,
+        "precision": 0.7142857142857143,
+        "f1": 0.6521739130434783,
+        "roc_auc": 0.7530000000000001,
+        "average_precision": 0.7619801284887551,
+        "TN": 152,
+        "FP": 48,
+        "FN": 80,
+        "TP": 120,
+        "errors": 128,
+        "threshold": 0.745
+      },
+      "candidate": {
+        "count": 400,
+        "normal": 200,
+        "positive": 200,
+        "accuracy": 0.88,
+        "balanced_accuracy": 0.88,
+        "sensitivity": 0.84,
+        "specificity": 0.92,
+        "precision": 0.9130434782608695,
+        "f1": 0.875,
+        "roc_auc": 0.937925,
+        "average_precision": 0.9428828071605702,
+        "TN": 184,
+        "FP": 16,
+        "FN": 32,
+        "TP": 168,
+        "errors": 48,
+        "threshold": 0.5
+      },
+      "accuracy_gain": 0.19999999999999996,
+      "balanced_accuracy_gain": 0.20000000000000007,
+      "fresh_holdout": true,
+      "paired_accuracy_bootstrap": {
+        "difference": 0.2,
+        "lower_95": 0.15,
+        "upper_95": 0.25,
+        "resamples": 10000,
+        "seed": 20261021
+      },
+      "routing": {
+        "baseline_expert": 2,
+        "adapted_expert": 398
+      }
+    },
+    "rsna_prior_holdout": {
+      "baseline": {
+        "count": 400,
+        "normal": 200,
+        "positive": 200,
+        "accuracy": 0.7225,
+        "balanced_accuracy": 0.7225,
+        "sensitivity": 0.65,
+        "specificity": 0.795,
+        "precision": 0.7602339181286549,
+        "f1": 0.7008086253369272,
+        "roc_auc": 0.7870250000000001,
+        "average_precision": 0.7883892971886428,
+        "TN": 159,
+        "FP": 41,
+        "FN": 70,
+        "TP": 130,
+        "errors": 111,
+        "threshold": 0.745
+      },
+      "candidate": {
+        "count": 400,
+        "normal": 200,
+        "positive": 200,
+        "accuracy": 0.8575,
+        "balanced_accuracy": 0.8574999999999999,
+        "sensitivity": 0.855,
+        "specificity": 0.86,
+        "precision": 0.8592964824120602,
+        "f1": 0.8571428571428571,
+        "roc_auc": 0.9346250000000002,
+        "average_precision": 0.9358841119985216,
+        "TN": 172,
+        "FP": 28,
+        "FN": 29,
+        "TP": 171,
+        "errors": 57,
+        "threshold": 0.5
+      },
+      "accuracy_gain": 0.135,
+      "balanced_accuracy_gain": 0.1349999999999999,
+      "fresh_holdout": false,
+      "paired_accuracy_bootstrap": {
+        "difference": 0.135,
+        "lower_95": 0.09,
+        "upper_95": 0.18,
+        "resamples": 10000,
+        "seed": 20261021
+      },
+      "routing": {
+        "baseline_expert": 1,
+        "adapted_expert": 399
+      }
+    },
+    "internal_test": {
+      "baseline": {
+        "count": 618,
+        "normal": 231,
+        "positive": 387,
+        "accuracy": 0.8915857605177994,
+        "balanced_accuracy": 0.8680660424846471,
+        "sensitivity": 0.9612403100775194,
+        "specificity": 0.7748917748917749,
+        "precision": 0.8773584905660378,
+        "f1": 0.9173859432799013,
+        "roc_auc": 0.9580746557490744,
+        "average_precision": 0.9681930773386972,
+        "TN": 179,
+        "FP": 52,
+        "FN": 15,
+        "TP": 372,
+        "errors": 67,
+        "threshold": 0.745
+      },
+      "candidate": {
+        "count": 618,
+        "normal": 231,
+        "positive": 387,
+        "accuracy": 0.889967637540453,
+        "balanced_accuracy": 0.865901540320145,
+        "sensitivity": 0.9612403100775194,
+        "specificity": 0.7705627705627706,
+        "precision": 0.8752941176470588,
+        "f1": 0.916256157635468,
+        "roc_auc": 0.9578061903643299,
+        "average_precision": 0.9680444625121727,
+        "TN": 178,
+        "FP": 53,
+        "FN": 15,
+        "TP": 372,
+        "errors": 68,
+        "threshold": 0.5
+      },
+      "accuracy_gain": -0.0016181229773463146,
+      "balanced_accuracy_gain": -0.0021645021645021467,
+      "fresh_holdout": false,
+      "paired_accuracy_bootstrap": {
+        "difference": -0.0016181229773462784,
+        "lower_95": -0.0048543689320388345,
+        "upper_95": 0.0,
+        "resamples": 10000,
+        "seed": 20261021
+      },
+      "routing": {
+        "baseline_expert": 613,
+        "adapted_expert": 5
+      }
+    },
+    "external_openi": {
+      "baseline": {
+        "count": 200,
+        "normal": 160,
+        "positive": 40,
+        "accuracy": 0.55,
+        "balanced_accuracy": 0.559375,
+        "sensitivity": 0.575,
+        "specificity": 0.54375,
+        "precision": 0.23958333333333334,
+        "f1": 0.3382352941176471,
+        "roc_auc": 0.54421875,
+        "average_precision": 0.2402071891445132,
+        "TN": 87,
+        "FP": 73,
+        "FN": 17,
+        "TP": 23,
+        "errors": 90,
+        "threshold": 0.745
+      },
+      "candidate": {
+        "count": 200,
+        "normal": 160,
+        "positive": 40,
+        "accuracy": 0.645,
+        "balanced_accuracy": 0.675,
+        "sensitivity": 0.725,
+        "specificity": 0.625,
+        "precision": 0.3258426966292135,
+        "f1": 0.4496124031007752,
+        "roc_auc": 0.755,
+        "average_precision": 0.44061541679207994,
+        "TN": 100,
+        "FP": 60,
+        "FN": 11,
+        "TP": 29,
+        "errors": 71,
+        "threshold": 0.5
+      },
+      "accuracy_gain": 0.09499999999999997,
+      "balanced_accuracy_gain": 0.11562500000000009,
+      "fresh_holdout": false,
+      "paired_accuracy_bootstrap": {
+        "difference": 0.095,
+        "lower_95": 0.03,
+        "upper_95": 0.16,
+        "resamples": 10000,
+        "seed": 20261021
+      },
+      "routing": {
+        "baseline_expert": 10,
+        "adapted_expert": 190
+      }
+    }
+  },
+  "promotion_gate": {
+    "rsna_accuracy_gain": true,
+    "rsna_balanced_gain": true,
+    "rsna_sensitivity": true,
+    "rsna_specificity": true,
+    "paired_gain_lower_bound_positive": true,
+    "kaggle_balanced_noninferiority": true,
+    "kaggle_sensitivity": true,
+    "openi_accuracy_gain": true,
+    "openi_balanced_gain": true,
+    "openi_sensitivity": true
+  },
+  "promotion_passed": true,
+  "production_model_changed": true,
+  "thresholds_tuned_on_evaluation": false,
+  "clinical_validation": false,
+  "notice": "Only 400-patient RSNA confirmation is fresh for 6B. All other cohorts were inspected before this design. RSNA opacity proxy and OpenI weak labels are not clinical diagnoses.",
+  "active_model": {
+    "id": "a79fe71a67fc",
+    "sha256": "a79fe71a67fc4e100a5cbde8624fb9286e663bd59e4beb74984810b3f2ba4e43",
+    "threshold": 0.5,
+    "temperature": 1.1374971593841223
+  },
+  "fit_counts": {
+    "Kaggle_train": 3801,
+    "RSNA_train": 1600,
+    "Kaggle_validation": 952,
+    "RSNA_validation": 400
+  },
+  "new_rsna_total": 2800,
+  "references": {
+    "data": "https://www.rsna.org/artificial-intelligence/ai-image-challenge/rsna-pneumonia-detection-challenge-2018",
+    "paper": "https://doi.org/10.1148/ryai.2019180041"
+  },
+  "first_candidate_not_promoted": "6A failed internal noninferiority; no production replacement. 6B kept original expert and used a new disjoint 400-patient confirmation cohort.",
+  "evaluation_snapshot_production_changed": false,
+  "source_evaluation_sha256": "a1dccf652df64a557b6f7194f4945da7a97f77e0f5514e012a0924bce65d8def"
+}
