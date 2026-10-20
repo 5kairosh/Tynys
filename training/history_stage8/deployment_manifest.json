@@ -1,0 +1,27 @@
+{
+  "stage": 8,
+  "baseline_revision": "b97535fac1d3f67d46d2df32c6db0d694441fb3a",
+  "model_id": "a79fe71a67fc",
+  "ood_parameter_id": "b0c5e869838e",
+  "files": {
+    "site/static/history-storage.js": "541406ad974cfc767f93e1df48c434220aa8ba90f69e5c32567332f5995b2e74",
+    "site/static/app.js": "1ce9d694fb0f9aa2755f1220b90181e04a941c382e4151640cba6fab053f0a1e",
+    "site/static/index.html": "605d6dde59c8a1759427de6e563844165c782c529c10d04a4c83693079c97594",
+    "site/static/style.css": "f29684cedd3d52b992e4cad30667d65f76b82e1be30437e87f4e555890cb881c"
+  },
+  "expected_previous": {
+    "site/static/history-storage.js": "d9e7f5a7b82eba8eeb260f8bae96d6be2470ca0a7b0bb40b7d179e193dc2e3d6",
+    "site/static/app.js": "58e453924050b0b11fb0f5868d3c4cd051a45af6f7d5533b20f9dadf564eb95e",
+    "site/static/index.html": "12f02609d07dbf8969446f1a9c722f1e1362ae47d7cd3f34346e1ec59e177a2c",
+    "site/static/style.css": "b4f25fbf55f696f882bf9666ab16fdf1b1ef2452980ffdd5951a3a5e4c5d944a"
+  },
+  "expected_unchanged": {
+    "site/app.py": "35fd47c9f812b6e5f44c9e6797db5d8651869d2baa62e79a2ce68af7108b98ca",
+    "site/service_runtime.py": "33560344eca13d7f8c0ae9825a276cf99e26a7659fdeb96c979343916881a67c",
+    "site/model/pneumonia_mobilenetv2.keras": "a79fe71a67fc4e100a5cbde8624fb9286e663bd59e4beb74984810b3f2ba4e43",
+    "site/model/cnn_best.keras": "19f707027db4d0313cd89523dd2a9b44093805cfa6412d1f27258db7be95c4fb",
+    "site/model/model_config.json": "63c6e98cc7713993778fb8b44430a8ebb6b334bac66be5ec0f815ea45f63eb4c",
+    "site/model/ood_params.npz": "b0c5e869838ed25b5b1c720e5015ccbb6e8f6654e2a5b098f25bee2502cafa47",
+    "site/model/selective_evaluation.json": "afabe8597b7044e335404db0a470c19c643a40fd9d2d649ee637a54568b82fe8"
+  }
+}

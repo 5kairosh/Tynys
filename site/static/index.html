@@ -5,11 +5,11 @@
   <meta name="description" content="Tynys — өкпе рентгендерін NORMAL және PNEUMONIA санаттарына жіктейтін TensorFlow оқу жобасы.">
   <title>Tynys — рентгенге жаңа көзқарас</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230c766c'/%3E%3Cpath d='M29 16h6v13h13v6H35v13h-6V35H16v-6h13z' fill='white'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="/static/style.css?v=b4f25fbf55f6">
-  <script src="/static/history-storage.js?v=d9e7f5a7b82e" defer></script>
+  <link rel="stylesheet" href="/static/style.css?v=f29684cedd3d">
+  <script src="/static/history-storage.js?v=541406ad974c" defer></script>
   <script src="/static/selective-evaluation.js?v=efd211ea4a5a" defer></script>
   <script src="/static/generalization-evaluation.js?v=106d8e4fa151" defer></script>
-  <script src="/static/app.js?v=58e453924050" defer></script>
+  <script src="/static/app.js?v=1ce9d694fb0f" defer></script>
 </head>
 <body>
 <div class="site-wrap">
@@ -97,9 +97,13 @@
       <section class="history-panel" aria-labelledby="history-title">
         <div class="history-heading"><div><h3 id="history-title">Талдау тарихы <span id="history-count">0</span></h3><p id="history-description">Соңғы 20 талдау. Әдепкіде тарих тек осы бет ашық тұрғанда сақталады.</p></div><button id="clear-history" class="history-clear" type="button" disabled>Тарихты тазалау</button></div>
         <div class="history-storage">
+          <div class="vault-header"><div><span class="vault-eyebrow">ЖЕКЕ ДЕРЕКТЕР</span><h4>Тарих сіздің бақылауыңызда</h4></div><span id="vault-badge" class="vault-badge">ПАРОЛЬСІЗ</span></div>
+          <p id="vault-status" role="status">Қорғау күйі тексерілуде…</p>
+          <div class="vault-actions"><button id="protect-history" type="button">Парольмен қорғау</button><button id="unlock-history" type="button" hidden>Тарихты ашу</button><button id="lock-history" type="button" hidden>Құлыптау</button></div>
           <label class="history-consent"><input id="save-history" type="checkbox" aria-describedby="history-consent-detail" disabled><span>Тарихты осы браузерде сақтауға келісемін</span></label>
-          <p id="history-consent-detail">Қоссаңыз, осы беттегі және кейінгі талдаулардың түпнұсқа файлдары мен нәтижелері сақталады: ең көбі 20 талдау, 80 МБ. DICOM метадеректері де файлда қалады. 7 күннен асқан жазбалар сайтты ашқанда не келесі тексеруде жойылады. Осы браузерді пайдаланатын басқа адамдар тарихты көре алады. Сақтауды өшірсеңіз, сақталған көшірмелер жойылады.</p>
+          <p id="history-consent-detail">Қоссаңыз, осы беттегі және кейінгі талдаулардың түпнұсқа файлдары мен нәтижелері сақталады: ең көбі 20 талдау, 80 МБ. DICOM метадеректері де файлда қалады. 7 күннен асқан жазбалар сайтты ашқанда не келесі тексеруде жойылады. Парольмен қорғалмаған немесе құлпы ашық тарихты осы браузер профиліндегі басқа адам көре алады. Сақтауды өшірсеңіз, сақталған көшірмелер жойылады.</p>
           <p id="history-storage-status" role="status" aria-live="polite">Браузердегі сақтау күйі тексерілуде…</p>
+          <p class="vault-limit">Парольмен қорғау — осы браузердегі көшірмелерге арналған. Жүктелген TXT/PDF файлдары бөлек қалады. Пароль ұмытылса, қорғалған тарихты қалпына келтіру мүмкін емес.</p>
         </div>
         <p id="history-empty" class="history-empty">Тексерілген суреттер осы жерде пайда болады.</p>
         <ol id="history-list" class="history-list" aria-label="Тексерілген рентгендер"></ol>
@@ -139,4 +143,15 @@
   <footer><a class="brand" href="#"><span class="brand-mark">✚</span>tynys<span class="brand-period">.</span></a><span>Өкпе рентгендерін классификациялау · Оқу прототипі</span><a href="https://www.tensorflow.org/tutorials/images/transfer_learning" target="_blank" rel="noopener noreferrer">TensorFlow ↗</a></footer>
 </div>
 <dialog id="model-dialog"><button id="close-dialog" class="dialog-close" aria-label="Жабу">×</button><div class="eyebrow">САҚТАЛҒАН МОДЕЛЬ</div><h2>Модель туралы</h2><div id="model-info"></div><p>Конфигурация мен көрсеткіштер нәтижелер архивінен оқылады.</p></dialog>
+<dialog id="history-vault-dialog" aria-labelledby="vault-dialog-title">
+  <form id="history-vault-form" autocomplete="off">
+    <div class="vault-dialog-head"><h2 id="vault-dialog-title">Тарихты парольмен қорғау</h2><button id="close-vault" type="button" aria-label="Пароль терезесін жабу">×</button></div>
+    <p id="vault-dialog-description"></p>
+    <label for="vault-password">Пароль</label><input id="vault-password" type="password" minlength="10" maxlength="256" required autocomplete="new-password" spellcheck="false">
+    <div id="vault-confirm-field"><label for="vault-confirm">Парольді қайталаңыз</label><input id="vault-confirm" type="password" minlength="10" maxlength="256" required autocomplete="new-password" spellcheck="false"></div>
+    <p id="vault-dialog-error" role="alert" hidden></p>
+    <button id="vault-submit" class="button primary" type="submit">Шифрлауды қосу</button>
+    <p class="vault-limit">Пароль серверге жіберілмейді. Ұмытсаңыз, қалпына келтіру жоқ. Ұзын, басқа жерде қолданылмайтын пароль таңдаңыз.</p>
+  </form>
+</dialog>
 </body></html>

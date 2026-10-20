@@ -378,3 +378,208 @@ test('full service becomes available again without losing the selected file',()=
   assert.equal(await page.locator('#file-name').innerText(),'waiting.png');
   assert.match(await page.locator('#header-status').innerText(),/Модель дайын/);
 }));
+
+// Disposable passwords and files, in fresh browser contexts only. Never user history.
+const VAULT_PASSWORD='Test-only long vault passphrase 2026';
+async function protect(page){
+  await page.locator('#protect-history').click();
+  await page.locator('#vault-password').fill(VAULT_PASSWORD);
+  await page.locator('#vault-confirm').fill(VAULT_PASSWORD);
+  await page.locator('#vault-submit').click();
+  await page.waitForFunction(()=>document.getElementById('vault-badge').textContent==='ШИФРЛАНҒАН');
+}
+async function unlock(page,password=VAULT_PASSWORD){
+  await page.locator('#unlock-history').click();await page.locator('#vault-password').fill(password);await page.locator('#vault-submit').click();
+  await page.waitForFunction(()=>document.getElementById('vault-badge').textContent==='ШИФРЛАНҒАН');
+}
+async function rawVault(page){return page.evaluate(async()=>new TynysHistory.Store().transaction(({rows,prefs})=>({
+  rows:rows.map(r=>({keys:Object.keys(r),version:r.version,file:r.file instanceof Blob,
+    filename:r.filename,result:r.result,iv:r.iv?Array.from(r.iv):null,
+    cipher:r.ciphertext?Array.from(new Uint8Array(r.ciphertext)):null})),
+  prefs:JSON.stringify(prefs)
+})));}
+
+test('vault migration encrypts files, names and results, then restores exact data after unlock',()=>contextTest(async(context,page)=>{
+  await ready(page);await page.locator('#save-history').check();await upload(page,'private-test.dcm');
+  await protect(page);const raw=await rawVault(page);
+  assert.equal(raw.rows.length,1);assert.equal(raw.rows[0].version,2);
+  assert.equal(raw.rows[0].file,false);assert.equal(raw.rows[0].filename,undefined);assert.equal(raw.rows[0].result,undefined);
+  assert.ok(!JSON.stringify(raw).includes(VAULT_PASSWORD));assert.ok(!JSON.stringify(raw).includes('private-test.dcm'));
+  const before=predictCount;
+  await page.reload({waitUntil:'domcontentloaded'});await count(page,0);
+  await page.waitForFunction(()=>document.getElementById('vault-badge').textContent==='ҚҰЛЫПТАУЛЫ');
+  assert.equal(await page.locator('#result-content').isVisible(),false);
+  await unlock(page);await count(page,1);await page.locator('.history-open').click();
+  assert.equal(predictCount,before);assert.equal(await page.locator('#score-value').innerText(),'0,900');
+  assert.equal(await page.locator('#preview-image').getAttribute('src'),preview);
+  const exact=await page.evaluate(async password=>{const store=new TynysHistory.Store();const state=await store.unlock(password);return {file:Array.from(new Uint8Array(await state.records[0].file.arrayBuffer())),result:state.records[0].result,keyExtractable:store.key.extractable};},VAULT_PASSWORD);
+  assert.deepEqual(Buffer.from(exact.file),PNG);assert.deepEqual(exact.result,prediction('private-test.dcm'));assert.equal(exact.keyExtractable,false);
+}));
+
+test('wrong password preserves ciphertext and clears both password inputs',()=>contextTest(async(context,page)=>{
+  await ready(page);await upload(page);await protect(page);const before=await rawVault(page);
+  await page.locator('#lock-history').click();await page.locator('#unlock-history').click();
+  await page.locator('#vault-password').fill('Incorrect disposable password');await page.locator('#vault-submit').click();
+  await page.locator('#vault-dialog-error').waitFor({state:'visible'});
+  assert.match(await page.locator('#vault-dialog-error').innerText(),/Пароль дұрыс емес/);
+  assert.equal(await page.locator('#vault-password').inputValue(),'');assert.equal(await page.locator('#vault-confirm').inputValue(),'');
+  assert.deepEqual(await rawVault(page),before);
+  await page.locator('#vault-password').fill(VAULT_PASSWORD);await page.locator('#vault-submit').click();
+  await page.waitForFunction(()=>document.getElementById('vault-badge').textContent==='ШИФРЛАНҒАН');await count(page,1);
+}));
+
+test('failed encryption transaction leaves the prior plaintext history intact',()=>contextTest(async(context,page)=>{
+  await ready(page);await page.locator('#save-history').check();await upload(page,'migration-test.png');
+  await page.evaluate(()=>{window.vaultOriginalPut=IDBObjectStore.prototype.put;IDBObjectStore.prototype.put=function(value,...args){if(this.name==='entries'&&value.version===2)throw new DOMException('Quota test','QuotaExceededError');return window.vaultOriginalPut.call(this,value,...args);};});
+  await page.locator('#protect-history').click();await page.locator('#vault-password').fill(VAULT_PASSWORD);await page.locator('#vault-confirm').fill(VAULT_PASSWORD);await page.locator('#vault-submit').click();
+  await page.locator('#vault-dialog-error').waitFor({state:'visible'});
+  const raw=await rawVault(page);assert.equal(raw.rows.length,1);assert.equal(raw.rows[0].file,true);assert.equal(raw.rows[0].filename,'migration-test.png');assert.ok(!raw.prefs.includes('vault'));
+  assert.equal(await page.locator('#vault-badge').innerText(),'ПАРОЛЬСІЗ');
+  await page.locator('#close-vault').click();await page.evaluate(()=>{IDBObjectStore.prototype.put=window.vaultOriginalPut;});
+}));
+
+test('ciphertext tampering fails authentication without deleting the record',()=>contextTest(async(context,page)=>{
+  await ready(page);await upload(page);await protect(page);await page.locator('#lock-history').click();
+  await page.evaluate(async()=>new TynysHistory.Store().transaction(({entries,rows})=>{new Uint8Array(rows[0].ciphertext)[0]^=1;entries.put(rows[0]);}));
+  const before=await rawVault(page);
+  await page.locator('#unlock-history').click();await page.locator('#vault-password').fill(VAULT_PASSWORD);await page.locator('#vault-submit').click();
+  await page.locator('#vault-dialog-error').waitFor({state:'visible'});
+  assert.match(await page.locator('#vault-dialog-error').innerText(),/өшіp|өшірілген жоқ|оқу мүмкін/);
+  assert.deepEqual(await rawVault(page),before);await count(page,0);
+}));
+
+test('ciphertext is bound to record identity and expiry metadata',()=>contextTest(async(context,page)=>{
+  await ready(page);const result=await page.evaluate(async({password,prediction})=>{
+    const cases=[];
+    for(const field of ['id','createdAt','expiresAt']){
+      const store=new TynysHistory.Store({name:'aad-test-'+field});
+      const record=TynysHistory.recordFor({id:'original',file:new File(['engineering bytes'],'aad.png'),time:new Date(),result:prediction});
+      await store.enable([record]);await store.protect(password);
+      await store.transaction(({entries,rows})=>{const row=rows[0];entries.delete(row.id);if(field==='id')row.id='swapped';else row[field]-=1000;entries.put(row);});
+      store.lock();let rejected=false;try{await store.unlock(password);}catch{rejected=true;}
+      cases.push({field,rejected,remaining:await store.transaction(({rows})=>rows.length)});
+    }
+    return cases;
+  },{password:VAULT_PASSWORD,prediction:prediction()});
+  assert.ok(result.every(r=>r.rejected&&r.remaining===1),JSON.stringify(result));
+}));
+
+test('new tabs stay locked, and a cross-tab lock suppresses an in-flight result',()=>contextTest(async(context,page)=>{
+  await ready(page);await upload(page);await protect(page);
+  const other=await context.newPage();await ready(other);
+  assert.equal(await other.locator('#vault-badge').innerText(),'ҚҰЛЫПТАУЛЫ');await count(other,0);
+  await unlock(other);await count(other,1);
+  let release,started;const requestStarted=new Promise(resolve=>started=resolve);
+  await page.route('**/api/predict',async route=>{started();await new Promise(resolve=>release=resolve);await route.fulfill({contentType:'application/json',body:JSON.stringify(prediction('late.png'))});});
+  await page.locator('#image-input').setInputFiles({name:'late.png',mimeType:'image/png',buffer:PNG});await page.locator('#analyze').click();await requestStarted;
+  await other.locator('#lock-history').click();await page.waitForFunction(()=>document.getElementById('vault-badge').textContent==='ҚҰЛЫПТАУЛЫ');
+  release();await page.waitForFunction(()=>!document.body.classList.contains('busy'));
+  await count(page,0);assert.equal(await page.locator('#result-content').isVisible(),false);assert.equal(await page.locator('#preview').isVisible(),false);
+  assert.equal(await page.locator('#result-title').textContent(),'');assert.equal(await page.locator('#file-name').textContent(),'');
+  assert.equal((await rawVault(page)).rows.length,1);
+  await page.unroute('**/api/predict');
+  await upload(page,'locked-session.png');assert.equal((await rawVault(page)).rows.length,1);
+  assert.equal(await page.locator('.history-saved').innerText(),'Тек осы бетте');
+}));
+
+test('locking another tab suppresses a pending PDF download',()=>contextTest(async(context,page)=>{
+  await ready(page);await upload(page);await protect(page);
+  const other=await context.newPage();await ready(other);await unlock(other);
+  let release,started,downloads=0;const requestStarted=new Promise(resolve=>started=resolve);
+  page.on('download',()=>downloads++);
+  await page.route('**/api/report',async route=>{started();await new Promise(resolve=>release=resolve);await route.fulfill({contentType:'application/pdf',body:'%PDF-1.4\n%%EOF'});});
+  await page.locator('#download-pdf').click();await requestStarted;await other.locator('#lock-history').click();
+  await page.waitForFunction(()=>document.getElementById('vault-badge').textContent==='ҚҰЛЫПТАУЛЫ');
+  release();await page.waitForFunction(()=>!document.getElementById('download-pdf').disabled);
+  assert.equal(downloads,0);assert.equal(await page.locator('#result-content').isVisible(),false);
+}));
+
+test('five-minute idle lock and cached-page exit remove visible decrypted data',()=>contextTest(async(context,page)=>{
+  await ready(page);await upload(page);await protect(page);
+  await page.evaluate(()=>{const original=Date.now;Date.now=()=>original()+301000;});
+  await page.waitForFunction(()=>document.getElementById('vault-badge').textContent==='ҚҰЛЫПТАУЛЫ');
+  assert.equal(await page.locator('#result-content').isVisible(),false);await count(page,0);
+  await unlock(page);await page.locator('.history-open').click();
+  await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true})));
+  await count(page,0);assert.equal(await page.locator('#result-content').isVisible(),false);
+  assert.equal((await rawVault(page)).rows.length,1);
+}));
+
+test('locked expiry is cleaned, encrypted limits apply and v1 clients fail closed',()=>contextTest(async(context,page)=>{
+  await ready(page);
+  const state=await page.evaluate(async({password,result})=>{
+    let now=Date.now();const store=new TynysHistory.Store({name:'encrypted-limit-test',now:()=>now});
+    const rows=Array.from({length:25},(_,i)=>TynysHistory.recordFor({id:'encrypted-'+i,file:new File(['engineering'],'test.png'),time:new Date(now-i),result}));
+    await store.protect(password,rows);const initial=await store.read();
+    store.lock();const oldDenied=await new Promise(resolve=>{const req=indexedDB.open('encrypted-limit-test',1);req.onerror=()=>resolve(req.error.name==='VersionError');req.onsuccess=()=>{req.result.close();resolve(false);};});
+    now+=8*24*60*60*1000;const expired=await store.read();
+    return {initial:initial.records.length,oldDenied,expired:expired.storedCount,locked:expired.locked};
+  },{password:VAULT_PASSWORD,result:prediction()});
+  assert.deepEqual(state,{initial:20,oldDenied:true,expired:0,locked:true});
+}));
+
+test('a migration race cannot overwrite another tab append',()=>contextTest(async(context,page)=>{
+  await ready(page);const state=await page.evaluate(async({password,result})=>{
+    const first=new TynysHistory.Store({name:'vault-race-test'}),second=new TynysHistory.Store({name:'vault-race-test'});
+    const record=id=>TynysHistory.recordFor({id,file:new File(['test'],'race.png'),time:new Date(),result});
+    const enabled=await first.enable([record('first')]);
+    const original=crypto.subtle.deriveKey.bind(crypto.subtle);let resume,signal;
+    const entered=new Promise(resolve=>signal=resolve);
+    crypto.subtle.deriveKey=async(...args)=>{signal();await new Promise(resolve=>resume=resolve);return original(...args);};
+    const pending=first.protect(password).then(()=>false,error=>error instanceof TynysHistory.HistoryChanged);
+    await entered;await second.append(record('second'),enabled.generation);resume();const rejected=await pending;delete crypto.subtle.deriveKey;
+    const saved=await first.read();return {rejected,count:saved.records.length,protected:saved.protected};
+  },{password:VAULT_PASSWORD,result:prediction()});
+  assert.deepEqual(state,{rejected:true,count:2,protected:false});
+}));
+
+test('passwords and keys never leave the browser, and cancel has no storage effect',()=>contextTest(async(context,page)=>{
+  const requests=[];page.on('request',request=>requests.push(request.url()+' '+(request.postData()||'')));
+  await ready(page);await page.locator('#protect-history').click();await page.locator('#vault-password').fill(VAULT_PASSWORD);await page.locator('#close-vault').click();
+  assert.equal(await page.locator('#vault-password').inputValue(),'');assert.deepEqual(await storage(page),{enabled:false,records:0});
+  await upload(page);await protect(page);await page.locator('#lock-history').click();await unlock(page);
+  assert.ok(requests.every(value=>!value.includes(VAULT_PASSWORD)));assert.ok(!(await rawVault(page)).prefs.includes('CryptoKey'));
+  assert.equal(await page.evaluate(()=>localStorage.length+sessionStorage.length),0);assert.equal((await context.cookies()).length,0);
+}));
+
+test('missing secure crypto disables protection but keeps analysis usable',()=>contextTest(async(context,page)=>{
+  await page.addInitScript(()=>Object.defineProperty(window,'isSecureContext',{value:false,configurable:true}));
+  await ready(page);assert.equal(await page.locator('#protect-history').isEnabled(),false);await upload(page);
+  assert.equal(await page.locator('#result-content').isVisible(),true);assert.deepEqual(await storage(page),{enabled:false,records:0});
+}));
+
+
+test('v1 database upgrade keeps legacy records until the user elects protection',()=>contextTest(async(context,page)=>{
+  await ready(page);const result=await page.evaluate(async prediction=>{
+    const record=TynysHistory.recordFor({id:'v1-existing',file:new File(['legacy test bytes'],'legacy.png'),time:new Date(),result:prediction});
+    await new Promise((resolve,reject)=>{const request=indexedDB.open('legacy-v1-fixture',1);request.onupgradeneeded=()=>{request.result.createObjectStore('entries',{keyPath:'id'});request.result.createObjectStore('settings',{keyPath:'key'});};request.onsuccess=()=>{const db=request.result,tx=db.transaction(['entries','settings'],'readwrite');tx.objectStore('entries').put(record);tx.objectStore('settings').put({key:'consent',enabled:true,generation:'legacy-consent'});tx.oncomplete=()=>{db.close();resolve();};tx.onabort=()=>reject(tx.error);};});
+    const store=new TynysHistory.Store({name:'legacy-v1-fixture'});const state=await store.read();
+    return {enabled:state.enabled,protected:state.protected,name:state.records[0].filename,bytes:await state.records[0].file.text(),result:state.records[0].result};
+  },prediction('legacy.png'));
+  assert.deepEqual(result,{enabled:true,protected:false,name:'legacy.png',bytes:'legacy test bytes',result:prediction('legacy.png')});
+}));
+
+test('encrypted byte budget accounts for ciphertext and prunes older large entries',()=>contextTest(async(context,page)=>{
+  await ready(page);const result=await page.evaluate(async({password,prediction})=>{
+    const store=new TynysHistory.Store({name:'encrypted-bytes-test'}),file=new File([new Uint8Array(5*1024*1024)],'engineering-large.png'),now=Date.now();
+    const rows=Array.from({length:17},(_,i)=>TynysHistory.recordFor({id:'size-'+i,file,time:new Date(now-i),result:prediction}));
+    await store.protect(password,rows);
+    return store.transaction(({rows})=>({count:rows.length,used:rows.reduce((n,row)=>n+row.ciphertext.byteLength+2048,0),versions:rows.map(r=>r.version)}));
+  },{password:VAULT_PASSWORD,prediction:prediction()});
+  assert.equal(result.count,15);assert.ok(result.used<=80*1024*1024);assert.ok(result.versions.every(v=>v===2));
+}));
+
+
+test('blank passwords and inconsistent consent cannot create or expose a vault',()=>contextTest(async(context,page)=>{
+  await ready(page);const result=await page.evaluate(async({password,result})=>{
+    const store=new TynysHistory.Store({name:'vault-consent-test'});
+    const row=TynysHistory.recordFor({id:'consent-row',file:new File(['test'],'consent.png'),time:new Date(),result});
+    await store.enable([row]);let blankRejected=false,disabledRejected=false;
+    try{await store.protect('            ');}catch{blankRejected=true;}
+    const stillPlain=(await store.read()).records.length===1;
+    await store.protect(password);await store.transaction(({settings,prefs})=>settings.put({...prefs,enabled:false}));
+    try{await store.read();}catch{disabledRejected=true;}
+    return {blankRejected,stillPlain,disabledRejected,cipherRecords:await store.transaction(({rows})=>rows.filter(r=>r.version===2).length)};
+  },{password:VAULT_PASSWORD,result:prediction()});
+  assert.deepEqual(result,{blankRejected:true,stillPlain:true,disabledRejected:true,cipherRecords:1});
+}));

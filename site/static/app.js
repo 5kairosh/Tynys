@@ -4,6 +4,9 @@ let selected=[], results=[], status=null, busy=false, previewUrl=null;
 let analysisHistory=[], activeHistoryId=null;
 let historyReady=false,historyWorking=false,historyEnabled=false,historyGeneration=null,pendingHistorySync=false,historyDeletionPending=false;
 const historyStore=new TynysHistory.Store();
+let historyProtected=false,historyLocked=false,storedHistoryCount=0,privacyEpoch=0;
+let vaultMode='protect',lastHistoryActivity=Date.now();
+const HISTORY_IDLE_MS=5*60*1000;
 let historyChannel=null;
 try{if(typeof BroadcastChannel==='function')historyChannel=new BroadcastChannel('tynys-history-events-v1');}catch{}
 let statusLoading=false, statusTimer=null, connectionError=false;
@@ -20,6 +23,8 @@ function updateButton(){
   $('image-input').disabled=locked;
   $('clear-history').disabled=locked||(!analysisHistory.length&&!historyEnabled&&!historyDeletionPending);
   $('save-history').disabled=locked;
+  for(const id of ['protect-history','unlock-history','lock-history'])$(id).disabled=locked;
+  $('protect-history').disabled=locked||!TynysHistory.secureAvailable();
   $('download-pdf').disabled=locked||!status?.ready||status?.service?.accepting===false;
   for(const button of $('history-list').querySelectorAll('button'))button.disabled=locked;
   if(pendingHistorySync&&!locked){pendingHistorySync=false;queueMicrotask(()=>void syncHistory());}
@@ -162,7 +167,23 @@ $('download-attention').addEventListener('click',()=>{
   const a=document.createElement('a');a.href=url;a.download='tynys-gradcam.png';document.body.append(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
-$('analyze').addEventListener('click',async()=>{if(busy||!selected.length)return;busy=true;document.body.classList.add('busy');error('');results=[];updateButton();$('result-tag').textContent='ТАЛДАУДА';try{for(let i=0;i<selected.length;i++){$('analyze-label').textContent=selected.length>1?`Талдауда: ${i+1} / ${selected.length}`:'Сурет талдануда…';const form=new FormData();form.append('file',selected[i]);const r=await api('/api/predict',{method:'POST',body:form});results.push(r);await rememberResult(selected[i],r);showResult(results[0]);}}catch(e){error(e.message);if(results.length)showResult(results[0]);$('result-tag').textContent=results.length?'ІШІНАРА ДАЙЫН':'ҚАТЕ';}finally{busy=false;document.body.classList.remove('busy');$('analyze-label').textContent='Суретті талдау';updateButton();}});
+$('analyze').addEventListener('click',async()=>{
+  if(busy||!selected.length)return;
+  const epoch=privacyEpoch,files=[...selected];
+  busy=true;document.body.classList.add('busy');error('');results=[];updateButton();$('result-tag').textContent='ТАЛДАУДА';
+  try{
+    for(let i=0;i<files.length;i++){
+      $('analyze-label').textContent=files.length>1?`Талдауда: ${i+1} / ${files.length}`:'Сурет талдануда…';
+      const form=new FormData();form.append('file',files[i]);
+      const r=await api('/api/predict',{method:'POST',body:form});
+      if(epoch!==privacyEpoch)break;
+      results.push(r);await rememberResult(files[i],r);
+      if(epoch!==privacyEpoch)break;
+      showResult(results[0]);
+    }
+  }catch(e){if(epoch===privacyEpoch){error(e.message);if(results.length)showResult(results[0]);$('result-tag').textContent=results.length?'ІШІНАРА ДАЙЫН':'ҚАТЕ';}}
+  finally{busy=false;document.body.classList.remove('busy');$('analyze-label').textContent='Суретті талдау';updateButton();}
+});
 $('download-result').addEventListener('click',()=>{
   if(!results.length)return;
   const lines=['TYNYS — РЕНТГЕНДІ КЛАССИФИКАЦИЯЛАУ',new Date().toLocaleString('kk-KZ',{timeZone:'Asia/Qyzylorda'}),''];
@@ -187,6 +208,7 @@ $('download-result').addEventListener('click',()=>{
 $('download-pdf').addEventListener('click',async()=>{
   if(busy||historyWorking||!status?.ready||!selected.length||!results.length)return;
   busy=true;updateButton();error('');
+  const epoch=privacyEpoch;
   const button=$('download-pdf');button.disabled=true;
   const label=button.firstChild;
   const oldLabel=label.textContent;label.textContent='PDF дайындалуда… ';
@@ -194,9 +216,10 @@ $('download-pdf').addEventListener('click',async()=>{
     const form=new FormData();for(const file of selected)form.append('files',file);
     const response=await apiResponse('/api/report',{method:'POST',body:form});
     const blob=await response.blob();
+    if(epoch!==privacyEpoch)return;
     if(!blob.type.includes('application/pdf'))throw Error('Сервер PDF файл қайтармады.');
     const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='tynys-report.pdf';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
-  }catch(e){error(e.message);}finally{busy=false;button.disabled=false;label.textContent=oldLabel;updateButton();}
+  }catch(e){if(epoch===privacyEpoch)error(e.message);}finally{busy=false;button.disabled=false;label.textContent=oldLabel;updateButton();}
 });
 $('model-details').addEventListener('click',()=>{const box=$('model-info');box.replaceChildren();const rows=[['Модель','MobileNetV2'],['Күйі',status?.ready?'Дайын':'Қолжетімсіз'],['TensorFlow',status?.tensorflow_version||'—'],['Өлшем',status?.config?.image_size?.join(' × ')||'—'],['Шешім шегі',status?.config?decimal(status.config.threshold):'—'],['Кезең',status?.config?.selected_stage||'—'],['Модель ID',status?.model_id||'—']];for(const [key,value] of rows){const row=document.createElement('div');row.className='info-row';const label=document.createElement('span'),v=document.createElement('strong');label.textContent=key;v.textContent=value;row.append(label,v);box.append(row);}$('model-dialog').showModal();});
 $('close-dialog').addEventListener('click',()=>$('model-dialog').close());
@@ -223,19 +246,86 @@ function showComparison(r){
 }
 
 
+function renderVaultState(){
+  $('protect-history').hidden=historyProtected;
+  $('unlock-history').hidden=!historyProtected||!historyLocked;
+  $('lock-history').hidden=!historyProtected||historyLocked;
+  $('vault-badge').textContent=historyProtected?(historyLocked?'ҚҰЛЫПТАУЛЫ':'ШИФРЛАНҒАН'):'ПАРОЛЬСІЗ';
+  $('vault-badge').classList.toggle('protected',historyProtected);
+  $('vault-status').textContent=historyProtected?(historyLocked?`Қойма құлыптаулы: ${storedHistoryCount} сақталған талдау. Көру үшін пароль енгізіңіз.`:'Осы браузердегі тарих шифрланған. 5 минут әрекетсіздіктен кейін құлыпталады. Құлыптау ашық сурет пен нәтижені экраннан алып тастайды.'):(historyEnabled?'Сақталған тарих парольмен қорғалмаған. Осы браузер профилін пайдаланатын басқа адам оны аша алады.':'Сақтау өшірулі. Қаласаңыз, сақталатын тарихты жеке парольмен қорғаңыз.');
+  if(!TynysHistory.secureAvailable()&&!historyProtected)$('vault-status').textContent+=' Бұл браузерде шифрлау қолжетімсіз: HTTPS немесе localhost қажет.';
+}
+function lockHistory(broadcast=true){
+  privacyEpoch++;historyStore.lock();
+  if(historyProtected)historyLocked=true;
+  releaseEntries(analysisHistory);analysisHistory=[];clearSelection();
+  for(const id of ['file-name','file-size','result-title','result-category','result-explanation','score-value','result-time','routing-note','history-feedback','comparison-note','quality-summary','attention-caption'])$(id).textContent='';
+  for(const id of ['quality-warnings','comparison-table','batch-results'])$(id).replaceChildren();
+  if($('history-vault-dialog').open)$('history-vault-dialog').close();
+  $('vault-password').value='';$('vault-confirm').value='';
+  announceHistory('Тарих құлыпталды. Ашық суреттер мен нәтижелер экраннан алынды; сақталған деректер өшірілмеді.');
+  if(broadcast)broadcastHistory('vault-lock');
+  pendingHistorySync=true;renderHistory();updateHistoryMode();updateButton();
+}
+function openVaultDialog(mode){
+  if(busy||historyWorking)return;
+  vaultMode=mode;lastHistoryActivity=Date.now();
+  $('history-vault-form').reset();$('vault-dialog-error').hidden=true;
+  const protect=mode==='protect';
+  $('vault-dialog-title').textContent=protect?'Тарихты парольмен қорғау':'Қорғалған тарихты ашу';
+  $('vault-dialog-description').textContent=protect?'Қорғауды қоссаңыз, осы беттегі және сақталған тарих шифрланып, келесі талдаулар да осы браузерде сақталады. 20 талдау, 80 МБ, 7 күн шегі сақталады. Басқа ескі қойындыларды жабыңыз немесе жаңартыңыз. Парольді ұмытсаңыз, тарих ашылмайды.':'Пароль тек осы браузерде кілт алу үшін қолданылады. Ол серверге жіберілмейді. Қате пароль сақталған деректерді өшірмейді.';
+  $('vault-confirm-field').hidden=!protect;$('vault-confirm').disabled=!protect;
+  $('vault-password').autocomplete=protect?'new-password':'current-password';
+  $('vault-submit').textContent=protect?'Шифрлауды қосу':'Тарихты ашу';
+  $('history-vault-dialog').showModal();$('vault-password').focus();
+}
+$('protect-history').addEventListener('click',()=>openVaultDialog('protect'));
+$('unlock-history').addEventListener('click',()=>openVaultDialog('unlock'));
+$('lock-history').addEventListener('click',()=>lockHistory());
+$('close-vault').addEventListener('click',()=>{if(!historyWorking){$('vault-password').value='';$('vault-confirm').value='';$('history-vault-dialog').close();}});
+$('history-vault-dialog').addEventListener('cancel',event=>{if(historyWorking)event.preventDefault();else{$('vault-password').value='';$('vault-confirm').value='';}});
+$('history-vault-dialog').addEventListener('close',()=>{$('vault-password').value='';$('vault-confirm').value='';});
+$('history-vault-form').addEventListener('submit',async event=>{
+  event.preventDefault();if(busy||historyWorking)return;
+  const protect=vaultMode==='protect';
+  if(protect&&$('vault-password').value!==$('vault-confirm').value){$('vault-dialog-error').textContent='Парольдер сәйкес емес.';$('vault-dialog-error').hidden=false;return;}
+  historyWorking=true;updateButton();$('vault-submit').disabled=true;$('close-vault').disabled=true;
+  $('vault-dialog-error').hidden=true;$('vault-submit').textContent=protect?'Шифрлануда…':'Ашылуда…';
+  let success=false;
+  try{
+    if(protect)await historyStore.protect($('vault-password').value,analysisHistory.map(TynysHistory.recordFor));
+    else await historyStore.unlock($('vault-password').value);
+    success=true;$('history-vault-dialog').close();broadcastHistory();lastHistoryActivity=Date.now();
+  }catch(error){
+    $('vault-dialog-error').textContent=error instanceof TynysHistory.VaultError||error instanceof TynysHistory.HistoryLocked?error.message:'Қорғау әрекеті орындалмады. Бұрынғы деректер өзгертілмеді; басқа қойындыны не сақтау орнын тексеріңіз.';
+    $('vault-dialog-error').hidden=false;
+  }finally{
+    $('vault-password').value='';$('vault-confirm').value='';historyWorking=false;
+    $('vault-submit').disabled=false;$('close-vault').disabled=false;$('vault-submit').textContent=protect?'Шифрлауды қосу':'Тарихты ашу';
+    updateButton();
+  }
+  if(success)await syncHistory();
+});
+for(const type of ['pointerdown','keydown','input'])document.addEventListener(type,()=>{lastHistoryActivity=Date.now();},{passive:true});
+setInterval(()=>{if(historyProtected&&!historyLocked&&Date.now()-lastHistoryActivity>=HISTORY_IDLE_MS)lockHistory();},5000);
+
 // History stays in memory unless the user explicitly opts into this browser's store.
 function announceHistory(message){$('history-storage-status').textContent=message;}
-function broadcastHistory(){historyChannel?.postMessage({type:'changed'});}
+function broadcastHistory(type='changed'){historyChannel?.postMessage({type});}
 function releaseEntries(entries){for(const entry of entries)if(entry.thumbnail?.startsWith('blob:'))URL.revokeObjectURL(entry.thumbnail);}
 function updateHistoryMode(){
   $('save-history').checked=historyEnabled;
+  renderVaultState();
   $('history-description').textContent=historyEnabled?'Соңғы 20 талдау. Осы браузерде 7 күнге дейін, барлығы 80 МБ-қа дейін сақталады.':'Соңғы 20 талдау. Әдепкіде тарих тек осы бет ашық тұрғанда сақталады.';
 }
 async function syncHistory(){
+  const epoch=privacyEpoch;
   if(busy||historyWorking){pendingHistorySync=true;return;}
   historyWorking=true;updateButton();
   try{
     const state=await historyStore.read();
+    if(epoch!==privacyEpoch)return;
+    historyProtected=state.protected===true;historyLocked=state.locked===true;storedHistoryCount=state.storedCount??state.records.length;
     // A disabled consent from another tab must not be silently re-enabled here.
     if(!state.enabled&&historyEnabled){releaseEntries(analysisHistory);analysisHistory=[];clearSelection();}
     const session=analysisHistory.filter(entry=>!entry.saved);
@@ -247,8 +337,9 @@ async function syncHistory(){
     // A saved entry deleted/expired elsewhere must not remain as the active result.
     if(activeHistoryId&&!analysisHistory.some(entry=>entry.id===activeHistoryId))clearSelection();
     historyEnabled=state.enabled;historyGeneration=state.generation;historyDeletionPending=false;
-    announceHistory(historyEnabled?`Сақтау қосулы. Браузерде ${state.records.length} талдау сақталған. Бұл сақтық көшірме емес: браузер деректерді тазалауы мүмкін.`:'Сақтау өшірулі. Тарих тек осы бетте қалады.');
+    announceHistory(historyLocked?'Қорғалған тарих құлыптаулы. Жаңа талдау жасауға болады; ашқанша жаңа нәтижелер осы бетте ғана қалады.':historyEnabled?`Сақтау қосулы. Браузерде ${state.records.length} талдау сақталған. Бұл сақтық көшірме емес: браузер деректерді тазалауы мүмкін.`:'Сақтау өшірулі. Тарих тек осы бетте қалады.');
   }catch{
+    if(historyProtected){historyStore.lock();historyLocked=true;releaseEntries(analysisHistory);analysisHistory=[];clearSelection();}
     announceHistory('Браузердегі тарихты оқу мүмкін болмады. Жаңа талдаулар осы бетте ғана қалады; сақталған деректерді жоюды қайта көріңіз.');
     historyEnabled=false;historyGeneration=null;
     historyDeletionPending=true;
@@ -260,7 +351,7 @@ async function rememberResult(file,result){
   if(results[0]===result)activeHistoryId=entry.id;
   releaseEntries(analysisHistory.splice(TynysHistory.LIMIT));
   $('history-feedback').textContent='';
-  if(historyEnabled){
+  if(historyEnabled&&!historyLocked){
     try{
       const state=await historyStore.append(TynysHistory.recordFor(entry),historyGeneration);
       const ids=new Set(state.ids);
@@ -268,7 +359,7 @@ async function rememberResult(file,result){
       announceHistory(`Сақталды. Браузерде ${ids.size} талдау бар. 7 күн және 80 МБ шегі қолданылады.`);
       broadcastHistory();
     }catch(error){
-      if(error instanceof TynysHistory.HistoryChanged){pendingHistorySync=true;historyEnabled=false;}
+      if(error instanceof TynysHistory.HistoryChanged||error instanceof TynysHistory.HistoryLocked){pendingHistorySync=true;historyEnabled=false;}
       announceHistory('Бұл нәтиже браузерге сақталмады. Осы бетте ғана қолжетімді. Сақтау орны не басқа беттегі өзгерісті тексеріңіз.');
     }
   }
@@ -333,7 +424,7 @@ $('save-history').addEventListener('change',async()=>{
       const ids=new Set(state.ids);for(const entry of analysisHistory)entry.saved=ids.has(entry.id);
       announceHistory(`Сақтау қосылды: ${ids.size} талдау. Келесі талдаулар да осы браузерде сақталады.`);
     }else{
-      await historyStore.clear();historyEnabled=false;historyGeneration=null;historyDeletionPending=false;
+      await historyStore.clear();historyEnabled=false;historyGeneration=null;historyDeletionPending=false;historyProtected=false;historyLocked=false;storedHistoryCount=0;
       for(const entry of analysisHistory)entry.saved=false;
       announceHistory('Сақтау өшірілді, браузердегі көшірмелер жойылды. Қазіргі тарих осы бетте ғана қалады.');
     }
@@ -346,7 +437,7 @@ $('clear-history').addEventListener('click',async()=>{
   historyWorking=true;updateButton();
   try{
     await historyStore.clear();
-    releaseEntries(analysisHistory);analysisHistory=[];historyEnabled=false;historyGeneration=null;historyDeletionPending=false;
+    releaseEntries(analysisHistory);analysisHistory=[];historyEnabled=false;historyGeneration=null;historyDeletionPending=false;historyProtected=false;historyLocked=false;storedHistoryCount=0;
     clearSelection();
     $('history-feedback').textContent='Талдау тарихы, ашық нәтиже және осы браузердегі сақталған көшірмелер жойылды. Сақтау өшірілді.';
     announceHistory('Браузердегі тарих тазаланды. Сақтау өшірулі.');
@@ -357,11 +448,13 @@ $('clear-history').addEventListener('click',async()=>{
   }
   finally{historyWorking=false;updateHistoryMode();renderHistory();updateButton();}
 });
-if(historyChannel)historyChannel.onmessage=()=>{pendingHistorySync=true;if(!busy&&!historyWorking){pendingHistorySync=false;void syncHistory();}};
+if(historyChannel)historyChannel.onmessage=event=>{if(event.data?.type==='vault-lock'){lockHistory(false);return;}pendingHistorySync=true;if(!busy&&!historyWorking){pendingHistorySync=false;void syncHistory();}};
 setInterval(()=>{if(historyEnabled||pendingHistorySync){pendingHistorySync=false;void syncHistory();}},60000);
 window.addEventListener('focus',()=>{if(historyReady)void syncHistory();});
 window.addEventListener('pageshow',event=>{if(event.persisted)void syncHistory();});
 window.addEventListener('pagehide',event=>{
+  if(historyProtected||$('history-vault-dialog').open)lockHistory(false);
+  else historyStore.lock();
   if(event.persisted)return;
   if(previewUrl)URL.revokeObjectURL(previewUrl);
   releaseEntries(analysisHistory);historyChannel?.close();

@@ -49,18 +49,21 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--revision',required=True)
     parser.add_argument('--manifest-sha',required=True)
-    parser.add_argument('--stage',type=int,choices=(6,7),default=6)
+    parser.add_argument('--stage',type=int,choices=(6,7,8),default=6)
     args=parser.parse_args()
     if sys.platform!='linux' or not re.fullmatch('[0-9a-f]{40}',args.revision) or not re.fullmatch('[0-9a-f]{64}',args.manifest_sha):
         raise ValueError('Run only in the existing Linux Codespace with exact SHA arguments.')
     root=Path('/workspaces/Tynys').resolve()
     if not (root/'.devcontainer/start.py').is_file():raise ValueError('Expected project is absent.')
     prefix='https://raw.githubusercontent.com/5kairosh/Tynys/'+args.revision+'/'
-    directory='generalization_stage6' if args.stage==6 else 'service_stage7'
+    directory={6:'generalization_stage6',7:'service_stage7',8:'history_stage8'}[args.stage]
     label='STAGE'+str(args.stage)
     raw=urllib.request.urlopen(prefix+'training/'+directory+'/deployment_manifest.json',timeout=45).read()
     if sha(raw)!=args.manifest_sha:raise ValueError('Deployment manifest SHA mismatch.')
     manifest=json.loads(raw)
+    for name,expected in manifest.get('expected_unchanged',{}).items():
+        path=(root/name).resolve()
+        assert path.is_relative_to(root) and sha(path.read_bytes())==expected,'Unexpected inference pipeline: '+name
     for name,expected in manifest['expected_previous'].items():
         path=(root/name).resolve()
         assert path.is_relative_to(root)
@@ -97,7 +100,7 @@ def main():
         assert status['xray_check']['parameter_id']==manifest['ood_parameter_id']
         assert status['xray_check']['reference_count']==5401 and status['xray_check']['calibration_count']==1352
         audit=status['selective_evaluation'];assert audit['available']
-        if args.stage==7:
+        if args.stage>=7:
             assert status['service']['policy']=='bounded_inference_v1'
             assert status['service']['capacity']==3 and status['service']['admitted']==0
             assert json.load(urllib.request.urlopen('http://127.0.0.1:7860/api/ready',timeout=5))['ready']
