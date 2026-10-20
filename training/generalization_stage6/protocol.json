@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "stage": 6,
+  "seed": 20261021,
+  "frozen_before_candidate_training_or_new_holdout_predictions": true,
+  "source": "RSNA-STR 2018 adjudicated challenge; NIH CXR patient mapping",
+  "target_definition": "Calculated radiologist Normal versus Lung Opacity suspicious for pneumonia. Other abnormalities and ambiguous labels excluded. This is a radiographic proxy, not confirmed clinical pneumonia.",
+  "sampling": "One deterministically sampled image per original NIH patient, then stratified random sampling without replacement. No patient crosses splits.",
+  "rsna_counts_per_class": {"train": 800, "validation": 200, "holdout": 200},
+  "kaggle": "Existing 3801 train / 952 validation. Existing 618 test previously inspected; descriptive regression only.",
+  "old_openi": "All 200 remain evaluation-only; previously inspected and 40 positive report groups exhausted. No OpenI pixels/labels in fitting or selection.",
+  "candidates": {
+    "features": "Frozen current MobileNetV2 backbone GAP, 1280 dimensions; same RGB/float32/resize_with_pad 224 preprocessing",
+    "family": "L2 logistic regression on standardized features",
+    "C": [0.001, 0.01, 0.1, 1.0],
+    "fit_weighting": "Equal total weight for each of four domain/class strata; scaler and classifier fitted on train only",
+    "max_iter": 2000,
+    "threshold_grid": "0.01..0.99 in steps of 0.005 on validation only",
+    "validation_selection": "Require sensitivity >=0.90 Kaggle and >=0.80 RSNA. Maximize minimum domain balanced accuracy, then mean balanced accuracy, then lower C, then higher threshold. If no feasible candidate, keep best descriptive candidate but do not deploy.",
+    "temperature": "After selection fit one bounded T in [0.2,5] on domain/class balanced validation NLL; transform threshold by same T to preserve decisions"
+  },
+  "freeze_before_holdout": "Save selected head, threshold, validation selection, source/config hashes and manifest hashes before any holdout or old-test inference",
+  "promotion_gate": {
+    "rsna_new_holdout": "accuracy gain >=0.05 AND balanced accuracy gain >=0.05 over existing classifier; sensitivity >=0.80; specificity >=0.70; paired 95% bootstrap accuracy-difference lower bound >0 (10000 resamples, seed 20261021)",
+    "kaggle_previously_inspected": "balanced accuracy drop <=0.02; sensitivity >=0.90",
+    "openi_previously_inspected": "accuracy gain >=0.05 AND balanced accuracy gain >=0.05; sensitivity >=0.60",
+    "validation_feasible": true,
+    "failed_gate": "Do not replace production model or claim improved clinical accuracy. Preserve candidate/report locally, publish numeric evidence and next-data requirement. Do not retune on revealed holdout."
+  },
+  "limitations": [
+    "Balanced quota sample; accuracy does not estimate deployment prevalence.",
+    "RSNA radiographic opacity labels and OpenI weak report labels are not clinical gold standard.",
+    "Original NIH patient identifiers support within-RSNA grouping; identity linkage across source institutions is not verified.",
+    "Fresh RSNA holdout is used once; old Kaggle/OpenI results are descriptive rechecks.",
+    "No OOD threshold change used to conceal classification errors."
+  ]
+}
