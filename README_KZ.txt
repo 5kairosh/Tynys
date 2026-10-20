@@ -207,3 +207,9 @@ Resume-тан кейінгі ескі туннель404 берді; loopback API
 және браузер тексерулері қайта өтті. Codespace тоқтаса сайт та тоқтайды; 24/7 кепілдік жоқ.
 Дәлел: training/generalization_stage6/verification.json, ci.json, deployment.json,
 public_api.json және ui_online.jpg. Docker қайта жиналмады; презентация тарихи.
+
+7-кезең онлайн тексерілді: PNG/CR DICOM 200, CT/жалған JPG 400, PDF 2 бет.
+GitHub CI: 159 pytest + 33 Chromium, success.
+https://github.com/5kairosh/Tynys/actions/runs/39494920388
+Нақты runtime commit: 2fd48dd2460c9559cd99a2e3a5092a4a09f605ab; CI commit: 3bf672a8172588a33e5d5c71c8518f20556efb15.
+Дәлелдер: training/service_stage7/. Codespaces 24/7 кепілдігін бермейді.

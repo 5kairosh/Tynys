@@ -1,0 +1,35 @@
+{
+  "run_id": 39494920388,
+  "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39494920388",
+  "status": "success",
+  "source_commit": "3bf672a8172588a33e5d5c71c8518f20556efb15",
+  "pytest_passed": 159,
+  "browser_passed": 33,
+  "logs": [
+    {
+      "name": "pytest",
+      "id": 118877369031,
+      "lines": [
+        "2026-10-20T20:48:32.5456122Z 159 passed, 13 warnings in 23.62s"
+      ]
+    },
+    {
+      "name": "browser-history",
+      "id": 118877368693,
+      "lines": [
+        "2026-10-20T20:47:49.6624604Z   duration_ms: 3185.13879",
+        "2026-10-20T20:47:49.7059863Z # tests 33",
+        "2026-10-20T20:47:49.7060759Z # pass 33",
+        "2026-10-20T20:47:49.7060933Z # fail 0",
+        "2026-10-20T20:47:49.7076710Z # duration_ms 22073.026169"
+      ]
+    }
+  ],
+  "initial_run": {
+    "run_id": 39494378821,
+    "browser_passed": 32,
+    "browser_total": 33,
+    "reason": "PDF test checked the error before the HTTP response arrived. Wait now observes the visible error and re-enabled button; expected error/result assertions were preserved.",
+    "production_change_required": false
+  }
+}

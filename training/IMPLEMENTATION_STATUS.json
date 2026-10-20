@@ -117,17 +117,20 @@
     "configured": true,
     "remote_run": true,
     "repo_url": "https://github.com/5kairosh/Tynys",
-    "run_id": 39489492345,
-    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345",
+    "run_id": 39494920388,
+    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39494920388",
     "status": "success",
-    "source_commit": "eaa6c5aa8e61dfb2d9ff174845994754dc8c256a",
-    "checked_at": "2026-10-20T20:19:58.662798+00:00"
+    "source_commit": "3bf672a8172588a33e5d5c71c8518f20556efb15",
+    "checked_at": "2026-10-20T20:50:03.325865+00:00",
+    "pytest_passed": 159,
+    "browser_passed": 33
   },
   "tests": {
     "local_passed": 159,
     "browser_passed": 33,
     "stage5_evidence": "training/ood_stage5/verification.json",
-    "current_stage": 7
+    "current_stage": 7,
+    "stage7_evidence": "training/service_stage7/verification.json"
   },
   "ensemble": {
     "weights": {
@@ -208,7 +211,7 @@
       "PDF"
     ],
     "remote_deployment_verified": true,
-    "deployed_source_commit": "eaa6c5aa8e61dfb2d9ff174845994754dc8c256a",
+    "deployed_source_commit": "2fd48dd2460c9559cd99a2e3a5092a4a09f605ab",
     "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345",
     "ci_status": "success",
     "evaluation_artifact": "site/model/selective_evaluation.json",
@@ -449,8 +452,12 @@
     "health_endpoint": "/api/health",
     "readiness_endpoint": "/api/ready",
     "load_test": "training/service_stage7/load_local.json",
-    "remote_deployment_verified": false,
+    "remote_deployment_verified": true,
     "continuous_availability_verified": false,
-    "model_changed": false
+    "model_changed": false,
+    "deployed_source_commit": "2fd48dd2460c9559cd99a2e3a5092a4a09f605ab",
+    "public_load_verified": true,
+    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39494920388",
+    "evidence": "training/service_stage7/verification.json"
   }
 }

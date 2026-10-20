@@ -1,6 +1,6 @@
 {
   "stage": 7,
-  "checked_at": "2026-10-20T20:41:45.918399+00:00",
+  "checked_at": "2026-10-20T20:50:03.325865+00:00",
   "pytest": {
     "passed": 159,
     "warnings": 13,
@@ -8,7 +8,7 @@
   },
   "browser": {
     "passed": 33,
-    "seconds": 62.77,
+    "seconds": 49.26,
     "runtime": "Real Chromium/IndexedDB; inference stubbed for regression tests"
   },
   "load_local": "training/service_stage7/load_local.json",
@@ -20,7 +20,7 @@
   },
   "model_id": "a79fe71a67fc",
   "ood_parameter_id": "b0c5e869838e",
-  "remote_verified": false,
+  "remote_verified": true,
   "source_sha256": {
     "site/app.py": "35fd47c9f812b6e5f44c9e6797db5d8651869d2baa62e79a2ce68af7108b98ca",
     "site/service_runtime.py": "33560344eca13d7f8c0ae9825a276cf99e26a7659fdeb96c979343916881a67c",
@@ -29,10 +29,17 @@
     "site/static/index.html": "12f02609d07dbf8969446f1a9c722f1e1362ae47d7cd3f34346e1ec59e177a2c",
     "site/static/style.css": "b4f25fbf55f696f882bf9666ab16fdf1b1ef2452980ffdd5951a3a5e4c5d944a",
     "site/tests/test_service_runtime.py": "1331e15e45bd5184679ce2a0d3d99fe29851bed1e018ec71b9be68d897d4b664",
-    "site/tests/browser/history.test.cjs": "2e8ef77fdeaab304152c7e63ed6003a9c2427a7d95131783d631e2a1e3af229e",
+    "site/tests/browser/history.test.cjs": "d7ceca96b90a0faf97e08aa1b7bd04c33854ddc20943d5a3432a25d5d1ec6930",
     "site/model/pneumonia_mobilenetv2.keras": "a79fe71a67fc4e100a5cbde8624fb9286e663bd59e4beb74984810b3f2ba4e43",
     "site/model/model_config.json": "63c6e98cc7713993778fb8b44430a8ebb6b334bac66be5ec0f815ea45f63eb4c",
     "site/model/ood_params.npz": "b0c5e869838ed25b5b1c720e5015ccbb6e8f6654e2a5b098f25bee2502cafa47",
     "site/model/selective_evaluation.json": "0b48f3f789a4cf2106fcda10b42672bee0407bc3c20f2b20cfe17e0e7e4afd55"
-  }
+  },
+  "ci_verified": true,
+  "deployment": "training/service_stage7/deployment.json",
+  "ci": "training/service_stage7/ci.json",
+  "public_api": "training/service_stage7/public_api.json",
+  "public_burst": "training/service_stage7/load_public.json",
+  "deployed_source_commit": "2fd48dd2460c9559cd99a2e3a5092a4a09f605ab",
+  "ci_source_commit": "3bf672a8172588a33e5d5c71c8518f20556efb15"
 }

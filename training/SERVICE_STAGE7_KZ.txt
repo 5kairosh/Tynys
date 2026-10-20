@@ -81,3 +81,26 @@ asyncio.shield HTTP күтуін underlying worker Future-ден бөледі;
 
 Жарияланған нұсқа/CI дәлелі: training/service_stage7/verification.json,
 deployment.json, ci.json (тек нақты орындалған соң толтырылады).
+
+Онлайн растау
+Codespaces-та 48 файл SHA256 бойынша тексеріліп орнатылды; Git HEAD өзгерген жоқ.
+Public PNG/CR DICOM 200; CT және жалған JPG 400; аралас екі файл PDF 200, 2 бет.
+Қысқа 4 сұраулық burst: 3 қабылданды, 1-і 429 алды. Health 6/6 HTTP 200;
+p95 444,79 мс (интернет/туннель уақытын қоса), ең ұзағы 1012,83 мс.
+Бұл аз өлшемнен ұзақмерзімді SLA шығарылмайды. Кейінгі PDF/predict жұмыс істеді.
+Браузердегі жүктелген OOD JSON API-дегі жаңа есеппен дәл сәйкес; console error жоқ.
+Қолданыстағы келісім/5 сақталған жазба өзгертілмеді, браузерден ашық сайтқа жеке рентген жүктелмеді.
+Public API сынақтары тек жасанды файлдармен, браузердегі нақты модель сынағы
+бөлек localhost origin-де орындалды. Сервердің жаңа журналында Traceback жоқ.
+CI: https://github.com/5kairosh/Tynys/actions/runs/39494920388 — success.
+159 Python + 33 браузер тесті. Алғашқы CI-де PDF сынағы жауапқа дейін тексерген;
+assert талаптары сақталып, нақты error/батырма күйін күтуге түзетілді.
+
+Орнатуды дәл қайталау
+training/service_stage7/deployment.json ішіндегі source_revision пен manifest_sha256
+бірге қолданылады. Manifest-ті дәл сол revision-нен оқу керек: кейінгі құжаттама
+commit-індегі файлдар тарихи manifest snapshot-ынан өзгеше болуы мүмкін.
+training/deploy_stage6.py --stage 7 --revision <source_revision> --manifest-sha <manifest_sha256>
+Linux /workspaces/Tynys ішінде ғана. Басқа өзгерген файл анықталса тоқтайды,
+ақаулықта backup-тан қайтарады; бұйрық credentials сұрамайды. Жоба runtime-ы
+жаңартылады, контейнердегі Git HEAD жылжыды деп есептелмейді.
