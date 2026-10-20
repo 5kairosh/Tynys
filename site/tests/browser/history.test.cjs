@@ -358,7 +358,8 @@ test('PDF overload preserves the prior result and re-enables download',()=>conte
   await ready(page);await upload(page);const title=await page.locator('#result-title').innerText();let requests=0;
   await page.route('**/api/report',route=>{requests++;return route.fulfill({status:503,headers:{'Retry-After':'5'},contentType:'application/json',body:JSON.stringify({detail:'Талдау кезегін күту уақыты аяқталды.'})});});
   await page.locator('#download-pdf').click();
-  await page.waitForFunction(()=>!document.body.classList.contains('busy'));
+  await page.locator('#error-message').waitFor({state:'visible'});
+  await page.waitForFunction(()=>!document.getElementById('download-pdf').disabled);
   assert.match(await page.locator('#error-message').innerText(),/кезегін күту/);
   assert.equal(await page.locator('#result-title').innerText(),title);
   assert.equal(await page.locator('#download-pdf').isEnabled(),true);assert.equal(requests,1);
