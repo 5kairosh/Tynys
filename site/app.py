@@ -12,7 +12,7 @@ import zipfile
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from PIL import Image, UnidentifiedImageError
@@ -28,6 +28,7 @@ from selective_evaluation import evaluation_status
 from dicom_input import dicom_to_png, dicom_status
 from pad_geometry import pad_geometry
 from upload_memory import UploadMemoryLimit
+from service_runtime import InferenceAdmission, InferenceRuntime
 
 ROOT = Path(__file__).resolve().parent
 MODEL_DIR = ROOT / "model"
@@ -327,16 +328,21 @@ class Engine:
 
 
 engine = Engine()
+runtime = InferenceRuntime()
 
 
 @asynccontextmanager
 async def lifespan(app):
     await run_in_threadpool(engine.load)
-    yield
+    try:
+        yield
+    finally:
+        await runtime.close()
 
 
 app = FastAPI(title="Tynys", lifespan=lifespan)
 app.add_middleware(UploadMemoryLimit)
+app.add_middleware(InferenceAdmission, runtime=runtime)
 
 
 @app.middleware("http")
@@ -350,11 +356,24 @@ async def privacy_headers(request, call_next):
 
 @app.get("/api/status")
 def status():
-    return engine.status()
+    return {**engine.status(), 'service': runtime.snapshot()}
+
+
+@app.get('/api/health')
+async def health():
+    return {'alive': True, 'model_ready': engine.model is not None,
+            'service': runtime.snapshot()}
+
+
+@app.get('/api/ready')
+async def readiness():
+    ready = engine.model is not None and engine.cnn_model is not None and not runtime.stopping
+    return Response(json.dumps({'ready': ready}), status_code=200 if ready else 503,
+                    media_type='application/json', headers={} if ready else {'Retry-After': '3'})
 
 
 @app.post("/api/predict")
-async def predict(file: UploadFile = File(...)):
+async def predict(request: Request, file: UploadFile = File(...)):
     if Path(file.filename or "").suffix.lower() not in {".jpg", ".jpeg", ".png", ".dcm"}:
         raise HTTPException(400, "JPG, PNG немесе DICOM файлын таңда.")
     data = await file.read(IMAGE_LIMIT + 1)
@@ -363,7 +382,7 @@ async def predict(file: UploadFile = File(...)):
         raise HTTPException(400, "Файл бос.")
     if len(data) > IMAGE_LIMIT:
         raise HTTPException(413, "Файл көлемі 12 МБ-тан аспауы керек.")
-    return await run_in_threadpool(engine.predict, data, file.filename or "xray.png")
+    return await runtime.run(request.state.inference_lease, engine.predict, data, file.filename or "xray.png")
 
 
 @app.get("/")
@@ -372,7 +391,7 @@ def index():
 
 
 @app.post('/api/report')
-async def report(files: list[UploadFile] = File(...)):
+async def report(request: Request, files: list[UploadFile] = File(...)):
     if not 1 <= len(files) <= 10:
         for file in files:
             await file.close()
@@ -398,7 +417,7 @@ async def report(files: list[UploadFile] = File(...)):
             display = base64.b64decode(result['preview'].split(',',1)[1]) if result.get('preview') else data
             items.append((display,result))
         return make_report(items)
-    pdf = await run_in_threadpool(generate)
+    pdf = await runtime.run(request.state.inference_lease, generate, report=True)
     return Response(pdf, media_type='application/pdf',
                     headers={'Content-Disposition': 'attachment; filename="tynys-report.pdf"'})
 

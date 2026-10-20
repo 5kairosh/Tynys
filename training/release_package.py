@@ -38,6 +38,9 @@ def main():
                      'training/generalization_stage6/routing_protocol.json','training/generalization_stage6/routing_evaluation.json',
                      'training/generalization_stage6/DATA_ATTRIBUTION.md','training/GENERALIZATION_STAGE6_KZ.txt'):
         assert any(name==required for name,_ in allowed),required
+    for required in ('site/service_runtime.py','training/SERVICE_STAGE7_KZ.txt',
+                     'training/verify_service_stage7.py','training/service_stage7/load_local.json'):
+        assert any(name==required for name,_ in allowed),required
     assert any(name=='training/multilabel_colab_kz.ipynb' for name,_ in allowed)
     manifest={'commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         'excluded':'OpenI source images, OpenI-trained weights/error pixels, all training caches, venv, Git and uploaded patient images.',

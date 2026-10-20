@@ -124,10 +124,10 @@
     "checked_at": "2026-10-20T20:19:58.662798+00:00"
   },
   "tests": {
-    "local_passed": 150,
-    "browser_passed": 29,
+    "local_passed": 159,
+    "browser_passed": 33,
     "stage5_evidence": "training/ood_stage5/verification.json",
-    "current_stage": 6
+    "current_stage": 7
   },
   "ensemble": {
     "weights": {
@@ -199,7 +199,7 @@
     "clinically_validated": false,
     "coverage_evaluated": true,
     "selective_risk_evaluated": true,
-    "local_tests": 150,
+    "local_tests": 159,
     "tested_surfaces": [
       "API",
       "web",
@@ -435,5 +435,22 @@
     "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345",
     "checked_at": "2026-10-20T20:19:58.662798+00:00",
     "evidence": "training/generalization_stage6/verification.json"
+  },
+  "service_stage7": {
+    "implemented": true,
+    "policy": "bounded_inference_v1",
+    "admission_capacity": 3,
+    "workers": 1,
+    "queue_timeout_seconds": 20,
+    "upload_timeout_seconds": 60,
+    "predict_timeout_seconds": 90,
+    "report_timeout_seconds": 180,
+    "automatic_post_retry": false,
+    "health_endpoint": "/api/health",
+    "readiness_endpoint": "/api/ready",
+    "load_test": "training/service_stage7/load_local.json",
+    "remote_deployment_verified": false,
+    "continuous_availability_verified": false,
+    "model_changed": false
   }
 }

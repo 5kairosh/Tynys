@@ -1,0 +1,94 @@
+{
+  "stage": 7,
+  "checked_at": "2026-10-20T20:39:15.629763+00:00",
+  "base_url": "http://127.0.0.1:7860",
+  "generated_pixels_only": true,
+  "medical_accuracy_test": false,
+  "model_id": "a79fe71a67fc",
+  "burst": [
+    {
+      "route": "/api/report",
+      "status": 429,
+      "ms": 28.47
+    },
+    {
+      "route": "/api/predict",
+      "status": 429,
+      "ms": 19.68
+    },
+    {
+      "route": "/api/predict",
+      "status": 200,
+      "ms": 1664.41,
+      "model_id": "a79fe71a67fc",
+      "comparison": true,
+      "gradcam": true
+    },
+    {
+      "route": "/api/predict",
+      "status": 429,
+      "ms": 21.2
+    },
+    {
+      "route": "/api/predict",
+      "status": 200,
+      "ms": 3316.59,
+      "model_id": "a79fe71a67fc",
+      "comparison": true,
+      "gradcam": true
+    },
+    {
+      "route": "/api/predict",
+      "status": 429,
+      "ms": 35.59
+    },
+    {
+      "route": "/api/predict",
+      "status": 429,
+      "ms": 17.76
+    },
+    {
+      "route": "/api/predict",
+      "status": 200,
+      "ms": 5021.17,
+      "model_id": "a79fe71a67fc",
+      "comparison": true,
+      "gradcam": true
+    }
+  ],
+  "accepted": 3,
+  "busy_rejected": 5,
+  "health": {
+    "samples": 84,
+    "all_200": true,
+    "median_ms": 5.25,
+    "p95_ms": 15.81,
+    "max_ms": 42.26,
+    "peak_active": 1,
+    "peak_admitted": 3
+  },
+  "pdf_pages_after_burst": 2,
+  "recovery_predict": 200,
+  "final_service": {
+    "policy": "bounded_inference_v1",
+    "capacity": 3,
+    "active": 0,
+    "waiting": 0,
+    "admitted": 0,
+    "accepting": true,
+    "queue_timeout_seconds": 20,
+    "predict_timeout_seconds": 90,
+    "report_timeout_seconds": 180,
+    "retry_after_seconds": 5,
+    "uptime_seconds": 48,
+    "counters": {
+      "accepted": 5,
+      "busy_rejections": 5,
+      "queue_timeouts": 0,
+      "processing_timeouts": 0,
+      "completed": 5,
+      "failed": 0
+    }
+  },
+  "limits": "Short demo burst, not a sustained capacity or 24/7 availability guarantee."
+}

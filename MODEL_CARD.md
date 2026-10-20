@@ -110,3 +110,17 @@ Space интернетке осы тапсырмада жарияланған ж
 2026-10-21: жоғарыдағы Docker тексеруі тарихи. 6-кезең image build/run қайта тексерілмеді.
 
 6-кезең CI және онлайн тексерілді: [CI run](https://github.com/5kairosh/Tynys/actions/runs/39489492345). Дәлел: `training/generalization_stage6/verification.json`.
+
+
+## Stage 7 service limits (2026-10-21)
+
+The clinical/model scope is unchanged. One inference worker shares three total
+admission slots across uploads, queued jobs, predictions and PDF jobs. Excess
+jobs receive HTTP 429 before body buffering. Queue and response deadlines do not
+interrupt native TensorFlow execution: detached work retains its slot until it
+finishes. `/api/health` is liveness; `/api/ready` checks that both models loaded.
+Neither guarantees prediction quality, free capacity, or continuous hosting.
+The browser never automatically re-uploads an image after a failure.
+See `training/SERVICE_STAGE7_KZ.txt` and the short synthetic load evidence under
+`training/service_stage7/`. Codespaces can still sleep. No current Docker rebuild
+or sustained capacity/24/7 uptime claim is made.

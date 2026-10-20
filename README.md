@@ -1,3 +1,11 @@
+Stage 7 (2026-10-21): bounded inference admission (3 total slots, one worker),
+shared PNG/DICOM/PDF backpressure, upload/queue/response deadlines, health/readiness,
+and browser recovery without automatic image re-upload. Local short burst: 3 HTTP 200,
+5 HTTP 429, health p95 15.81 ms. 159 Python and 33 Chromium tests passed.
+No model/OOD changes; 1218-image forward audit reproduced previous predictions.
+See [Kazakh service guide](training/SERVICE_STAGE7_KZ.txt).
+Codespaces remains a temporary demo, with no 24/7 availability guarantee.
+
 ---
 title: Tynys
 emoji: 🫁

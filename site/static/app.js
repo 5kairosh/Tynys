@@ -9,37 +9,65 @@ try{if(typeof BroadcastChannel==='function')historyChannel=new BroadcastChannel(
 let statusLoading=false, statusTimer=null, connectionError=false;
 function scheduleStatusCheck(){
   clearTimeout(statusTimer);
-  statusTimer=setTimeout(()=>loadStatus(),status?.ready?15000:3000);
+  statusTimer=setTimeout(()=>loadStatus(),status?.ready&&status?.service?.accepting!==false?15000:3000);
 }
 const decimal=(n,d=3)=>Number(n).toFixed(d).replace('.',',');
 const percent=n=>decimal(n*100,2)+'%';
 function error(message){$('error-message').textContent=message;$('error-message').hidden=!message;}
 function updateButton(){
   const locked=busy||historyWorking||!historyReady;
-  $('analyze').disabled=locked||!selected.length||!status?.ready;
+  $('analyze').disabled=locked||!selected.length||!status?.ready||status?.service?.accepting===false;
   $('image-input').disabled=locked;
   $('clear-history').disabled=locked||(!analysisHistory.length&&!historyEnabled&&!historyDeletionPending);
   $('save-history').disabled=locked;
-  $('download-pdf').disabled=locked||!status?.ready;
+  $('download-pdf').disabled=locked||!status?.ready||status?.service?.accepting===false;
   for(const button of $('history-list').querySelectorAll('button'))button.disabled=locked;
   if(pendingHistorySync&&!locked){pendingHistorySync=false;queueMicrotask(()=>void syncHistory());}
 }
-async function api(url,options){let r;try{r=await fetch(url,options);}catch{throw Error('Серверге қосылмады. start.bat файлын іске қосып, сервер терезесін ашық қалдырыңыз.');}let data;try{data=await r.json();}catch{throw Error('Серверден жауап алынбады. Сервердің іске қосылғанын тексеріңіз.');}if(!r.ok)throw Error(typeof data.detail==='string'?data.detail:'Сұрауды орындау мүмкін болмады.');return data;}
+async function apiResponse(url,options={}){
+  let response;
+  try{
+    const seconds=url==='/api/report'?280:url==='/api/predict'?190:8;
+    response=await fetch(url,{...options,signal:options.signal||AbortSignal.timeout(seconds*1000)});
+  }catch(e){
+    if(e.name==='TimeoutError'||e.name==='AbortError')throw Error('Жауапты күту уақыты аяқталды. Нәтиже алынбады. Біраздан соң қайта басыңыз.');
+    throw Error('Серверге қосылмады. Интернетті және сервердің қосылғанын тексеріңіз. Сурет автоматты түрде қайта жіберілмейді.');
+  }
+  if(!response.ok){
+    const data=await response.json().catch(()=>({}));
+    const retry=Number(response.headers.get('Retry-After'));
+    const message=typeof data.detail==='string'?data.detail:'Сұрауды орындау мүмкін болмады.';
+    throw Error(message+(retry>0&&retry<=300?` Қайта жіберу автоматты емес; ${retry} секунд күтіңіз.`:''));
+  }
+  return response;
+}
+async function api(url,options){
+  const response=await apiResponse(url,options);
+  try{return await response.json();}catch{throw Error('Серверден дұрыс жауап алынбады. Қосылымды тексеріңіз.');}
+}
+function renderService(){
+  const box=$('service-status');
+  box.classList.toggle('service-offline',!status?.ready);
+  if(!status?.ready){box.textContent='Сервермен байланыс тексерілуде. Codespaces ұйқыға кетсе, жоба иесі оны қайта іске қосуы керек. Қосылым автоматты тексеріледі.';return;}
+  const service=status.service;
+  box.textContent=service?.accepting===false?'Сервер бос емес. Кезек босағанда талдау батырмасы автоматты қосылады. Таңдалған сурет қайта жіберілмейді.':service?.active||service?.waiting?`Сервер жұмыс істеп тұр: ${service.active} талдау орындалуда, ${service.waiting} сұрау кезекте. Суреттер кезекпен өңделеді.`:'Сервер дайын. Суреттер кезекпен өңделеді; орын толса, қайта жіберу туралы хабарлама шығады.';
+}
 async function loadStatus(){
   if(statusLoading)return;
   if(busy){scheduleStatusCheck();return;}
   statusLoading=true;
   try{status=await api('/api/status',{signal:AbortSignal.timeout(8000)});
+  renderService();
   renderSelectiveEvaluation(status.selective_evaluation);
   void renderGeneralizationEvaluation(status);
   if(connectionError&&status.ready){error('');connectionError=false;}
-$('header-status').textContent=status.ready?'Модель дайын':'Модель қолжетімсіз';$('status-dot').classList.toggle('ready',status.ready);if(!status.ready)error(status.message||'Модель қосылмаған.');const m=status.metrics?.find(x=>x.model==='MobileNetV2');const cnn=status.metrics?.find(x=>x.model==='CNN');const ensemble=status.metrics?.find(x=>x.model==='Ensemble');if(m){$('metric-accuracy').textContent=percent(m.accuracy);$('metric-recall').textContent=percent(m.recall);$('metric-count').textContent=Math.round(m.TN+m.FP+m.FN+m.TP);const body=$('metrics-table');body.replaceChildren();for(const [key,label,type] of [['accuracy','Accuracy','percent'],['precision','Precision','percent'],['recall','Recall / sensitivity','percent'],['specificity','Specificity','percent'],['f1','F1-score','decimal'],['roc_auc','ROC-AUC','decimal']]){const tr=document.createElement('tr');for(const value of [label,cnn?cnn[key]:null,m[key],status.ensemble?.available?ensemble?.[key]:null]){const td=document.createElement('td');td.textContent=typeof value==='string'?value:value==null?'—':type==='percent'?percent(value):decimal(value,4);tr.append(td);}body.append(tr);}}const external=status.external_validation;$('external-note').textContent=external?.available?`Сыртқы тексеру (OpenI, ${external.metrics.count} сурет): accuracy ${percent(external.metrics.accuracy)}, recall ${percent(external.metrics.recall)}. Ішкі тесттен бөлек. Топтау есеп ID-іне сүйенеді.`:(external?.message||'Сыртқы бағалау қолжетімсіз.');const paired=status.mcnemar;$('mcnemar-note').textContent=paired?.available?`Ішкі test: McNemar p=${Number(paired.p_value).toExponential(3)}, α=0,05. ${paired.significant?'Айырма статистикалық маңызды.':'Статистикалық маңыздылық анықталмады.'} Бұл осы тестке қатысты.`:(paired?.message||'McNemar нәтижесі қолжетімсіз.');if(status.config)$('research-threshold').textContent=decimal(status.config.threshold);updateButton();}catch(e){
-    status=null;connectionError=true;
+$('header-status').textContent=status.ready?(status.service?.accepting===false?'Сервер бос емес':'Модель дайын'):'Модель қолжетімсіз';$('status-dot').classList.toggle('ready',status.ready);if(!status.ready)error(status.message||'Модель қосылмаған.');const m=status.metrics?.find(x=>x.model==='MobileNetV2');const cnn=status.metrics?.find(x=>x.model==='CNN');const ensemble=status.metrics?.find(x=>x.model==='Ensemble');if(m){$('metric-accuracy').textContent=percent(m.accuracy);$('metric-recall').textContent=percent(m.recall);$('metric-count').textContent=Math.round(m.TN+m.FP+m.FN+m.TP);const body=$('metrics-table');body.replaceChildren();for(const [key,label,type] of [['accuracy','Accuracy','percent'],['precision','Precision','percent'],['recall','Recall / sensitivity','percent'],['specificity','Specificity','percent'],['f1','F1-score','decimal'],['roc_auc','ROC-AUC','decimal']]){const tr=document.createElement('tr');for(const value of [label,cnn?cnn[key]:null,m[key],status.ensemble?.available?ensemble?.[key]:null]){const td=document.createElement('td');td.textContent=typeof value==='string'?value:value==null?'—':type==='percent'?percent(value):decimal(value,4);tr.append(td);}body.append(tr);}}const external=status.external_validation;$('external-note').textContent=external?.available?`Сыртқы тексеру (OpenI, ${external.metrics.count} сурет): accuracy ${percent(external.metrics.accuracy)}, recall ${percent(external.metrics.recall)}. Ішкі тесттен бөлек. Топтау есеп ID-іне сүйенеді.`:(external?.message||'Сыртқы бағалау қолжетімсіз.');const paired=status.mcnemar;$('mcnemar-note').textContent=paired?.available?`Ішкі test: McNemar p=${Number(paired.p_value).toExponential(3)}, α=0,05. ${paired.significant?'Айырма статистикалық маңызды.':'Статистикалық маңыздылық анықталмады.'} Бұл осы тестке қатысты.`:(paired?.message||'McNemar нәтижесі қолжетімсіз.');if(status.config)$('research-threshold').textContent=decimal(status.config.threshold);updateButton();}catch(e){
+    status=null;connectionError=true;renderService();
     void renderGeneralizationEvaluation(null);
     renderSelectiveEvaluation({available:false,message:'Серверге қосылмады. Бағалау есебі сервер қосылғанда қайта тексеріледі.'});
     $('header-status').textContent='Серверге қосылмады';
     $('status-dot').classList.remove('ready');
-    error('Серверге қосылмады. Сайт бумасындағы start.bat файлын іске қосып, сервер терезесін ашық қалдырыңыз. Қосылым автоматты түрде қайта тексеріледі.');
+    error('Серверге қосылмады. Интернетті және сервердің қосылғанын тексеріңіз. Codespaces ұйқыға кетсе, жоба иесі қайта іске қосуы керек. Қосылым автоматты түрде қайта тексеріледі.');
     updateButton();
   }finally{statusLoading=false;scheduleStatusCheck();}
 }
@@ -164,8 +192,7 @@ $('download-pdf').addEventListener('click',async()=>{
   const oldLabel=label.textContent;label.textContent='PDF дайындалуда… ';
   try{
     const form=new FormData();for(const file of selected)form.append('files',file);
-    const response=await fetch('/api/report',{method:'POST',body:form});
-    if(!response.ok){const data=await response.json().catch(()=>({}));throw Error(typeof data.detail==='string'?data.detail:'PDF есепті жасау мүмкін болмады.');}
+    const response=await apiResponse('/api/report',{method:'POST',body:form});
     const blob=await response.blob();
     if(!blob.type.includes('application/pdf'))throw Error('Сервер PDF файл қайтармады.');
     const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='tynys-report.pdf';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);

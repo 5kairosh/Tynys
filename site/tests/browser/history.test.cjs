@@ -322,3 +322,58 @@ test('stage6 evidence recovers after server disconnect without reload or inferen
   online=true;response=page.waitForResponse('**/api/status');await page.evaluate(()=>window.dispatchEvent(new Event('online')));await response;
   await page.waitForFunction(()=>!document.getElementById('generalization-download').disabled);assert.equal(await page.locator('#generalization-cards .audit-card').count(),3);assert.equal(predictCount,before);
 }));
+
+// Service recovery uses transport faults, not alternate medical predictions.
+test('429 overload keeps the selected file and requires a manual retry',()=>contextTest(async(context,page)=>{
+  await ready(page);let requests=0;
+  await page.route('**/api/predict',route=>{requests++;return route.fulfill({status:429,headers:{'Retry-After':'5'},contentType:'application/json',body:JSON.stringify({detail:'Сервер бос емес.'})});});
+  await page.locator('#image-input').setInputFiles({name:'retry.png',mimeType:'image/png',buffer:PNG});
+  await page.locator('#analyze').click();
+  await page.waitForFunction(()=>!document.body.classList.contains('busy'));
+  assert.match(await page.locator('#error-message').innerText(),/5 секунд/);
+  assert.equal(await page.locator('#file-name').innerText(),'retry.png');
+  assert.equal(await page.locator('#analyze').isEnabled(),true);
+  assert.equal((await storage(page)).records,0);
+  await page.waitForTimeout(200);assert.equal(requests,1);
+  await page.unroute('**/api/predict');await page.locator('#analyze').click();
+  await page.waitForFunction(()=>!document.body.classList.contains('busy'));
+  assert.match(await page.locator('#result-title').innerText(),/Сенімді бағалау/);
+}));
+
+test('client deadline releases controls without creating history or retrying',()=>contextTest(async(context,page)=>{
+  await page.addInitScript(()=>{const original=AbortSignal.timeout.bind(AbortSignal);AbortSignal.timeout=ms=>original(ms===190000?30:ms);});
+  await ready(page);let requests=0;
+  await page.route('**/api/predict',async route=>{requests++;await new Promise(resolve=>setTimeout(resolve,150));await route.abort().catch(()=>{});});
+  await page.locator('#image-input').setInputFiles({name:'timeout.png',mimeType:'image/png',buffer:PNG});
+  await page.locator('#analyze').click();
+  await page.waitForFunction(()=>!document.body.classList.contains('busy'));
+  assert.match(await page.locator('#error-message').innerText(),/күту уақыты аяқталды/);
+  assert.equal(await page.locator('#analyze').isEnabled(),true);
+  assert.equal(await page.locator('#file-name').innerText(),'timeout.png');
+  assert.equal(await page.locator('#result-content').isVisible(),false);
+  assert.deepEqual(await storage(page),{enabled:false,records:0});assert.equal(requests,1);
+}));
+
+test('PDF overload preserves the prior result and re-enables download',()=>contextTest(async(context,page)=>{
+  await ready(page);await upload(page);const title=await page.locator('#result-title').innerText();let requests=0;
+  await page.route('**/api/report',route=>{requests++;return route.fulfill({status:503,headers:{'Retry-After':'5'},contentType:'application/json',body:JSON.stringify({detail:'Талдау кезегін күту уақыты аяқталды.'})});});
+  await page.locator('#download-pdf').click();
+  await page.waitForFunction(()=>!document.body.classList.contains('busy'));
+  assert.match(await page.locator('#error-message').innerText(),/кезегін күту/);
+  assert.equal(await page.locator('#result-title').innerText(),title);
+  assert.equal(await page.locator('#download-pdf').isEnabled(),true);assert.equal(requests,1);
+}));
+
+test('full service becomes available again without losing the selected file',()=>contextTest(async(context,page)=>{
+  let accepting=false;
+  await page.route('**/api/status',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({ready:true,model_id:'test-model-v1',config:{threshold:.745},metrics:[],service:{accepting,active:1,waiting:2}})}));
+  await ready(page);
+  await page.locator('#image-input').setInputFiles({name:'waiting.png',mimeType:'image/png',buffer:PNG});
+  assert.equal(await page.locator('#analyze').isEnabled(),false);
+  assert.match(await page.locator('#header-status').innerText(),/бос емес/);
+  assert.match(await page.locator('#service-status').innerText(),/қайта жіберілмейді/);
+  accepting=true;
+  await page.waitForFunction(()=>!document.getElementById('analyze').disabled);
+  assert.equal(await page.locator('#file-name').innerText(),'waiting.png');
+  assert.match(await page.locator('#header-status').innerText(),/Модель дайын/);
+}));
