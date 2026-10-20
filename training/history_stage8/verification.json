@@ -1,6 +1,6 @@
 {
   "stage": 8,
-  "checked_at": "2026-10-20T21:14:16.058554+00:00",
+  "checked_at": "2026-10-20T21:24:04Z",
   "python": {
     "passed": 159,
     "warnings": 13,
@@ -11,7 +11,9 @@
     "full_prior_seconds": 92.99,
     "final_focused": 16,
     "final_focused_seconds": 35.22,
-    "final_full_ci_verified": false
+    "final_full_ci_verified": true,
+    "final_full_ci_passed": 48,
+    "final_full_ci_seconds": 39.38
   },
   "algorithm": {
     "cipher": "AES-GCM",
@@ -26,7 +28,21 @@
   "baseline_revision": "b97535fac1d3f67d46d2df32c6db0d694441fb3a",
   "medical_model_changed": false,
   "medical_accuracy_improvement_claim": false,
-  "remote_verified": false,
+  "remote_verified": true,
+  "ci_verified": true,
+  "ci": "training/history_stage8/ci.json",
+  "ci_source_commit": "e51a479c97fa27d7a5c8af1535a3cda68908f8dc",
+  "deployment": "training/history_stage8/deployment.json",
+  "public_api": "training/history_stage8/public_api.json",
+  "local_real_model_ui": {
+    "origin": "http://localhost:7860",
+    "generated_pixels_only": true,
+    "encrypted_fixture_count": 1,
+    "lock_and_reload_hide_record": true,
+    "correct_password_restores_previous_result": true,
+    "restored_file_pdf_pages": 1,
+    "real_medical_user_data_used": false
+  },
   "existing_user_history_changed": false,
   "source_sha256": {
     "site/static/history-storage.js": "541406ad974cfc767f93e1df48c434220aa8ba90f69e5c32567332f5995b2e74",

@@ -1,0 +1,27 @@
+{
+  "run_id": 39498827595,
+  "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39498827595",
+  "status": "success",
+  "source_commit": "e51a479c97fa27d7a5c8af1535a3cda68908f8dc",
+  "pytest_passed": 159,
+  "browser_passed": 48,
+  "logs": [
+    {
+      "name": "pytest",
+      "id": 118890782171,
+      "lines": [
+        "2026-10-20T21:16:27.7664969Z 159 passed, 13 warnings in 19.24s"
+      ]
+    },
+    {
+      "name": "browser-history",
+      "id": 118890782041,
+      "lines": [
+        "2026-10-20T21:16:16.9551637Z # tests 48",
+        "2026-10-20T21:16:16.9551988Z # pass 48",
+        "2026-10-20T21:16:16.9552184Z # fail 0",
+        "2026-10-20T21:16:16.9552899Z # duration_ms 39382.769549"
+      ]
+    }
+  ]
+}

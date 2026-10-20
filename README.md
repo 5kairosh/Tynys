@@ -10,6 +10,14 @@ pinned: false
 
 # Tynys
 
+Stage 8 (2026-10-21): optional password-encrypted browser history, manual and
+five-minute idle locks, and suppression of late predictions/PDFs after locking.
+Legacy history is preserved until the user elects protection. Passwords and keys
+are not sent to the API; there is no password recovery. Downloaded files remain
+outside the vault. [Guide and limits](training/HISTORY_VAULT_STAGE8_KZ.txt).
+[Verified CI: 159 Python + 48 Chromium/Web Crypto tests](https://github.com/5kairosh/Tynys/actions/runs/39498827595).
+The medical inference pipeline is unchanged.
+
 Stage 7 (2026-10-21): bounded inference admission (3 total slots, one worker),
 shared PNG/DICOM/PDF backpressure, upload/queue/response deadlines, health/readiness,
 and browser recovery without automatic image re-upload. Local short burst: 3 HTTP 200,

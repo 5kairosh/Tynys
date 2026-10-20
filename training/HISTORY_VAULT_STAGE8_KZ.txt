@@ -89,3 +89,26 @@ site/tests/browser/history.test.cjs — нақты Chromium/IndexedDB/Web Crypto
 https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/deriveKey
 https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt
 https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
+
+ОРЫНДАЛҒАН ТЕКСЕРУ
+GitHub CI: https://github.com/5kairosh/Tynys/actions/runs/39498827595 — success.
+Тексерілген код: e51a479c97fa27d7a5c8af1535a3cda68908f8dc.
+159 Python тесті, 48 Chromium/IndexedDB/Web Crypto тесті өтті.
+Жергілікті: 159 Python; бастапқы толық 47 браузер және соңғы 16 мақсатты сынақ.
+Соңғы барлық 48 сынақтың бірге орындалуы CI журналымен расталды.
+Нақты модельмен жасанды файлды талдау, шифрлау, құлыптау, reload, парольмен ашу,
+бұрынғы нәтижені көру және сол қалпына келген файлдан 1 беттік PDF тексерілді.
+Ашық серверге тек жасанды PNG/CR/CT/жалған JPG жіберілді: 200/200/400/400;
+екі файл PDF — 200, %PDF, 2 бет. Grad-CAM және модельдер салыстыруы қолжетімді.
+4 frontend файл exact Git SHA256 бойынша орнатылды; 7 inference/model/config/OOD
+файлы өзгермегені де тексерілді. Git HEAD жылжыды деп есептелмейді.
+Қолданыстағы public тарихқа пароль қойылмады және жазбалары өзгертілмеді.
+Тек қауіпсіздік параметрін басқару батырмасы көрсетілді; user парольді өзі таңдайды.
+Скриншоттарда жеке рентгендер мен файл аттары жоқ. Браузер console error: 0.
+
+ОРНАТУДЫ ҚАЙТАЛАУ
+deployment.json ішіндегі source_revision және manifest_sha256 бірге қолданылады.
+Manifest-ті дәл сол immutable revision-нен оқу керек; кейінгі құжаттама commit-і
+тарихи snapshot-ты өзгертпейді. Linux /workspaces/Tynys ішінде:
+python training/deploy_stage6.py --stage 8 --revision <source_revision> --manifest-sha <manifest_sha256>
+Жергілікті күтпеген өзгеріс байқалса тоқтайды; қате болса backup-тан қайтарады.

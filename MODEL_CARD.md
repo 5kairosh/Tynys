@@ -124,3 +124,13 @@ The browser never automatically re-uploads an image after a failure.
 See `training/SERVICE_STAGE7_KZ.txt` and the short synthetic load evidence under
 `training/service_stage7/`. Codespaces can still sleep. No current Docker rebuild
 or sustained capacity/24/7 uptime claim is made.
+
+## Stage 8 optional history encryption (2026-10-21)
+
+The medical model, calibration, OOD and server inference paths are unchanged.
+Users can elect AES-GCM encryption of their local IndexedDB files and results.
+New tabs/reloads start locked; keys remain in the open tab. There is no password
+recovery, account login or synchronization. Legacy plaintext history stays
+unprotected until the user elects protection. Downloads, a compromised browser,
+and deletion/forensic recovery are outside this feature's protection.
+See `training/HISTORY_VAULT_STAGE8_KZ.txt` and `training/history_stage8/` for evidence.

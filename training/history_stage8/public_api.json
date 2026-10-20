@@ -1,0 +1,35 @@
+{
+  "stage": 8,
+  "checked_at": "2026-10-20T21:20:52.222357+00:00",
+  "base_url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev",
+  "generated_pixels_only": true,
+  "cases": {
+    "png": {
+      "status": 200,
+      "gradcam": true,
+      "comparison": true,
+      "assessment": "review_required"
+    },
+    "cr_dicom": {
+      "status": 200,
+      "gradcam": true,
+      "comparison": true,
+      "assessment": "review_required"
+    },
+    "ct_dicom": {
+      "status": 400
+    },
+    "fake_jpg": {
+      "status": 400
+    },
+    "mixed_pdf": {
+      "status": 200,
+      "pages": 2,
+      "signature": "%PDF"
+    }
+  },
+  "model_id": "a79fe71a67fc",
+  "ood_parameter_id": "b0c5e869838e",
+  "four_frontend_files_match_deployed_git_blobs": true,
+  "all_slots_released": true
+}
