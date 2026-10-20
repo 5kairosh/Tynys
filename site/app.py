@@ -24,6 +24,7 @@ from assessment import assess_input, POLICY
 from image_quality import check_image_quality, unavailable_quality, quality_status
 from ensemble import ensemble_score, validate_ensemble
 from ood import OODDetector
+from selective_evaluation import evaluation_status
 from dicom_input import dicom_to_png, dicom_status
 from pad_geometry import pad_geometry
 from upload_memory import UploadMemoryLimit
@@ -140,7 +141,7 @@ class Engine:
             return {"available":False,"message":"Ensemble конфигурациясы немесе CNN қолжетімсіз. Негізгі модель жұмыс істейді."}
 
     def status(self):
-        return {"quality_check": quality_status(), "assessment_policy": {"name": POLICY, "clinically_validated": False}, "ensemble": self.ensemble_status(), "external_validation": self.external_status(), "dicom": dicom_status(), "xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
+        return {"selective_evaluation": evaluation_status(MODEL_DIR, self.fingerprint, self.ood.status()['available']), "quality_check": quality_status(), "assessment_policy": {"name": POLICY, "clinically_validated": False}, "ensemble": self.ensemble_status(), "external_validation": self.external_status(), "dicom": dicom_status(), "xray_check": self.ood.status(), "mcnemar": self.paired_test_status(), "ready": self.model is not None, "message": self.error,
                 "config": self.config, "metrics": self.metrics,
                 "model_id": self.fingerprint,
                 "comparison_ready": self.cnn_model is not None,

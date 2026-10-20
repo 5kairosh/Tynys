@@ -39,7 +39,7 @@ MeSH белгілері клиникалық gold standard емес, проек�
 ## OOD және түсіндірме
 
 Validation-ның 1280 белгісі, shrinkage covariance, 95-процентиль шегі 26.34090290.
-Параметрлер дайын, non-X-ray сапасы бөлек бағаланған жоқ. OOD тек ескерту береді.
+Параметрлер дайын, non-X-ray сапасы бөлек бағаланған жоқ. OOD ауытқуы болса не тексерілмесе, сайт санат бойынша қорытынды бермейді.
 Grad-CAM 7×7 картадан жуық аймақты көрсетеді, зақым шекарасын анықтамайды.
 Калибрлеу клиникалық ықтималдықты дәлелдемейді. NORMAL барлық ауруды жоққа шығармайды.
 
@@ -142,10 +142,18 @@ for these inputs. The API adds `assessment.status` (`classified` or `review_requ
 This is a conservative presentation rule, not a validated selective classifier, an X-ray
 authenticator or a clinical confidence estimate. It does not change model weights, calibration,
 the 0.745 decision threshold or the validation OOD threshold. Existing internal/external
-metrics measure the original forced binary predictions; coverage and selective error rates
-for this guard have not been evaluated. A passed OOD check does not establish correctness.
+metrics measure the original forced binary predictions. The fixed-policy audit (2026-10-20)
+accepted 39/618 internal test images (6 errors/39), and 0/200 external OpenI images.
+External selective accuracy is undefined. This audit does not demonstrate error reduction. A passed OOD check does not establish correctness.
 
 Educational binary NORMAL/PNEUMONIA classifier. Calibration is fitted on all 952 SHA-verified
 validation images. T(MobileNetV2)=0.97995943, threshold=0.745.
 Current internal and external results are listed above. OOD parameters are fitted on validation
 features but non-X-ray detection performance is unvalidated. No clinical approval is claimed.
+
+## 4-КЕЗЕҢ — САҚТЫҚ ЕРЕЖЕСІНІҢ НАҚТЫ ҚАМТУЫ МЕН ҚАТЕЛІГІ
+Сайттың «Зерттеу нәтижесі» бөліміне ішкі test 618 / сыртқы OpenI 200 жеке
+есептері және JSON жүктеу қосылды. Ішкі қамту 39/618 (6,31%), қабылданған топ
+қатесі 6/39 (15,38%); OpenI 0/200, сондықтан таңдамалы accuracy есептелмейді.
+Қателікті азайту расталған жоқ. Модель мен шектер өзгермеді.
+Әдіс, шектеу, қайта орындау: training/SELECTIVE_EVALUATION_KZ.txt.

@@ -7,6 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230c766c'/%3E%3Cpath d='M29 16h6v13h13v6H35v13h-6V35H16v-6h13z' fill='white'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/static/style.css">
   <script src="/static/history-storage.js" defer></script>
+  <script src="/static/selective-evaluation.js" defer></script>
   <script src="/static/app.js" defer></script>
 </head>
 <body>
@@ -33,7 +34,7 @@
     </section>
     <section class="numbers" aria-label="Модельдің тест нәтижелері">
       <div class="numbers-intro">Өлшенген нәтиже.<br><strong>Ашық әдіс.</strong></div>
-      <div><strong id="metric-accuracy">—</strong><span>Тесттегі accuracy</span></div>
+      <div><strong id="metric-accuracy">—</strong><span>Test accuracy · OOD-қа дейін</span></div>
       <div><strong id="metric-recall">—</strong><span>Пневмония recall</span></div>
       <div><strong id="metric-count">—</strong><span>Тест суреттері</span></div>
     </section>
@@ -113,6 +114,14 @@
     <section class="research-section" id="research">
       <div class="section-heading"><div><div class="eyebrow">03 / ЭКСПЕРИМЕНТ</div><h2>Сандар сөйлейді.</h2></div><p>Сайтқа қосылған модель архивіндегі<br>нақты тест нәтижелері.</p></div>
       <div class="research-layout"><div class="research-main"><p id="external-note" class="external-note"></p><p id="mcnemar-note" class="calibration-note"></p><div class="table-scroll"><table><caption class="visually-hidden">CNN, MobileNetV2 және Ensemble салыстыру</caption><thead><tr><th>Көрсеткіш</th><th>CNN</th><th>MobileNetV2</th><th>Ensemble</th></tr></thead><tbody id="metrics-table"><tr><td colspan="4">Метрикалар жүктелуде…</td></tr></tbody></table></div><p class="research-footnote">Нәтижелер осы датасеттің тест жиынына қатысты. Өзге суреттердегі сапа бөлек бағалауды қажет етеді.</p></div><aside class="research-aside"><span class="mini-label">НЕГІЗГІ МОДЕЛЬ</span><h3>MobileNetV2</h3><p>ImageNet салмақтары.<br>Transfer Learning.<br>Fine-tuning.</p><div class="model-threshold"><span>Шешім шегі</span><strong id="research-threshold">—</strong></div><a href="https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia" target="_blank" rel="noopener noreferrer">Датасетті қарау ↗</a></aside></div>
+      <section class="selective-audit" aria-labelledby="selective-title">
+        <div class="audit-heading"><div><div class="eyebrow">4-КЕЗЕҢ / САҚТЫҚ ЕРЕЖЕСІ</div><h3 id="selective-title">Қанша суретке қорытынды берілді?</h3></div><button id="selective-download" type="button" class="button secondary" disabled>Есепті жүктеу <span>↓</span></button></div>
+        <p class="audit-intro">OOD ережесі күмәнді суретке санат бойынша қорытынды бермейді. Төменде осы бекітілген ереженің қамтуы мен қателігі өлшенді. Жоғарыдағы кесте барлық суретке екі санаттың бірін бергендегі нәтижені көрсетеді.</p>
+        <p id="selective-status" role="status">Есеп тексерілуде…</p>
+        <p id="selective-finding" class="audit-finding" hidden></p>
+        <div id="selective-cards" class="audit-grid"></div>
+        <p class="audit-limit">Қорытынды берілген суреттердегі accuracy тек сол топқа қатысты. Қорытынды берілмеген сурет дұрыс не қате жіктелді деп саналмайды. OOD-тан өту болжамның дұрыстығын растамайды. OpenI — әлсіз MeSH белгілері бар шағын іріктелген жиын; клиникалық сенімділік дәлелденбеген.</p>
+      </section>
       <details class="research-graphs"><summary>Colab-тағы нақты графиктерді қарау <span>+</span></summary><div class="graph-content"><figure><img src="/static/graphs/MobileNetV2_test_metrics.png" alt="MobileNetV2 тест қателері матрицасы, ROC және precision-recall қисықтары" loading="lazy"><figcaption>Test: қателер матрицасы, ROC және precision-recall</figcaption></figure><div class="graph-pair"><figure><img src="/static/graphs/mobilenet_fine_history.png" alt="Fine-tuning кезіндегі train және validation loss пен accuracy" loading="lazy"><figcaption>Fine-tuning үйрету тарихы</figcaption></figure><figure><img src="/static/graphs/class_distribution.png" alt="Train, validation және test класстарының сурет саны" loading="lazy"><figcaption>Деректердің бөлінуі</figcaption></figure></div></div></details>
     </section>
     <section class="closing"><div class="eyebrow">БІЛІМНЕН БАСТАЛАТЫН МҮМКІНДІК</div><h2>Технология көмектеседі.<br><em>Шешімді маман қабылдайды.</em></h2><p>Tynys — TensorFlow және Keras негізіндегі оқу жобасы.<br>Қазіргі модель екі санатты ажыратады. Бірнеше ауру белгісін анықтау — келесі зерттеу кезеңі.</p><a href="#analysis" class="button secondary">Бір суретті тексеру <span>↗</span></a></section>

@@ -200,3 +200,52 @@ test('different browser profiles do not share saved originals',()=>contextTest(a
     assert.deepEqual(await storage(other),{enabled:false,records:0});
   }finally{await separate.close();}
 }));
+
+// The aggregate report has an independent denominator from full-cohort metrics.
+async function auditStatus(page,report){
+  await page.route('**/api/status',route=>route.fulfill({json:{ready:true,model_id:'test-model-v1',config:{threshold:.745},metrics:[],selective_evaluation:report}}));
+}
+async function actualAudit(){return {available:true,...JSON.parse(await fs.readFile(path.resolve(__dirname,'../../model/selective_evaluation.json'),'utf8'))};}
+test('audit cards show actual accepted counts and download exactly that evidence',()=>contextTest(async(context,page)=>{
+  const report=await actualAudit(),before=predictCount;await auditStatus(page,report);await ready(page);
+  for(const key of ['internal_test','external_openi']){
+    const cohort=report.cohorts[key],card=page.locator(`[data-cohort="${key}"]`);
+    assert.match(await card.innerText(),new RegExp(`${cohort.accepted.count} / ${cohort.baseline.count}`));
+    await card.locator('summary').click();
+    assert.match(await card.innerText(),new RegExp(`${cohort.accepted.TN} / ${cohort.accepted.FP} / ${cohort.accepted.FN} / ${cohort.accepted.TP}`));
+  }
+  const pending=page.waitForEvent('download');await page.locator('#selective-download').click();
+  const download=await pending;assert.deepEqual(JSON.parse(await fs.readFile(await download.path(),'utf8')),report);
+  assert.equal(predictCount,before);assert.equal(await page.locator('#save-history').isChecked(),false);
+  assert.match(await page.locator('#selective-finding').innerText(),/Шектеу анықталды/);
+}));
+test('zero coverage never renders perfect or zero selective accuracy',()=>contextTest(async(context,page)=>{
+  const report=await actualAudit();
+  for(const cohort of Object.values(report.cohorts)){
+    cohort.accepted={count:0,normal:0,pneumonia:0,TN:0,FP:0,FN:0,TP:0,errors:0,accuracy:null,error_rate:null,sensitivity:null,specificity:null};
+    cohort.withheld={...cohort.baseline};cohort.coverage=0;cohort.withheld_rate=1;
+  }
+  await auditStatus(page,report);await ready(page);
+  assert.equal(await page.getByText('Бағалау мүмкін емес',{exact:true}).count(),2);
+  assert.equal(await page.getByText('Қорытынды берілген сурет жоқ',{exact:true}).count(),2);
+}));
+test('unavailable audit cannot block image upload or analysis',()=>contextTest(async(context,page)=>{
+  await auditStatus(page,{available:false,message:'Параметрлер сәйкес емес.'});await ready(page);
+  assert.match(await page.locator('#selective-status').innerText(),/сәйкес емес/);
+  assert.equal(await page.locator('#selective-download').isDisabled(),true);
+  await upload(page);assert.match(await page.locator('#result-title').innerText(),/Сенімді бағалау/);
+}));
+test('audit remains usable on narrow screens without horizontal overflow',()=>contextTest(async(context,page)=>{
+  await page.setViewportSize({width:390,height:844});await auditStatus(page,await actualAudit());await ready(page);
+  await page.locator('#selective-title').scrollIntoViewIfNeeded();
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth));
+  assert.equal(await page.locator('.audit-card').count(),2);
+}));
+
+test('status refresh preserves an opened audit explanation',()=>contextTest(async(context,page)=>{
+  await auditStatus(page,await actualAudit());await ready(page);
+  const details=page.locator('[data-cohort="internal_test"] details');await details.locator('summary').click();
+  const response=page.waitForResponse('**/api/status');
+  await page.evaluate(()=>window.dispatchEvent(new Event('online')));await response;
+  assert.equal(await details.getAttribute('open'),'');
+}));

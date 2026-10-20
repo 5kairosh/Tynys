@@ -54,7 +54,7 @@ def test_api_and_pdf_agree_without_changing_scores(client, monkeypatch, within_r
         if review:
             assert 'Техникалық санат:' in text
             assert 'Санат бойынша қорытынды берілмеді.' in text
-            assert 'бөлек бағаланбаған' in text
+            assert 'клиникалық сенімділікті растамайды' in text
         else:
             assert 'Модель санаты' in text
 

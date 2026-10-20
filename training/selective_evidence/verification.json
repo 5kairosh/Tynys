@@ -1,0 +1,31 @@
+{
+  "checked_at": "2026-10-20T11:17:26.620482+00:00",
+  "stage": 4,
+  "policy": "ood_guard_v1",
+  "scope": "Fixed-policy descriptive held-out audit; no clinical reliability/error reduction claim",
+  "local_pytest": {
+    "passed": 109,
+    "warnings": 1,
+    "seconds": 30.58,
+    "command": "site/.venv/Scripts/python -m pytest site/tests training/tests -q"
+  },
+  "browser_tests": {
+    "passed": 21,
+    "seconds": 43.68,
+    "runtime": "Chromium with real IndexedDB; inference stub only in browser regression suite"
+  },
+  "local_live": {
+    "port": 7866,
+    "ready": true,
+    "selective_evaluation_available": true,
+    "downloaded_json_matches_status": true,
+    "synthetic_png_ui": true,
+    "browser_console_errors": 0,
+    "parity_evidence": "training/selective_evidence/live_parity.json",
+    "screenshot": "training/selective_evidence/ui_local.jpg"
+  },
+  "remote_verified": false,
+  "model_weights_changed": false,
+  "config_bytes_changed": false,
+  "thresholds_changed": false
+}

@@ -30,6 +30,8 @@ def main():
     assert any(name=='site/model/ood_params.npz' for name,_ in allowed)
     assert any(name=='site/model/image_quality_config.json' for name,_ in allowed)
     assert any(name=='site/static/history-storage.js' for name,_ in allowed)
+    assert any(name=='site/model/selective_evaluation.json' for name,_ in allowed)
+    assert any(name=='site/static/selective-evaluation.js' for name,_ in allowed)
     assert any(name=='training/multilabel_colab_kz.ipynb' for name,_ in allowed)
     manifest={'commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         'excluded':'OpenI source images, OpenI-trained weights/error pixels, all training caches, venv, Git and uploaded patient images.',

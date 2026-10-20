@@ -3,6 +3,7 @@
 Avoids downloading the entire 2.29 GiB dataset. Each file must match the saved SHA-256.
 Signed redirect URL stays in memory. Source images stay in ignored training/cache.
 """
+import argparse
 import csv
 import json
 import time
@@ -72,9 +73,12 @@ class RemoteZip(io.RawIOBase):
 
 
 def main():
-    cache=ROOT/'training/cache/validation'
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--split', choices=('validation','test'), default='validation')
+    args=parser.parse_args()
+    cache=ROOT/'training/cache'/args.split
     cache.mkdir(parents=True,exist_ok=True)
-    with (ROOT/'training/manifests/validation_manifest.csv').open() as f:
+    with (ROOT/'training/manifests'/(args.split+'_manifest.csv')).open() as f:
         rows=list(csv.DictReader(f))
     complete=[]
     for row in rows:
@@ -117,7 +121,7 @@ def main():
             if len(image)==info.file_size and zlib.crc32(image)==info.CRC and hashlib.sha256(image).hexdigest()==row['sha256']:
                 target.write_bytes(image)
                 return {**row,'path':str(target)}
-        raise ValueError('Validation файлының SHA-256-сы сәйкес емес: '+Path(row['path']).name)
+        raise ValueError('Файлдың SHA-256-сы сәйкес емес: '+Path(row['path']).name)
     resolved={}
     missing=[]
     for row in rows:
@@ -135,7 +139,7 @@ def main():
                 row=future.result()
                 resolved[row['sha256']]=row
                 if len(resolved)%25==0 or len(resolved)==len(rows):
-                    print(f'Validation: {len(resolved)}/{len(rows)}',flush=True)
+                    print(f'{args.split}: {len(resolved)}/{len(rows)}',flush=True)
             except requests.RequestException as exc:
                 errors+=1
                 print(f'Желі қатесі ({type(exc).__name__}), кэш сақталды.',flush=True)
@@ -144,7 +148,7 @@ def main():
                         pending.cancel()
                     break
     if len(resolved)!=len(rows):
-        raise requests.ConnectionError(f'Validation толық емес: {len(resolved)}/{len(rows)}. Кэштен қайта жалғастыруға болады.')
+        raise requests.ConnectionError(f'{args.split} толық емес: {len(resolved)}/{len(rows)}. Кэштен қайта жалғастыруға болады.')
     resolved=[resolved[row['sha256']] for row in rows]
     with (cache/'manifest.csv').open('w',newline='',encoding='utf-8') as stream:
         writer=csv.DictWriter(stream,fieldnames=list(resolved[0]));writer.writeheader();writer.writerows(resolved)

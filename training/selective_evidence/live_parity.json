@@ -1,0 +1,29 @@
+{
+  "cases": [
+    {
+      "case": "internal_accepted",
+      "http_status": 200,
+      "disposition": "classified",
+      "score_delta": 2.0592510595607294e-06,
+      "distance_delta": 1.1921563462635731e-05,
+      "seconds": 0.72
+    },
+    {
+      "case": "internal_withheld",
+      "http_status": 200,
+      "disposition": "review_required",
+      "score_delta": 5.082882385820664e-08,
+      "distance_delta": 9.917730032782401e-06,
+      "seconds": 0.75
+    },
+    {
+      "case": "external_withheld",
+      "http_status": 200,
+      "disposition": "review_required",
+      "score_delta": 5.600086450119335e-08,
+      "distance_delta": 1.0915221473339898e-05,
+      "seconds": 0.42
+    }
+  ],
+  "note": "Real local API vs offline numerical audit; no uploaded pixels saved in evidence."
+}

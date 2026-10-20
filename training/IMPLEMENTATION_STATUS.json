@@ -243,5 +243,38 @@
     "deployed_frontend_source_commit": "f423420a308cd6dbf81eaec092af0109e515aacd",
     "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39197545496",
     "ci_status": "success"
+  },
+  "selective_evaluation": {
+    "implemented": true,
+    "measured": true,
+    "policy": "ood_guard_v1",
+    "cohorts": {
+      "internal_test": {
+        "count": 618,
+        "accepted": 39,
+        "withheld": 579,
+        "coverage": 0.06310679611650485,
+        "accepted_errors": 6,
+        "accepted_accuracy": 0.8461538461538461
+      },
+      "external_openi": {
+        "count": 200,
+        "accepted": 0,
+        "withheld": 200,
+        "coverage": 0.0,
+        "accepted_errors": 0,
+        "accepted_accuracy": null
+      }
+    },
+    "thresholds_changed": false,
+    "error_reduction_demonstrated": false,
+    "clinically_validated": false,
+    "report": "site/model/selective_evaluation.json",
+    "documentation": "training/SELECTIVE_EVALUATION_KZ.txt",
+    "local_tests": {
+      "pytest_passed": 109,
+      "browser_passed": 21
+    },
+    "evidence": "training/selective_evidence/verification.json"
   }
 }
