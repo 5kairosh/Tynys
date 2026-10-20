@@ -1,0 +1,18 @@
+{
+  "version": "train_validation_mahalanobis_v2",
+  "frozen_before_new_evaluation": true,
+  "reference_split": "train",
+  "reference_count": 3801,
+  "threshold_split": "validation",
+  "threshold_count": 952,
+  "target_reference_acceptance": 0.95,
+  "threshold_rule": "ascending calibration distance at 1-based rank ceil((n+1)*0.95)",
+  "covariance": "0.9 * sample covariance (ddof=1) + 0.1 * mean diagonal * identity",
+  "feature_dimension": 1280,
+  "model_weights_changed": false,
+  "classifier_calibration_or_threshold_changed": false,
+  "test_or_external_used_to_fit": false,
+  "evaluation_cohorts_previously_inspected": true,
+  "clinical_or_formal_coverage_guarantee": false,
+  "notes": "Same classifier and shrinkage as before. Fit geometry on train only; threshold on separate validation. Rechecking already inspected test/OpenI is descriptive, not a fresh confirmatory study. Validation was also used for classifier model selection; surrogate groups are not verified patient IDs."
+}

@@ -74,7 +74,8 @@ class RemoteZip(io.RawIOBase):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--split', choices=('validation','test'), default='validation')
+    parser.add_argument('--split', choices=('train','validation','test'), default='validation')
+    parser.add_argument('--workers', type=int, choices=range(1,9), default=4)
     args=parser.parse_args()
     cache=ROOT/'training/cache'/args.split
     cache.mkdir(parents=True,exist_ok=True)
@@ -132,7 +133,7 @@ def main():
             missing.append(row)
     print(f'Кэштен тексерілді: {len(resolved)}/{len(rows)}; қалғаны: {len(missing)}',flush=True)
     errors=0
-    with ThreadPoolExecutor(max_workers=4) as pool:
+    with ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures={pool.submit(fetch,row):row for row in missing}
         for future in as_completed(futures):
             try:
