@@ -1,0 +1,2402 @@
+[
+  {
+    "source_id": "738524e2-9e98-43cb-8c56-b480a2a0ae2f",
+    "patient_group": "nih:00012704",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8bca4dca-cff5-4d7b-bcd7-e303c59c3c6a",
+    "patient_group": "nih:00015530",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "4ef488de-5a36-4a85-a7a8-7e264450e36e",
+    "patient_group": "nih:00002260",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ba395818-6a27-4185-98ca-a51c4c70b2d5",
+    "patient_group": "nih:00021321",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f797d075-bb52-465b-84bf-da47866e002d",
+    "patient_group": "nih:00025183",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "a66f6558-466d-4d30-81c4-8cf39ee06334",
+    "patient_group": "nih:00012946",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ffc9e552-ca53-43a8-a156-b0f97f0d40f3",
+    "patient_group": "nih:00011147",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5a8441c9-a4c4-4706-9763-05c20b43f5b4",
+    "patient_group": "nih:00023130",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7c8b9b44-5d6c-4e18-a42a-8a57e4273651",
+    "patient_group": "nih:00003546",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d9884def-b31a-4861-9eea-27f97bffeba2",
+    "patient_group": "nih:00008481",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2d29c5d7-cd1e-4fb7-896b-c55b69ca6c96",
+    "patient_group": "nih:00011835",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6f9f6941-46d9-4c16-8c5a-e2a6de1de7e4",
+    "patient_group": "nih:00003570",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2cf52eb6-785e-48e5-ae35-6b40da8d024e",
+    "patient_group": "nih:00028747",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "79dc4c47-886a-46dd-95bf-41dd80c072a6",
+    "patient_group": "nih:00005341",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b15cff7a-2345-45ad-9eef-4a9e5ab6762d",
+    "patient_group": "nih:00002549",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "35b74418-4c61-42dd-932d-94021f9a75f9",
+    "patient_group": "nih:00021546",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7e57bbc2-9a12-4aab-af8c-9499def50d9a",
+    "patient_group": "nih:00026394",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "9c48a4fc-de51-4ec0-a6e8-24995708ce92",
+    "patient_group": "nih:00007322",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bc25b9b4-252f-4f51-8294-97723612fd00",
+    "patient_group": "nih:00024777",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "20320517-d325-4a1e-ac50-f9af99975634",
+    "patient_group": "nih:00020909",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "aac0f44c-3942-460a-8d75-ece0ac88ab0f",
+    "patient_group": "nih:00013655",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7f5c524d-2d8f-4314-826d-10890906455a",
+    "patient_group": "nih:00005467",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "fd434b64-6bb8-4829-a529-a66464af090c",
+    "patient_group": "nih:00007729",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f3a19c20-4fc9-4c5a-b9bb-26baff924c6a",
+    "patient_group": "nih:00014344",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "28e124e0-e71c-4444-ab34-3db1a5f7d1fc",
+    "patient_group": "nih:00016410",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1a4491fa-a9d9-4b89-8f90-1c84fc8d9642",
+    "patient_group": "nih:00015537",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "229ce52f-9e0b-4b6d-abd5-60fc9c3a024a",
+    "patient_group": "nih:00005218",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b82d06aa-4036-4ad0-acf1-99b127f2ce17",
+    "patient_group": "nih:00027427",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "85d9875a-9fac-4422-a92b-08a593461a51",
+    "patient_group": "nih:00013946",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "605b591a-47f3-42c6-bf31-ef92f875c5a8",
+    "patient_group": "nih:00020461",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bfccb05a-9ac8-4879-bdc4-7aff2460093c",
+    "patient_group": "nih:00003369",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "66412414-434a-4a66-97e3-68bf804d8a4a",
+    "patient_group": "nih:00014447",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "c1f9926f-975c-402d-976c-ee9a12fa30f2",
+    "patient_group": "nih:00017000",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "cd4f439d-61be-4ecb-bc27-383f9cd29569",
+    "patient_group": "nih:00007638",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2cf61db7-101c-4430-ae32-949b5a62f653",
+    "patient_group": "nih:00008976",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f66549b1-f756-45d1-88cd-f0083e9a25ca",
+    "patient_group": "nih:00007405",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "c1ef6724-f95f-40f1-b25b-de806d9bc39d",
+    "patient_group": "nih:00004533",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e2e0accf-73b4-4cc4-bc85-2066f1fa4762",
+    "patient_group": "nih:00011915",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2dbac7d7-9100-4861-8e15-fa2adf82c6e3",
+    "patient_group": "nih:00022572",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1513dc09-fc73-485f-8f71-4f2c69e15421",
+    "patient_group": "nih:00016752",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b8f18ef1-9d70-48a2-abd0-1944aaee8efc",
+    "patient_group": "nih:00005457",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6d5dd0d3-ca66-43ca-b4bf-46784adcce2c",
+    "patient_group": "nih:00018278",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "cfda9975-acb2-4966-9340-a338a71dfcc5",
+    "patient_group": "nih:00023464",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1169aece-61f6-4843-8abe-f2b11265d2fd",
+    "patient_group": "nih:00016719",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "a13bf9b7-ea61-4bff-96dc-e6c716638461",
+    "patient_group": "nih:00004110",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7fa10f67-8c38-4027-b7f6-50887f85ad43",
+    "patient_group": "nih:00028454",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b6b3152f-ef3f-41ee-b015-118500c0f08a",
+    "patient_group": "nih:00021426",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "043d020e-c61b-40ac-8704-be5ed7ded293",
+    "patient_group": "nih:00026484",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "376a6f4e-a470-48e7-9092-b6179f296e46",
+    "patient_group": "nih:00010608",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b480a222-9ff6-445e-a911-e5a4161eff10",
+    "patient_group": "nih:00006856",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8ca25ab0-0ec3-4b4f-b11a-e7c947e6cd8c",
+    "patient_group": "nih:00021839",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3b84f97b-fa88-424a-891c-e57c3b92c062",
+    "patient_group": "nih:00021035",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1e0c4ae9-52f0-4bec-827a-2824d13a1680",
+    "patient_group": "nih:00008598",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "948ad418-c89a-4476-8152-1e956ef27cbf",
+    "patient_group": "nih:00000061",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "10e2a82e-57bd-480e-9b69-e4ec1565b0ab",
+    "patient_group": "nih:00016462",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "053208fa-ac79-46e2-9e78-f219ac122513",
+    "patient_group": "nih:00020121",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "be2c9d90-ba76-4bad-b9c1-2e73ecfd4bfa",
+    "patient_group": "nih:00001792",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2a670192-9427-46c5-843a-943dedf6ac83",
+    "patient_group": "nih:00021926",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b72d2f85-76a5-4acf-b5aa-12ec1c3b0bff",
+    "patient_group": "nih:00025994",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b29e295b-367c-4787-90da-e9d506bdce45",
+    "patient_group": "nih:00001255",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bca2c151-2431-4595-80c7-75480a196c6e",
+    "patient_group": "nih:00028646",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "a7bbb7d4-3dab-4510-81b6-d79020126058",
+    "patient_group": "nih:00029423",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "fa892e51-e0d0-4fe8-b31e-351a8057bc84",
+    "patient_group": "nih:00019005",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b181eb13-a6b0-4576-afcd-0e23c90723ba",
+    "patient_group": "nih:00011683",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "9f6b73b6-14ee-42c2-bdcc-4e39a0cb137e",
+    "patient_group": "nih:00019534",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "698aa83a-eef7-433f-a4bd-16b359967d93",
+    "patient_group": "nih:00026932",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "40346c30-cf4a-4fe3-a6a1-935ac182a551",
+    "patient_group": "nih:00009689",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "26950e98-3b48-4d7c-b2d0-daa4249be551",
+    "patient_group": "nih:00022648",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f8ba25b1-23c2-4f71-bdb3-3850e40f5426",
+    "patient_group": "nih:00030209",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "af8b2dd5-e469-4be9-bdb3-027d7a1a3dc0",
+    "patient_group": "nih:00005827",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "168563e7-4335-4c3f-9593-235df8fcd765",
+    "patient_group": "nih:00015887",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "690f5a12-56f5-4fd5-8155-eedf06f18fc7",
+    "patient_group": "nih:00023544",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "4b76319b-47c3-466b-80f2-6dc1e046b0ba",
+    "patient_group": "nih:00014948",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1ab7a206-d635-4e05-99c0-8ffee0ed4e7a",
+    "patient_group": "nih:00006070",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "06327569-4e4f-4fdc-a116-db367c079669",
+    "patient_group": "nih:00009117",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e6d643f9-3a71-47bd-ba97-90912b918c65",
+    "patient_group": "nih:00007058",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "751cf854-91ca-4bca-ada1-0442ccbda41a",
+    "patient_group": "nih:00013755",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bfdffef0-de93-45a5-a743-af5e2b3ac681",
+    "patient_group": "nih:00019271",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "34411756-b5ea-47b6-bcb4-3dd037d95eba",
+    "patient_group": "nih:00021284",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1ef18823-a5f5-48e2-8e51-032110b4e6fc",
+    "patient_group": "nih:00005704",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ca46e843-dd19-43f1-a133-4014e1cd9882",
+    "patient_group": "nih:00012613",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ae9de5c9-8bb7-4570-8c3b-d5f724108f0b",
+    "patient_group": "nih:00012146",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "c2d5032a-d589-4c4f-a071-74f3899b3968",
+    "patient_group": "nih:00021165",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3a5b4890-bfe1-4953-add3-a1bb443d862b",
+    "patient_group": "nih:00010801",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e457e363-5309-4cd0-a242-6b7af7c329d0",
+    "patient_group": "nih:00003051",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5bb6cb82-684b-4e51-ad4e-c70ee3a61efe",
+    "patient_group": "nih:00022307",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "81f8cd75-46eb-474d-a413-51cb420402e6",
+    "patient_group": "nih:00022433",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "05ead813-3c04-4e42-a5e1-4ca43294ece9",
+    "patient_group": "nih:00028725",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7bd7f456-f801-4337-abdb-a5e6cc5aef94",
+    "patient_group": "nih:00012638",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "11ea306d-5547-42cb-aa25-a02f151fe5ac",
+    "patient_group": "nih:00005353",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "54cbe63c-5c44-4d55-ae01-0096c805dda1",
+    "patient_group": "nih:00013256",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e2027ec6-9e87-4384-a8c3-f54bb7d00d81",
+    "patient_group": "nih:00011268",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6e9f7191-8b42-4836-a419-8bf369715667",
+    "patient_group": "nih:00014015",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2e4b20f7-69c4-4680-9c8b-6984c195b1cf",
+    "patient_group": "nih:00017712",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "880ea9e3-6c84-47c9-a94f-bd8c94903eb3",
+    "patient_group": "nih:00018029",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "60c7d6a1-9aad-452f-9789-918056b955ad",
+    "patient_group": "nih:00005067",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ec3f8f76-e644-4905-a379-8c8b33cc0dc6",
+    "patient_group": "nih:00014844",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d13c4943-edb2-4bc7-a034-e6964bbbdbf9",
+    "patient_group": "nih:00021424",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "a4ac5fc1-dbc7-4380-8265-04e05f959c0e",
+    "patient_group": "nih:00019894",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6ab78b00-c23a-4eef-b0c7-d9d6f684faaa",
+    "patient_group": "nih:00012129",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "63590dff-7b12-4aeb-b747-6f7f7ad23f23",
+    "patient_group": "nih:00029983",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b76341f1-7b72-4c86-aed2-9967a0b3c729",
+    "patient_group": "nih:00010790",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6329ef20-a219-43c4-a437-e15622f8c0ac",
+    "patient_group": "nih:00025733",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "398cd60c-17b9-44bc-8547-5cb6b6dad714",
+    "patient_group": "nih:00006875",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "aee1bed8-19e1-4ca5-9d1d-3ebf08a06156",
+    "patient_group": "nih:00010521",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "721ca9d9-ef3e-4fda-84c3-bd9f7a7645aa",
+    "patient_group": "nih:00024608",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "92ade897-33b2-42d9-92eb-540492537bf0",
+    "patient_group": "nih:00021499",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2d5f9a95-1a11-4471-be50-b6dabf02e310",
+    "patient_group": "nih:00019058",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ff3c2e94-b672-4bd2-8073-e9a4b6d9294d",
+    "patient_group": "nih:00026606",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "a7b3ecba-37f0-4bf5-ad2e-5ddb4416d19c",
+    "patient_group": "nih:00012293",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3690bde1-7419-46a5-baa2-14b88feed1ea",
+    "patient_group": "nih:00020951",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b9866e78-1b04-4f5a-9970-c434ef113c73",
+    "patient_group": "nih:00026923",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b3ff1452-a443-4261-a713-76c47b9932e9",
+    "patient_group": "nih:00019961",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "30f45cbe-06c1-4d04-aabf-89c46b85b12b",
+    "patient_group": "nih:00014956",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3b7062c5-6436-4190-8b82-a605faf55614",
+    "patient_group": "nih:00020058",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2c392528-045f-4ff7-a10a-1a71487f3f17",
+    "patient_group": "nih:00012345",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7d9e027d-8e9b-47b9-9771-1f75e0410c74",
+    "patient_group": "nih:00004585",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "0f5f6270-8811-4bfe-8ad6-cc6e1f3a786f",
+    "patient_group": "nih:00028034",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "783f8909-2032-4acf-ba6c-dad6f1bdee2f",
+    "patient_group": "nih:00015358",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "07349035-d546-41ec-813a-612614536f5a",
+    "patient_group": "nih:00009666",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d3fc662c-1f22-4b89-9ef3-822362650bb4",
+    "patient_group": "nih:00020908",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "73cd5772-d381-4e83-a022-3fab0f78b035",
+    "patient_group": "nih:00020781",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "931b6fb9-e53d-4748-8d66-0d0cf92c96ce",
+    "patient_group": "nih:00006123",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "9c6cda5f-1ee0-4048-ad4f-815739b9d5ab",
+    "patient_group": "nih:00001078",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "798cc681-1bc3-4421-a2a3-eb6712925d7e",
+    "patient_group": "nih:00002118",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5e3da45b-f7b6-4948-aad4-7a37cf9cae5b",
+    "patient_group": "nih:00016292",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "aef66833-841d-40c8-84f8-acfc81c2f9b8",
+    "patient_group": "nih:00009931",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6d7eeaa9-f060-4fc2-ae1d-f4dd1476fee9",
+    "patient_group": "nih:00019741",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3b4b5587-e5b3-4609-83a7-acf33a0b5803",
+    "patient_group": "nih:00021572",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "cc6c1c5d-cdc3-4bd4-a10d-c8c0859e2908",
+    "patient_group": "nih:00012776",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d77b519d-abb7-49d7-8bec-dedebe8f50d1",
+    "patient_group": "nih:00023112",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "29b9a5ae-56e4-4e15-a78d-cbaeda0c276a",
+    "patient_group": "nih:00011251",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1153fe0a-8d2d-4900-8cfd-af90d1e0bdfe",
+    "patient_group": "nih:00006890",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d065fe7c-89ee-4d8c-ae98-7000ec5f55f2",
+    "patient_group": "nih:00029700",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ace71169-f41d-4a68-a7b3-b16abf065f9c",
+    "patient_group": "nih:00029943",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b7fd679b-570c-4159-aadd-5c39d2238af2",
+    "patient_group": "nih:00019930",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f295132a-40a6-4e4d-94fb-a5b05f8915d5",
+    "patient_group": "nih:00010146",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7bb1c647-d8d1-4640-b495-f41c4d2a34ca",
+    "patient_group": "nih:00022566",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "06ec9278-5144-4b88-87f4-c195bb24857d",
+    "patient_group": "nih:00026412",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "14d4b142-29d6-4656-ab1d-17b84816b2c6",
+    "patient_group": "nih:00026993",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "04644a8f-bd70-484a-a4db-7ea330c6177c",
+    "patient_group": "nih:00008471",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bb1715b5-51ff-487d-ba71-669de8e74652",
+    "patient_group": "nih:00009121",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b9b65900-2ff9-4d1d-8dde-80990a82974f",
+    "patient_group": "nih:00014616",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "59263e7b-3048-4612-b840-b5545dfe42fc",
+    "patient_group": "nih:00003328",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bf2b3b65-b21f-4e76-b3b3-98effc784a2e",
+    "patient_group": "nih:00023033",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2d23e774-78fc-4c4c-beb5-5504f915dc27",
+    "patient_group": "nih:00019551",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b299e0bb-b612-47b8-9e9f-269fac434378",
+    "patient_group": "nih:00022805",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7105d840-ed2b-42fa-a32c-ba10ff3604bb",
+    "patient_group": "nih:00029129",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e17bacff-85d3-47b3-b2cb-2a3e123a6912",
+    "patient_group": "nih:00014690",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "01027bc3-dc40-4165-a6c3-d6be2cb7ca34",
+    "patient_group": "nih:00015060",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1c7a9efb-f38e-46e0-8f2e-f9ba05112ae8",
+    "patient_group": "nih:00011810",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8fbdb95f-e09b-47ff-b674-2128fa3c361b",
+    "patient_group": "nih:00015980",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "9c9ab747-cfb4-4407-af1c-4085e95f38ef",
+    "patient_group": "nih:00021880",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "29c8bf9e-f034-4ffd-a8d9-000a48172c42",
+    "patient_group": "nih:00021482",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "be4073e5-f1ef-4259-b7a4-8c379844cbaa",
+    "patient_group": "nih:00016258",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d5011cb2-a146-4ca6-a055-2ec956315350",
+    "patient_group": "nih:00000042",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "c333554c-e635-4d5a-8975-66aecd096036",
+    "patient_group": "nih:00026099",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d26ac6d2-b842-4ae5-a806-6cc1451fb1ea",
+    "patient_group": "nih:00016060",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6d631a71-9364-4e18-b6c0-ea6269812a62",
+    "patient_group": "nih:00006990",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "df10aee9-878c-4782-8aea-de4369355fd6",
+    "patient_group": "nih:00030609",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f5848669-b012-4685-9bc2-3c76680f7289",
+    "patient_group": "nih:00025849",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1a960408-21c0-4b5f-a093-2ea4a94a2258",
+    "patient_group": "nih:00020244",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d9c72e53-3295-43f0-b3b4-cb8725252a6c",
+    "patient_group": "nih:00010569",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "0adcbadd-6b95-4692-bdfb-6a03d51af237",
+    "patient_group": "nih:00017214",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6af28755-0522-4b37-97d8-b931a31b876c",
+    "patient_group": "nih:00007700",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "12d70948-c153-45bd-9942-e6cc07d54d07",
+    "patient_group": "nih:00009047",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "9373e0be-021b-4ef4-b7d8-973ea23caee3",
+    "patient_group": "nih:00020514",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "a95c830d-b00d-40cd-abd4-1e256ce80721",
+    "patient_group": "nih:00023178",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "13038f21-5a9c-4c77-848e-0cea101a1079",
+    "patient_group": "nih:00030300",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "36a9f078-981f-47fd-87eb-e8be3ac35082",
+    "patient_group": "nih:00012161",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5acc56a4-1b6e-4394-9364-9772047d583f",
+    "patient_group": "nih:00030457",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "787fe62b-0e2b-481a-b1f3-2a3f754ba7dd",
+    "patient_group": "nih:00013461",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2a31df3c-5131-4622-b63a-be9a058837bd",
+    "patient_group": "nih:00019484",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1bbb0121-c443-4b31-990e-c2837fb6f120",
+    "patient_group": "nih:00007334",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "cced60c2-0cdd-4730-8b6a-34386fc4dcfa",
+    "patient_group": "nih:00013578",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "40de7d48-6a58-44e5-bfe0-1300057f8d85",
+    "patient_group": "nih:00021292",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "525ef0b0-b113-4fc3-b7f5-bafbe3dc0968",
+    "patient_group": "nih:00019625",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5ba8be0b-f11b-47c6-a91c-fe62c0ef516c",
+    "patient_group": "nih:00006754",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ac6b624d-71ba-44ca-957e-592a715f0ac2",
+    "patient_group": "nih:00007111",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3141838c-603b-47ea-8591-80a7e7c5bf12",
+    "patient_group": "nih:00021098",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ca822d74-4d24-43d4-8082-370b66e39f14",
+    "patient_group": "nih:00020285",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b3c6be40-8ed6-4fcb-b688-bf1779be8f5d",
+    "patient_group": "nih:00008342",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "563bba08-9229-4cc0-89e0-da0131e7f6bd",
+    "patient_group": "nih:00005280",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "39ced0d0-246c-430d-9bea-efc60bfa487c",
+    "patient_group": "nih:00014706",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bcaa0edc-16d6-44b7-b548-91ddf6ed5cec",
+    "patient_group": "nih:00008217",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2fe44d47-5ec2-48e5-bcfc-7376a0bad13f",
+    "patient_group": "nih:00018353",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "9e9cf557-f329-43ed-8095-dc66bc667c28",
+    "patient_group": "nih:00016705",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2fb08ec8-48b2-4a8a-bfba-834fcc728451",
+    "patient_group": "nih:00027652",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "810b8ef8-f65f-4f24-9798-aa13ed4fc828",
+    "patient_group": "nih:00019157",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "56bea3ed-36f7-44ff-bcbd-d6bef00a1c9f",
+    "patient_group": "nih:00028719",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6c916756-059c-4001-bb3a-8c1ac7c9a062",
+    "patient_group": "nih:00018314",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "05632b7f-f4c5-4d67-aa93-8f3c04eb7937",
+    "patient_group": "nih:00013678",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ba95191c-8de1-42ae-a0eb-806cffb757f1",
+    "patient_group": "nih:00014827",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "9ba0ddf6-3ea8-4ee5-b133-d295ed914ab7",
+    "patient_group": "nih:00008097",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "0620afa3-b2ea-442e-9e4f-c854086ca763",
+    "patient_group": "nih:00011548",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "42cba7fc-9859-4032-8563-760d1782a3b8",
+    "patient_group": "nih:00013004",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8ad09776-a81e-4b36-95ed-2fb3bbbe1b02",
+    "patient_group": "nih:00030178",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "0a8efdc1-1dff-4d65-8948-c56a5d74a906",
+    "patient_group": "nih:00002634",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "66ab97fc-4b26-454e-8e09-e06e1c2eb74b",
+    "patient_group": "nih:00006725",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "38adcca4-6486-4169-ad60-07f8dec4e11a",
+    "patient_group": "nih:00021199",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3b1bead0-08fc-4f1c-acad-7fef601ebeaa",
+    "patient_group": "nih:00028204",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "eb7aa38d-ba9a-4e37-a689-27af5e82c052",
+    "patient_group": "nih:00012047",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bf3d9218-58b3-4a3b-b68f-54b16f3570d7",
+    "patient_group": "nih:00020852",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f7b45870-76fe-42f3-9833-acef8c336dac",
+    "patient_group": "nih:00007007",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "99af6822-9ace-4a71-9e1e-4de315370ad4",
+    "patient_group": "nih:00011212",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "693bfe22-dff4-4f4c-9ade-09dcb1babbb6",
+    "patient_group": "nih:00007512",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "75dbc949-4634-4f9c-b3bb-a8c03747e9e1",
+    "patient_group": "nih:00010698",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2f05627f-60eb-4a46-85d5-69b8c0391643",
+    "patient_group": "nih:00015031",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f4d4d49c-57bd-45fc-92e3-bdb587005341",
+    "patient_group": "nih:00010980",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "09852193-d7df-4cce-a616-a536d5de5042",
+    "patient_group": "nih:00017676",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "9089d4a8-bb7a-4090-b7fc-f8954bd3318b",
+    "patient_group": "nih:00011418",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5dad8463-531e-4945-8aab-058a63127c4e",
+    "patient_group": "nih:00025381",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "fe518d2d-28a1-42eb-918d-16f7bc6039bb",
+    "patient_group": "nih:00015151",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b248af4f-3c62-418f-a55c-80ca6f73a9e1",
+    "patient_group": "nih:00019770",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8efbae3f-42e7-45f4-8cc8-be6a572bbe73",
+    "patient_group": "nih:00006082",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "21909788-6009-48a7-80c2-8ee149b18251",
+    "patient_group": "nih:00010478",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1b9c8e5a-7c64-416a-ba87-fa424c3ad707",
+    "patient_group": "nih:00013794",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "15ea3d73-122d-4273-83e0-01f62d801ca7",
+    "patient_group": "nih:00013924",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "29000617-ac33-40a4-ac5c-19fb586edb69",
+    "patient_group": "nih:00020513",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "48029094-265a-43e6-9e29-455237085578",
+    "patient_group": "nih:00009667",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "18cded58-0cce-4b19-93de-48082a7b7d4c",
+    "patient_group": "nih:00019812",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ca5defaa-00b9-4904-87dd-debcc3ed3d77",
+    "patient_group": "nih:00013310",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "965e93d0-93f6-4a71-9abf-847027df3196",
+    "patient_group": "nih:00026024",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "56443211-949a-46fd-a677-8faa8afdad28",
+    "patient_group": "nih:00014906",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2af2d0c7-b138-49b0-8bf3-65aaedcf0682",
+    "patient_group": "nih:00000397",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "262ee9b7-31c4-424f-81b7-bb6ddb57b7e1",
+    "patient_group": "nih:00008581",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "27cf448c-36b9-4ee0-ad14-dcf350f564b7",
+    "patient_group": "nih:00018404",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "29cfef18-40c3-489f-adcf-05bd93765b9d",
+    "patient_group": "nih:00005150",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "78e64e55-99c4-4b43-8695-355ddd50bfef",
+    "patient_group": "nih:00001874",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e4adbfcf-d787-473c-ace4-7ea59984f732",
+    "patient_group": "nih:00017467",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "efcc7a4f-23d6-4df1-9d80-677a620856d7",
+    "patient_group": "nih:00018240",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5b795813-0205-4879-9bcb-69b7a417316f",
+    "patient_group": "nih:00012635",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "470595fa-5702-4009-9b56-88549ad8c560",
+    "patient_group": "nih:00025624",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5b924690-7a86-49b8-b36e-1d12d5f4fff6",
+    "patient_group": "nih:00003273",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "316500e8-41a8-4f74-849f-0460cbcb2712",
+    "patient_group": "nih:00022421",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "158cf8f2-8066-42f9-aad0-f52e1bc8de07",
+    "patient_group": "nih:00030339",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e5575a73-cc40-4c5c-9a6b-e47299e9fbad",
+    "patient_group": "nih:00023853",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b11a86fc-8db1-4a1e-90f5-8c07ab29cd99",
+    "patient_group": "nih:00017555",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2c57f3c2-af21-40dd-a7b0-16b5c04c419d",
+    "patient_group": "nih:00009459",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "646f59a0-eaf9-4c33-aebc-811da54a29b8",
+    "patient_group": "nih:00029737",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "abd50515-15ea-489a-bdb8-c38dd3ef0b36",
+    "patient_group": "nih:00019354",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5bb67504-f09e-49f7-9c4c-03b43f034fa1",
+    "patient_group": "nih:00013616",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b815bf0c-9150-4a9f-acd5-d278a35e505d",
+    "patient_group": "nih:00015100",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "aceab35b-8252-4df6-996a-1b28ff287540",
+    "patient_group": "nih:00000695",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "9a1fe07c-88c3-4ec2-9713-09d3beaf9830",
+    "patient_group": "nih:00003064",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3eb94a9c-7597-4c32-8ec4-37d3889fe317",
+    "patient_group": "nih:00007557",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "aabc6613-e421-4402-8e28-53dea1fde054",
+    "patient_group": "nih:00006199",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "55d5a0b4-ff06-4c41-8aee-d3d49febd027",
+    "patient_group": "nih:00015251",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "a281a261-8435-4861-bea0-0bca497dc5a2",
+    "patient_group": "nih:00002224",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3d8ebf19-bf2c-4dff-9c25-25aa15d1ed88",
+    "patient_group": "nih:00020289",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "cc4ee7fa-24e0-4b29-873f-bde1671290f4",
+    "patient_group": "nih:00010109",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7bd2d1cd-f950-4898-8d7d-375da645c19c",
+    "patient_group": "nih:00023138",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e09d050c-ac21-40c1-8b6f-9895582f4508",
+    "patient_group": "nih:00029613",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6f988c8c-ad47-4694-b5c9-bf572cc7c23a",
+    "patient_group": "nih:00019262",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "87e02682-fc89-44c0-8a7c-866f0dcaa8eb",
+    "patient_group": "nih:00029328",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "272c12da-2d1a-4616-9911-ce159cef7fff",
+    "patient_group": "nih:00005418",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "80498871-eb35-486b-89e5-1b3240417e70",
+    "patient_group": "nih:00006281",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "17c7c4c8-56af-4a29-b05d-312a3730e1b7",
+    "patient_group": "nih:00016486",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "142ecc70-d000-4629-9814-2a4fd0627d32",
+    "patient_group": "nih:00006044",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "35a379c4-1e56-41f7-8a25-a1c2e9b88464",
+    "patient_group": "nih:00019884",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3daf4e31-32b6-486d-8091-4747a365cf60",
+    "patient_group": "nih:00008773",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1a4d2d2f-34c8-42cb-a432-9c46bb7a8988",
+    "patient_group": "nih:00008226",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3a925cdd-891d-42bf-9ce1-30e7c95318be",
+    "patient_group": "nih:00000193",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "dfed644c-9548-465a-b962-78ead3498f38",
+    "patient_group": "nih:00005712",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b8020472-9c2d-44ce-a09b-f5795b95f230",
+    "patient_group": "nih:00014129",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7779a9c7-9483-4a8b-9c24-f6dfe787cfc4",
+    "patient_group": "nih:00009074",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "cd9d12ca-cf21-4375-8f64-0e1bcf3fd0c0",
+    "patient_group": "nih:00001035",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "4a04893d-e68e-46eb-956d-1c92b6ee27a4",
+    "patient_group": "nih:00024727",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "501410cd-cc11-4701-93ee-11d367dd6e04",
+    "patient_group": "nih:00003149",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5828e978-162a-4726-82e3-a057474d6b8a",
+    "patient_group": "nih:00013658",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d4653287-cdac-4e8b-94db-b3c71147faf4",
+    "patient_group": "nih:00019085",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "153c4961-5c28-448a-9dc0-c972ce580671",
+    "patient_group": "nih:00029455",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ba6dbb79-14a5-442e-bcee-be7d02211e6c",
+    "patient_group": "nih:00018480",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b5cb73ad-33bb-4adb-9123-e645becd46d9",
+    "patient_group": "nih:00013052",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1462ffd1-939b-49b7-9234-eeeb7f4986cc",
+    "patient_group": "nih:00028285",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "06737bed-8dc1-47d9-8c30-324282dcc84d",
+    "patient_group": "nih:00021552",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "09fab84b-19f3-42e1-9c90-69a49b7b37d6",
+    "patient_group": "nih:00018157",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "c2bc5aaf-0a2c-42d1-9a9f-c52d21f7817b",
+    "patient_group": "nih:00006962",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bde5d050-10b4-4a55-9c5a-b509013483f6",
+    "patient_group": "nih:00001123",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ccee8914-7408-422f-9800-c86f5e906939",
+    "patient_group": "nih:00000174",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "611a6d3a-3c10-4fe4-9bd5-af17ba537486",
+    "patient_group": "nih:00002181",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8c80ee20-1e1e-400f-b727-9cfd07213c13",
+    "patient_group": "nih:00006613",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "98d96d73-2a33-45a0-a242-dbbad2f2e579",
+    "patient_group": "nih:00005026",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b54c5581-bb40-4c19-9d5a-3be944ef8132",
+    "patient_group": "nih:00014073",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "229e6cb4-e8fd-43ce-9ab9-5ddd95e28d2b",
+    "patient_group": "nih:00011971",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "da31f911-ffdc-4348-90a5-cbdccd644e67",
+    "patient_group": "nih:00005609",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "0e4cfd32-2d25-4530-90cd-26950725703a",
+    "patient_group": "nih:00025718",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "33e4f74e-b8f2-470b-8815-6ee3e94b8590",
+    "patient_group": "nih:00021772",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "074f8729-c5ea-4830-8249-9a04208eab5e",
+    "patient_group": "nih:00008151",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3aec9f35-58ba-4c7b-8b02-06f1218d3b3f",
+    "patient_group": "nih:00023276",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ccd2d3ca-cd9e-4ed1-a4ea-e3989c590e4d",
+    "patient_group": "nih:00018108",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b4a86f67-272e-4204-9dab-749ec2ec627f",
+    "patient_group": "nih:00022686",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "54679037-b484-4bb7-acb6-e8ae09139c85",
+    "patient_group": "nih:00015009",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "39d5e1bf-8092-4bc7-af98-f2a5dcd4c39d",
+    "patient_group": "nih:00026707",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e75f84e3-8223-47db-bc5b-3f93e5eba5c6",
+    "patient_group": "nih:00015945",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3011a504-67f0-4bda-b774-46cb7c38b839",
+    "patient_group": "nih:00003455",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ccd41f6b-7715-4c84-9957-c5eaee20b0f1",
+    "patient_group": "nih:00017106",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3496cccd-1600-4ae9-920f-a5bf7919801c",
+    "patient_group": "nih:00017831",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "09d79f22-df14-4e5a-bc98-7a1d6bcd6965",
+    "patient_group": "nih:00025052",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "671508a1-7593-4563-904d-d7055e85d809",
+    "patient_group": "nih:00009577",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3bb0913d-db75-4c66-81bd-fdd9143eef15",
+    "patient_group": "nih:00030152",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1202ef51-061c-43a4-8d2b-759fce4f15d4",
+    "patient_group": "nih:00015399",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1ff8b4d7-7799-4d2e-be27-218c244ac73e",
+    "patient_group": "nih:00014379",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "41e4abf6-897e-464d-9cec-ed3c51d8809e",
+    "patient_group": "nih:00030079",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "4f36fdcd-1887-45b7-805f-2afffc3d10b3",
+    "patient_group": "nih:00012286",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f9a571b8-65a5-463c-8ee7-db2f3728f5d2",
+    "patient_group": "nih:00013346",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7d5502bf-2958-4bc1-a34e-d0b30f36f5fc",
+    "patient_group": "nih:00018987",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "244ce2a0-21d8-4f75-a118-dd5a51658bc7",
+    "patient_group": "nih:00027042",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3db17fd0-1423-41a0-9ae6-41f8c864caca",
+    "patient_group": "nih:00019065",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "a25056f9-2c4e-42f3-a035-26552647dcd4",
+    "patient_group": "nih:00016757",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "96b5bbc1-fa5e-4301-9a3d-03ab0aa66975",
+    "patient_group": "nih:00004908",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2b9b510d-85f2-4c82-a742-955d2f4fd17a",
+    "patient_group": "nih:00002457",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "64b36fb9-40c8-431a-abd2-6b9170f52db6",
+    "patient_group": "nih:00019992",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3707b351-5760-4962-93a0-9f58252d22e7",
+    "patient_group": "nih:00007629",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "4a63e531-4a33-4951-bfa0-77e213844e55",
+    "patient_group": "nih:00015079",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7dc67964-ab75-474b-87f2-f9368833196d",
+    "patient_group": "nih:00017757",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e1d8cc12-d372-48f2-9126-74660809eccf",
+    "patient_group": "nih:00015446",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7dd38aad-d538-4068-8ddd-c1c401b7e2b2",
+    "patient_group": "nih:00028932",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3f34c48c-80e6-4a04-9351-6ad809760b70",
+    "patient_group": "nih:00025603",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1d8417fd-bdcd-455e-92eb-81a54b77173e",
+    "patient_group": "nih:00003247",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "192c7502-0bb4-4479-ae6c-9ff142f1c684",
+    "patient_group": "nih:00027700",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "dbd3e871-a1b7-499d-a303-705ff2003eaf",
+    "patient_group": "nih:00009913",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6bc8aad2-30ea-4daf-94cb-4b65c6e8d0c2",
+    "patient_group": "nih:00025568",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "90cfaf6d-0247-4431-be9b-bca6c060e394",
+    "patient_group": "nih:00005918",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2616cf22-5180-4ac5-ab85-6285543093aa",
+    "patient_group": "nih:00027886",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "a79046a9-7861-4fb0-9dc9-ce2e4b11fdb0",
+    "patient_group": "nih:00022986",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "a968e822-adce-4a16-be1b-81764099c9a5",
+    "patient_group": "nih:00005921",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "606aba72-d0db-42d5-97e8-c40d88673dcf",
+    "patient_group": "nih:00005711",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "eb211810-c51d-42c7-913b-d327c8ca4dd7",
+    "patient_group": "nih:00010347",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "77b4b295-c277-42a7-b210-b236ea42274e",
+    "patient_group": "nih:00026194",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "354298de-cfa4-435c-b757-4dbce12102d6",
+    "patient_group": "nih:00026821",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "1a0aa05e-697c-40ba-a0c0-1dc64a913e3f",
+    "patient_group": "nih:00029252",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "06bdaf90-df6a-46ae-ac6d-a4afb7937c8d",
+    "patient_group": "nih:00021830",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b6cb8151-4575-461c-a342-335d9c413359",
+    "patient_group": "nih:00010550",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8a233483-8ab2-4cc5-b32b-20fe40cc5d77",
+    "patient_group": "nih:00027478",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5d0e05a6-389f-4be7-b91c-8fbebfc79ec6",
+    "patient_group": "nih:00028235",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6fd5262a-db7f-43b9-b29d-cfba322b8ba1",
+    "patient_group": "nih:00001193",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6cceaf55-c53d-4732-9436-85db3e219a62",
+    "patient_group": "nih:00017922",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b532569f-be57-44a1-8452-83aa0bf278d1",
+    "patient_group": "nih:00019861",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7e85a356-c710-409a-95ea-a92e3dccb7f8",
+    "patient_group": "nih:00019485",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bfbd4ed3-1d78-437b-b5dc-09ab063b55fa",
+    "patient_group": "nih:00026202",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8c051e14-777c-4f54-a2b7-d71645cae564",
+    "patient_group": "nih:00018078",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "79ffd214-6464-406a-a78b-5aaa8cc1fe7e",
+    "patient_group": "nih:00006051",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "759f55b1-8bd3-4695-a4ac-6ad6336abaed",
+    "patient_group": "nih:00011985",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "629778e6-9644-45cf-b19f-d926b1e7eb2f",
+    "patient_group": "nih:00003109",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2d9e909c-bfb6-4360-b65e-d69a3fbd0ba6",
+    "patient_group": "nih:00016987",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "415f5493-d330-4239-b25c-cda4ef422683",
+    "patient_group": "nih:00009038",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "91c5dbfe-4eee-48f7-95b5-f7dc0c25eddf",
+    "patient_group": "nih:00027946",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d01c47aa-347c-4919-a82e-b90b7d3b164f",
+    "patient_group": "nih:00015975",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f2f6de7e-9fbe-4016-9c43-7031e6382baf",
+    "patient_group": "nih:00025241",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "73ff8055-3881-4c61-b700-396adf5083fc",
+    "patient_group": "nih:00030093",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2efdecc5-1b2a-48cf-8cf7-1f736bbbfd75",
+    "patient_group": "nih:00026144",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "c5819ad1-5784-4db3-83d7-3d3a2d348287",
+    "patient_group": "nih:00020477",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d88da3d2-4032-4736-b278-bed083ce1b19",
+    "patient_group": "nih:00005853",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "53e37b9f-3231-44e8-8bf1-56eaaa6e49c4",
+    "patient_group": "nih:00030245",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "23dc53f1-52ba-4411-87c9-d05b3ee35a0d",
+    "patient_group": "nih:00000377",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "baf2a126-f441-4566-9b85-59c1f2cdaf96",
+    "patient_group": "nih:00008309",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f5b9e64c-e373-4ccb-806c-850c5a38dad6",
+    "patient_group": "nih:00029874",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "fee10db3-aaf5-415b-849a-56576d782f1c",
+    "patient_group": "nih:00006411",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8b869cb7-6ca0-454c-a9c2-cda67d8762f0",
+    "patient_group": "nih:00025424",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bfba9c94-6a70-4e72-856b-7e585331f5d7",
+    "patient_group": "nih:00026078",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d160add8-0276-4cb0-a9d6-70f8fd302c00",
+    "patient_group": "nih:00006350",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "16637461-2175-426c-a0fd-e6bf3c6dbe95",
+    "patient_group": "nih:00015239",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8cdacf7d-d81c-40af-8bea-d107073d0412",
+    "patient_group": "nih:00014223",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "caaa9115-3afe-4f23-91b4-a6a7246c4401",
+    "patient_group": "nih:00012925",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d930583e-0c91-4b5f-9a23-0f71f0349586",
+    "patient_group": "nih:00021006",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "257e34f1-f461-45fd-ab15-ec4cbfada52a",
+    "patient_group": "nih:00027757",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "7d5f828f-5c6a-4898-a64f-8364339f35cd",
+    "patient_group": "nih:00022514",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "8be3494d-fe57-47d2-9dd1-ac5db3781850",
+    "patient_group": "nih:00030282",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ea20f7ad-5958-4a6a-b871-89e747593fd8",
+    "patient_group": "nih:00016280",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "abe39f96-f9ee-4539-a408-c7a623c4d778",
+    "patient_group": "nih:00017359",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "05ad9fb7-7500-492a-a5db-d8e1c69855e5",
+    "patient_group": "nih:00021386",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "f57ecf23-7226-45d3-b6af-375abe2db134",
+    "patient_group": "nih:00021998",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "9f978e30-810a-4ec0-8edf-f917216b0543",
+    "patient_group": "nih:00021144",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "6d0d2d29-ba30-40ef-b9a3-822b522ffb51",
+    "patient_group": "nih:00008429",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2d3cfc9f-d0b7-4c6b-882e-cdde29b92bcf",
+    "patient_group": "nih:00012008",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "c28fc2ae-60ca-4638-ae32-29cc4af24e8b",
+    "patient_group": "nih:00017647",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "0ea1e7fa-5d69-471e-9655-69542b15d3e7",
+    "patient_group": "nih:00015136",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "000686d7-f4fc-448d-97a0-44fa9c5d3aa6",
+    "patient_group": "nih:00020085",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2a1276a9-c806-480d-80ac-008d1bcb469f",
+    "patient_group": "nih:00020929",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3c83072d-97ca-47d6-9d55-ec9f1f23c166",
+    "patient_group": "nih:00001959",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "0f1fced1-4c33-44b2-9009-1370aa6287f3",
+    "patient_group": "nih:00003538",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e84da550-d09e-46cd-94c1-617b6d7aa461",
+    "patient_group": "nih:00029108",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "af22f5c3-c994-4902-96b2-8c75eb5e8e4b",
+    "patient_group": "nih:00020580",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2918eae9-cbaa-4ea4-a0ce-6f234a954220",
+    "patient_group": "nih:00021779",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "4474c611-e91a-4aa2-8993-69ad51c2e332",
+    "patient_group": "nih:00025909",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "01a4059c-22f7-4f51-8a27-50aff0b3aeb3",
+    "patient_group": "nih:00002093",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "fe88e494-9645-40b5-bcad-670b8426c9a0",
+    "patient_group": "nih:00006295",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "b540ba89-72f7-40f5-a916-376546c20014",
+    "patient_group": "nih:00026158",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "33c24f1e-7526-4d84-a057-facdc540f22b",
+    "patient_group": "nih:00009138",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5a89829f-6235-4a52-9e11-c98dd10e1c9d",
+    "patient_group": "nih:00016489",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "bb6d8e4b-f416-435a-8dee-fe3f60b4db11",
+    "patient_group": "nih:00002583",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "5f2b98cc-a7b5-46d5-9ea8-4fa260cb998c",
+    "patient_group": "nih:00020292",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "788e8f37-4c9c-42a3-a731-a4d7a6865cea",
+    "patient_group": "nih:00003394",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "e397dc92-c9c8-4b93-b8fd-831514c74254",
+    "patient_group": "nih:00030070",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "2d2633d2-b5a5-4f56-901e-6599355cebd4",
+    "patient_group": "nih:00005916",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "ad69b71d-7005-4f1e-a6d8-27d84106c9af",
+    "patient_group": "nih:00020548",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "37a371ad-7e94-4a2c-923c-2ddfce97f2ed",
+    "patient_group": "nih:00000610",
+    "label": 0,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "d9815385-9c37-4484-8785-92b3eed84586",
+    "patient_group": "nih:00021130",
+    "label": 1,
+    "split": "holdout_confirmation"
+  },
+  {
+    "source_id": "3a0832d6-76d6-4915-945c-2ea769faabb3",
+    "patient_group": "nih:00018936",
+    "label": 0,
+    "split": "holdout_confirmation"
+  }
+]

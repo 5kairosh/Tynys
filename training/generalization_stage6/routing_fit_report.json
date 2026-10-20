@@ -1,0 +1,71 @@
+{
+  "stage": "6B",
+  "frozen_at": "2026-10-20T19:34:51.479204+00:00",
+  "routing_protocol_sha256": "f9745801ec429e8269ffef8d82f925e86af2f6938cdf0440dc4dbd49e71c22b7",
+  "base_fit_report_sha256": "151e0ad306412051654f0828aac2df393c719c475169e653b00a90a3fce6a111",
+  "source_model_sha256": "ea584b998a454d973acbbb676fa5e951fce1a79d6d615f2d6b07b40d57760172",
+  "source_config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
+  "model_sha256": "a79fe71a67fc4e100a5cbde8624fb9286e663bd59e4beb74984810b3f2ba4e43",
+  "temperature": 1.1374971593841223,
+  "threshold": 0.5,
+  "validation": {
+    "kaggle": {
+      "count": 952,
+      "normal": 270,
+      "positive": 682,
+      "accuracy": 0.9359243697478992,
+      "balanced_accuracy": 0.9541598783534267,
+      "sensitivity": 0.9120234604105572,
+      "specificity": 0.9962962962962963,
+      "precision": 0.9983948635634029,
+      "f1": 0.9532567049808429,
+      "roc_auc": 0.9979091995221028,
+      "average_precision": 0.9991777236573139,
+      "TN": 269,
+      "FP": 1,
+      "FN": 60,
+      "TP": 622,
+      "errors": 61,
+      "threshold": 0.5
+    },
+    "rsna": {
+      "count": 400,
+      "normal": 200,
+      "positive": 200,
+      "accuracy": 0.9,
+      "balanced_accuracy": 0.9,
+      "sensitivity": 0.895,
+      "specificity": 0.905,
+      "precision": 0.9040404040404041,
+      "f1": 0.8994974874371859,
+      "roc_auc": 0.95905,
+      "average_precision": 0.9621524624896807,
+      "TN": 181,
+      "FP": 19,
+      "FN": 21,
+      "TP": 179,
+      "errors": 40,
+      "threshold": 0.5
+    }
+  },
+  "validation_routing": {
+    "kaggle": {
+      "count": 952,
+      "chosen_rsna": 6,
+      "domain_accuracy": 0.9936974789915967
+    },
+    "rsna": {
+      "count": 400,
+      "chosen_rsna": 398,
+      "domain_accuracy": 0.995
+    }
+  },
+  "validation_weighted_nll": 0.18316276844374674,
+  "router_C": 0.001,
+  "router_iterations": 16,
+  "router_selection": "Fixed C and >=0 domain logit, no hyperparameter search",
+  "trained_on": "5401 train images only; domain/class balanced",
+  "evaluation_data_used_to_fit": false,
+  "production_model_changed": false,
+  "confirmation_manifest_sha256": "8ad398a66ff34f7931e0045a3dd009dcba96c74816533117adb95905d98b7169"
+}
