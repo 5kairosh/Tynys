@@ -1,0 +1,23 @@
+{
+  "id": 39489492345,
+  "head_sha": "eaa6c5aa8e61dfb2d9ff174845994754dc8c256a",
+  "html_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-10-20T20:08:53Z",
+  "updated_at": "2026-10-20T20:10:21Z",
+  "jobs": [
+    {
+      "name": "pytest",
+      "conclusion": "success",
+      "html_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345/job/118858537077"
+    },
+    {
+      "name": "browser-history",
+      "conclusion": "success",
+      "html_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345/job/118858537475"
+    }
+  ],
+  "checked_at": "2026-10-20T20:11:42.045408+00:00",
+  "note": "Both jobs success verified through GitHub API. Local counts150 pytest /29 Chromium; remote workflow runs the same suites."
+}

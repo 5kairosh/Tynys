@@ -115,18 +115,13 @@
   },
   "ci": {
     "configured": true,
-    "remote_run": false,
-    "status": "pending",
-    "previous_verified_run": {
-      "configured": true,
-      "remote_run": true,
-      "repo_url": "https://github.com/5kairosh/Tynys",
-      "run_id": 39481020833,
-      "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
-      "status": "success",
-      "checked_at": "2026-10-20T19:12:38.994887+00:00",
-      "source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6"
-    }
+    "remote_run": true,
+    "repo_url": "https://github.com/5kairosh/Tynys",
+    "run_id": 39489492345,
+    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345",
+    "status": "success",
+    "source_commit": "eaa6c5aa8e61dfb2d9ff174845994754dc8c256a",
+    "checked_at": "2026-10-20T20:19:58.662798+00:00"
   },
   "tests": {
     "local_passed": 150,
@@ -212,15 +207,16 @@
       "TXT",
       "PDF"
     ],
-    "remote_deployment_verified": false,
-    "deployed_source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6",
-    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
+    "remote_deployment_verified": true,
+    "deployed_source_commit": "eaa6c5aa8e61dfb2d9ff174845994754dc8c256a",
+    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345",
     "ci_status": "success",
     "evaluation_artifact": "site/model/selective_evaluation.json",
     "error_reduction_demonstrated": false,
     "model_and_classifier_threshold_changed": true,
     "ood_parameters_changed": true,
-    "active_stage": 6
+    "active_stage": 6,
+    "evidence": "training/generalization_stage6/verification.json"
   },
   "image_quality": {
     "implemented": true,
@@ -293,10 +289,10 @@
       "pytest_passed": 150,
       "browser_passed": 29
     },
-    "evidence": "training/ood_stage5/verification.json",
-    "remote_deployment_verified": false,
-    "deployed_source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6",
-    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
+    "evidence": "training/generalization_stage6/verification.json",
+    "remote_deployment_verified": true,
+    "deployed_source_commit": "eaa6c5aa8e61dfb2d9ff174845994754dc8c256a",
+    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345",
     "ci_status": "success",
     "model_and_classifier_threshold_changed": true,
     "ood_parameters_changed": true,
@@ -433,7 +429,11 @@
     ],
     "documentation": "training/GENERALIZATION_STAGE6_KZ.txt",
     "clinical_validation": false,
-    "remote_verified": false,
-    "ci_verified": false
+    "remote_verified": true,
+    "ci_verified": true,
+    "source_commit": "eaa6c5aa8e61dfb2d9ff174845994754dc8c256a",
+    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345",
+    "checked_at": "2026-10-20T20:19:58.662798+00:00",
+    "evidence": "training/generalization_stage6/verification.json"
   }
 }

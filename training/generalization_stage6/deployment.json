@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-10-20T20:19:58.662798+00:00",
+  "url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/",
+  "source_commit": "eaa6c5aa8e61dfb2d9ff174845994754dc8c256a",
+  "deployment_manifest": "training/generalization_stage6/deployment_manifest.json",
+  "files_sha_verified_in_codespace": 65,
+  "public_static_sha256": {
+    "site/static/index.html": "c88394cb662addffd09d370e40e2e8f353b8f3b38a74848252c9a283368759c6",
+    "site/static/app.js": "7d0b70b8d91632e5d36457089a0384086b3bb9d0e8580af0f402437687d20034",
+    "site/static/style.css": "16538b66cdfc667cada275a73398a7018d65bba4df15cd2cac8333624926500f",
+    "site/static/generalization-evaluation.js": "106d8e4fa1519fe2365010136e52819b8df83079151af8a9901f9cc745165c94",
+    "site/static/selective-evaluation.js": "efd211ea4a5a7acdfa6b72eaf70508db0bb1aa12da51783e7e46e24d23076d41",
+    "site/static/research/generalization-stage6.json": "fb1f954b352418fb49783efc832e3ffcb183305c4fe8fa34c9c0ac01a24ba51e"
+  },
+  "model_id": "a79fe71a67fc",
+  "ood_parameter_id": "b0c5e869838e",
+  "config_sha256": "63c6e98cc7713993778fb8b44430a8ebb6b334bac66be5ec0f815ea45f63eb4c",
+  "git_head_advanced": false,
+  "method": "SHA-verified immutable GitHub files applied to existing Codespace with owned-server restart and rollback; no git in container.",
+  "codespace_pid_observed": 4529,
+  "browser_study_and_ood_downloads_equal_evidence": true,
+  "browser_console_errors": 0,
+  "existing_user_history_changed": false,
+  "public_forwarding_recreated_after_stale_404": true,
+  "new_institution_validation": false,
+  "clinical_validation": false,
+  "screenshot": "training/generalization_stage6/ui_online.jpg",
+  "deployment_manifest_url": "https://raw.githubusercontent.com/5kairosh/Tynys/eaa6c5aa8e61dfb2d9ff174845994754dc8c256a/training/generalization_stage6/deployment_manifest.json",
+  "deployment_manifest_sha256": "2afce56de42d080471723479a364c1188391c246f69bea2c91484abffc917d0b"
+}

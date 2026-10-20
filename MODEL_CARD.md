@@ -108,3 +108,5 @@ Space интернетке осы тапсырмада жарияланған ж
 
 
 2026-10-21: жоғарыдағы Docker тексеруі тарихи. 6-кезең image build/run қайта тексерілмеді.
+
+6-кезең CI және онлайн тексерілді: [CI run](https://github.com/5kairosh/Tynys/actions/runs/39489492345). Дәлел: `training/generalization_stage6/verification.json`.

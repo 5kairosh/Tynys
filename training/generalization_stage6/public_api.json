@@ -1,0 +1,83 @@
+{
+  "checked_at": "2026-10-20T20:18:10.576001+00:00",
+  "url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/",
+  "source_commit": "eaa6c5aa8e61dfb2d9ff174845994754dc8c256a",
+  "status_http": 200,
+  "ready": true,
+  "model_id": "a79fe71a67fc",
+  "ood_parameter_id": "b0c5e869838e",
+  "comparison_ensemble_mcnemar_available": true,
+  "audit_available": true,
+  "cohorts": {
+    "internal_test": {
+      "accepted": 608,
+      "count": 618,
+      "accepted_errors": 68
+    },
+    "external_openi": {
+      "accepted": 167,
+      "count": 200,
+      "accepted_errors": 53
+    },
+    "rsna_confirmation": {
+      "accepted": 348,
+      "count": 400,
+      "accepted_errors": 45
+    }
+  },
+  "cases": [
+    {
+      "case": "synthetic.png",
+      "http": 200,
+      "assessment": "review_required",
+      "branch": "rsna_adapted",
+      "score": 0.7210870336322662,
+      "distance": 106.30383484133388
+    },
+    {
+      "case": "synthetic-cr.dcm",
+      "http": 200,
+      "assessment": "review_required",
+      "branch": "rsna_adapted",
+      "score": 0.9998428242329359,
+      "distance": 69.26605514469823
+    },
+    {
+      "case": "synthetic-ct.dcm",
+      "http": 400
+    },
+    {
+      "case": "text.jpg",
+      "http": 400
+    }
+  ],
+  "pdf": {
+    "http": 200,
+    "magic": "%PDF",
+    "pages": 2
+  },
+  "real_source_pixels_uploaded_to_public": false,
+  "user_history_changed": false,
+  "root_http": 200,
+  "root_html_sha256": "c88394cb662addffd09d370e40e2e8f353b8f3b38a74848252c9a283368759c6",
+  "forwarding_recreated": true,
+  "post_forwarding_recreation_checks": [
+    {
+      "case": "synthetic.png",
+      "http": 200
+    },
+    {
+      "case": "cr.dcm",
+      "http": 200
+    },
+    {
+      "case": "ct.dcm",
+      "http": 400
+    },
+    {
+      "case": "text.jpg",
+      "http": 400
+    }
+  ],
+  "post_forwarding_recreation_pdf_pages": 2
+}

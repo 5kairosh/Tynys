@@ -131,3 +131,21 @@ ci.json, ui_online.jpg. Ескі кезеңдердің жазбалары — �
 Бұл түзету классификация дәлдігі немесе клиникалық қауіпсіздік артты деген сөз емес.
 Docker осы кезеңде қайта жиналмады. Презентация тарихи нұсқасында қалды.
 Codespaces тоқтаса, сайт та тоқтайды; тәулік бойы жұмыс істеу кепілдігі жоқ.
+
+## 6-кезеңнің онлайн тексеруі
+
+2026-10-21 — 6-КЕЗЕҢНІҢ ҚАШЫҚТАҒЫ ТЕКСЕРУІ
+Код: eaa6c5aa8e61dfb2d9ff174845994754dc8c256a
+CI success, екі job: https://github.com/5kairosh/Tynys/actions/runs/39489492345
+Жергілікті150 pytest және29 Chromium/IndexedDB; CI сол suites-ті орындап success болды.
+Сайт: https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/
+Жаңа модель a79fe71a67fc, threshold0.5, T1.1374971593841223, OOD b0c5e869838e.
+65 файл Codespace-та SHA256-мен тексерілді; Git HEAD жаңартылды деп есептелмейді.
+Ашық root/API200; synthetic PNG/CR DICOM200, CT/fakeJPG400; PDF %PDF,2бет.
+Браузерден JSON study/қамту есептері жүктеліп, жария evidence/API-мен дәл салыстырылды.
+Console error жоқ. Қолданыстағы пайдаланушының браузер тарихы өзгертілмеді.
+Resume-тан кейінгі ескі туннель404 берді; loopback API/HTML200 екені дәлелденіп,
+7860 forwarding қайта құрылды және Public қалпына келтірілді. Кейін барлық HTTP
+және браузер тексерулері қайта өтті. Codespace тоқтаса сайт та тоқтайды; 24/7 кепілдік жоқ.
+Дәлел: training/generalization_stage6/verification.json, ci.json, deployment.json,
+public_api.json және ui_online.jpg. Docker қайта жиналмады; презентация тарихи.

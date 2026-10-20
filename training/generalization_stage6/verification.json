@@ -1,6 +1,6 @@
 {
   "stage": 6,
-  "checked_at": "2026-10-20T20:05:00.099681+00:00",
+  "checked_at": "2026-10-20T20:19:58.662798+00:00",
   "model_id": "a79fe71a67fc",
   "ood_parameter_id": "b0c5e869838e",
   "pytest": {
@@ -26,7 +26,9 @@
     "pdf_pages": 2,
     "persistent_consent": false,
     "existing_user_history_changed": false,
-    "pdf_rendered_and_visually_reviewed": true
+    "pdf_rendered_and_visually_reviewed": true,
+    "console_errors": 0,
+    "downloaded_json_matches_api": true
   },
   "synthetic_controls": {
     "flagged": 6,
@@ -40,8 +42,13 @@
   "new_institution_validation": false,
   "old_benchmarks_previously_inspected": true,
   "clinical_validation": false,
-  "remote_verified": false,
-  "ci_verified": false,
+  "remote_verified": true,
+  "ci_verified": true,
   "presentation_updated": false,
-  "docker_rebuilt": false
+  "docker_rebuilt": false,
+  "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39489492345",
+  "source_commit": "eaa6c5aa8e61dfb2d9ff174845994754dc8c256a",
+  "deployment_evidence": "training/generalization_stage6/deployment.json",
+  "public_api_evidence": "training/generalization_stage6/public_api.json",
+  "screenshot": "training/generalization_stage6/ui_online.jpg"
 }
