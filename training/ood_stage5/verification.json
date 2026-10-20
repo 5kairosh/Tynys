@@ -1,0 +1,38 @@
+{
+  "checked_at": "2026-10-20T18:57:27.163813+00:00",
+  "stage": 5,
+  "policy": "ood_guard_v2",
+  "protocol_commit": "da93ca1",
+  "local_pytest": {
+    "passed": 135,
+    "warnings": 1,
+    "seconds": 38.18,
+    "command": "site/.venv/Scripts/python -m pytest site/tests training/tests -q"
+  },
+  "browser_tests": {
+    "passed": 24,
+    "seconds": 37.57,
+    "runtime": "Chromium and real IndexedDB; regression suite stubs inference"
+  },
+  "live_local": {
+    "port": 7867,
+    "real_kaggle_normal_and_pneumonia_previously_blocked_now_classified": true,
+    "still_ood_example_remains_withheld": true,
+    "api_score_distance_parity": "training/ood_stage5/live_local.json",
+    "txt_policy_parameter_distance_verified": true,
+    "pdf_pages": 2,
+    "browser_console_errors": 0,
+    "screenshot": "training/ood_stage5/ui_local.jpg"
+  },
+  "synthetic_controls": {
+    "flagged": 6,
+    "total": 6,
+    "clinical_non_xray_validation": false
+  },
+  "classifier_weights_or_config_changed": false,
+  "ood_parameters_changed": true,
+  "test_or_external_used_to_fit": false,
+  "evaluation_cohorts_previously_inspected": true,
+  "remote_verified": false,
+  "ci_verified": false
+}

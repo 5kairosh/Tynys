@@ -1,0 +1,41 @@
+{
+  "cases": [
+    {
+      "case": "black",
+      "disposition": "review_required",
+      "distance": 77.7410441130793,
+      "threshold": 38.25761417386084
+    },
+    {
+      "case": "white",
+      "disposition": "review_required",
+      "distance": 93.8276703719076,
+      "threshold": 38.25761417386084
+    },
+    {
+      "case": "rgb_noise",
+      "disposition": "review_required",
+      "distance": 128.01133997283299,
+      "threshold": 38.25761417386084
+    },
+    {
+      "case": "red",
+      "disposition": "review_required",
+      "distance": 98.28534688476095,
+      "threshold": 38.25761417386084
+    },
+    {
+      "case": "gradient",
+      "disposition": "review_required",
+      "distance": 93.31249178238762,
+      "threshold": 38.25761417386084
+    },
+    {
+      "case": "checkerboard",
+      "disposition": "review_required",
+      "distance": 94.15245735362578,
+      "threshold": 38.25761417386084
+    }
+  ],
+  "note": "Generated engineering controls only. Not a clinical/non-X-ray validation cohort; no threshold tuning on these controls."
+}

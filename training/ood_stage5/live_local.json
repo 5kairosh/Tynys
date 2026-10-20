@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "case": "normal_previously_blocked",
+      "sha256": "f17a003185299f171440c2cb408c2e5bacea90376971ed81ecc9812465e209fb",
+      "old_disposition": "review_required",
+      "new_disposition": "classified",
+      "score": 0.0658331388450073,
+      "distance": 36.028791603834556,
+      "threshold": 38.25761417386084,
+      "http": 200
+    },
+    {
+      "case": "pneumonia_previously_blocked",
+      "sha256": "6211aa5bb73c2aa1d598bf2ebe7c14ac6617552c031523c1c73c9528f2d6b2e3",
+      "old_disposition": "review_required",
+      "new_disposition": "classified",
+      "score": 0.9985508656931179,
+      "distance": 27.961435479470786,
+      "threshold": 38.25761417386084,
+      "http": 200
+    },
+    {
+      "case": "still_ood",
+      "sha256": "fb64f55d6aeece30cea3f0f7f29da1cfffb06d9810d6f68c532eb41fdbdb66ee",
+      "old_disposition": "review_required",
+      "new_disposition": "review_required",
+      "score": 0.0013645010242023649,
+      "distance": 42.37988209109989,
+      "threshold": 38.25761417386084,
+      "http": 200
+    }
+  ],
+  "note": "Workflow/parity examples selected by prior/current disposition; not an accuracy sample."
+}

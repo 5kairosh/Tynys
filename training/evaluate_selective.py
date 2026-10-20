@@ -1,4 +1,4 @@
-"""Measure fixed ood_guard_v1 coverage/errors on SHA-verified held-out images.
+"""Measure the current fixed OOD guard on SHA-verified evaluation images.
 
 No training, threshold search or parameter writes. Raw features/images are cached
 only under ignored training/cache. Public output contains numerical aggregates
@@ -138,20 +138,25 @@ def main():
     report = {'schema': SCHEMA, 'policy': POLICY, 'clinically_validated': False,
               'thresholds_tuned_on_evaluation': False, 'bindings': bindings,
               'classification_threshold': config['threshold'], 'ood_threshold': detector.params[2],
-              'ood_fitted_on': 'validation (952 images); 95th percentile on fitting data',
+              'ood_fitted_on': 'train reference; cutoff on separate validation (prespecified 95% target)',
+              'ood_calibration': detector.metadata,
+              'evaluation_cohorts_previously_inspected': True,
+              'comparison_to_stage4': {k: v for k,v in json.loads((ROOT/'training/ood_stage5/baseline_stage4/summary.json').read_text(encoding='utf-8')).items() if k in ('policy','ood_threshold','cohorts')},
               'preprocessing': 'decode_image RGB; float32; resize_with_pad 224x224; trained model preprocessing',
               'model': 'MobileNetV2', 'cohorts': summaries,
               'source_hash_encoding': 'SHA256 of UTF-8 text with CRLF normalized to LF',
               'source_sha256': {str(path.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
                   for path in [ROOT/'training/manifests/test_manifest.csv', ROOT/'training/manifests/test_predictions.csv',
-                               ROOT/'training/external_predictions.csv', Path(__file__), *sorted(output.glob('*.csv'))]},
+                               ROOT/'training/external_predictions.csv', Path(__file__), ROOT/'training/ood_stage5/protocol.json',
+                               ROOT/'training/ood_stage5/fit_report.json', *sorted(output.glob('*.csv'))]},
               'limitations': ['Fixed-policy descriptive audit; no causal/clinical reliability claim.',
                   'Accepted-subset accuracy has a different denominator from full-cohort accuracy.',
                   'OOD acceptance is not X-ray authentication or a guarantee of correctness.',
                   'Filename/report UID grouping is not verified longitudinal patient identity.',
                   'OpenI is a selected small cohort with weak report-level MeSH labels, not a clinical gold standard.',
                   'Only MobileNetV2 binary predictions audited; image quality warnings are advisory and do not gate.',
-                  'Validation fitted the OOD boundary and is not an independent evaluation cohort.'],
+                  'Validation calibrated the cutoff and was used for classifier selection: no formal coverage guarantee.',
+                  'Test/OpenI were previously inspected in stage 4. This is a descriptive recheck, not a fresh confirmatory study.'],
               'tensorflow_version': tf.__version__}
     if artifact_bindings(model_dir) != bindings:
         raise ValueError('Source/parameters changed during evaluation; refusing stale publication.')

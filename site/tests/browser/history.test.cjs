@@ -217,7 +217,7 @@ test('audit cards show actual accepted counts and download exactly that evidence
   const pending=page.waitForEvent('download');await page.locator('#selective-download').click();
   const download=await pending;assert.deepEqual(JSON.parse(await fs.readFile(await download.path(),'utf8')),report);
   assert.equal(predictCount,before);assert.equal(await page.locator('#save-history').isChecked(),false);
-  assert.match(await page.locator('#selective-finding').innerText(),/Шектеу анықталды/);
+  assert.match(await page.locator('.audit-limit').innerText(),/клиникалық сенімділік дәлелденбеген/);
 }));
 test('zero coverage never renders perfect or zero selective accuracy',()=>contextTest(async(context,page)=>{
   const report=await actualAudit();
@@ -228,6 +228,7 @@ test('zero coverage never renders perfect or zero selective accuracy',()=>contex
   await auditStatus(page,report);await ready(page);
   assert.equal(await page.getByText('Бағалау мүмкін емес',{exact:true}).count(),2);
   assert.equal(await page.getByText('Қорытынды берілген сурет жоқ',{exact:true}).count(),2);
+  assert.match(await page.locator('#selective-finding').innerText(),/Шектеу анықталды/);
 }));
 test('unavailable audit cannot block image upload or analysis',()=>contextTest(async(context,page)=>{
   await auditStatus(page,{available:false,message:'Параметрлер сәйкес емес.'});await ready(page);
@@ -248,4 +249,29 @@ test('status refresh preserves an opened audit explanation',()=>contextTest(asyn
   const response=page.waitForResponse('**/api/status');
   await page.evaluate(()=>window.dispatchEvent(new Event('online')));await response;
   assert.equal(await details.getAttribute('open'),'');
+}));
+
+test('v2 accepted prediction renders a class and the actual OOD distance',()=>contextTest(async(context,page)=>{
+  const r=prediction('current.png');r.assessment={...r.assessment,policy:'ood_guard_v2',status:'classified',message:'Train/validation тексеруі.'};
+  r.xray_check={available:true,is_xray:true,within_reference:true,distance:28.2,threshold:29.3,parameter_id:'current-ood'};
+  await page.route('**/api/predict',route=>route.fulfill({json:r}));await ready(page);await upload(page,'current.png');
+  assert.equal(await page.locator('#result-title').innerText(),'Пневмония санатына жіктелді');
+  assert.match(await page.locator('#xray-warning').innerText(),/28,20; OOD шегі: 29,30/);
+  assert.equal(await page.locator('#score-value').innerText(),'0,900');
+}));
+test('legacy saved result keeps its original guard outcome after v2 upgrade',()=>contextTest(async(context,page)=>{
+  await ready(page);await page.locator('#save-history').check();await upload(page,'legacy.png');
+  const before=predictCount;
+  await page.route('**/api/status',route=>route.fulfill({json:{ready:true,model_id:'test-model-v1',config:{threshold:.745},metrics:[],assessment_policy:{name:'ood_guard_v2'},xray_check:{parameter_id:'current-ood'}}}));
+  await page.reload({waitUntil:'domcontentloaded'});await count(page,1);await page.locator('.history-open').click();
+  assert.equal(predictCount,before);assert.match(await page.locator('#result-title').innerText(),/Сенімді бағалау/);
+  assert.match(await page.locator('#history-feedback').innerText(),/OOD ережесі жаңарған/);
+  assert.equal(await page.locator('#score-value').innerText(),'0,900');
+}));
+test('v2 report discloses train calibration roles and previous-policy coverage',()=>contextTest(async(context,page)=>{
+  await auditStatus(page,await actualAudit());await ready(page);
+  assert.match(await page.locator('#ood-calibration-detail').innerText(),/3801 train/);
+  assert.match(await page.locator('#ood-calibration-detail').innerText(),/952 validation/);
+  assert.match(await page.locator('[data-cohort="internal_test"] .audit-change').innerText(),/бұрын 6,31%/);
+  assert.match(await page.locator('[data-cohort="external_openi"] .audit-change').innerText(),/бұрын 0,00%/);
 }));

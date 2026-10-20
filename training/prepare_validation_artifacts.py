@@ -8,6 +8,7 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import numpy as np
 from scipy.optimize import minimize_scalar
@@ -118,14 +119,8 @@ def main():
         calibrations[name]={'method':'temperature','T':T}
         thresholds[name]=choose(y,expit(logits/T))
         diagnostics.append(dict(model=name,T=T,threshold=thresholds[name],validation_count=len(y),NLL_raw=nll(1),NLL_calibrated=nll(T)))
-    mean=vectors.mean(axis=0)
-    covariance=np.cov(vectors,rowvar=False)
-    scale=max(float(np.trace(covariance)/len(mean)),1e-8)
-    precision=np.linalg.solve(.9*covariance+.1*scale*np.eye(len(mean)),np.eye(len(mean)))
-    delta=vectors-mean
-    distance=np.sqrt(np.maximum(0,np.einsum('ij,jk,ik->i',delta,precision,delta)))
-    ood_threshold=float(np.quantile(distance,.95))
-    np.savez_compressed(model_dir/'ood_params.npz',mean=mean,precision=precision,threshold=ood_threshold,model_id=ids['MobileNetV2'])
+    # Fit OOD separately AFTER config serialization; never reuse validation to
+    # fit both its reference covariance and its distance cutoff.
     config=json.loads((original/'model_config.json').read_text(encoding='utf-8'))
     config.update(threshold=thresholds['MobileNetV2'],calibration=calibrations['MobileNetV2'],model_calibrations=calibrations)
     test_y=np.array([int(r['label']) for r in source_predictions]);metrics=[]
@@ -147,7 +142,9 @@ def main():
     write_rows(manifests/'test_predictions.csv',predictions)
     paired=calculate_mcnemar(manifests/'test_predictions.csv',model_dir)
     (model_dir/'mcnemar.json').write_text(json.dumps(paired,ensure_ascii=False,indent=2),encoding='utf-8')
-    report={'validation_calibration':diagnostics,'ood':{'validation_count':len(y),'feature_dimension':len(mean),'threshold':ood_threshold,'percentile':95,'non_xray_validated':False},'test_metrics':metrics,'mcnemar':paired,
+    subprocess.run([sys.executable,str(ROOT/'training/calibrate_ood.py'),'--publish'],check=True)
+    fitted_ood=json.loads((ROOT/'training/ood_stage5/fit_report.json').read_text(encoding='utf-8'))
+    report={'validation_calibration':diagnostics,'ood':{**fitted_ood,'validation_count':len(y),'feature_dimension':1280,'percentile':95,'non_xray_validated':False},'test_metrics':metrics,'mcnemar':paired,
             'provenance':'Original Oct13 models and SHA-verified validation. Archived raw test scores evaluated once after fitting.'}
     (ROOT/'training/calibration_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     (model_dir/'project_summary.txt').write_text('Validation temperature scaling және OOD есептелді. Оқу прототипі.\n'+json.dumps(report,ensure_ascii=False,indent=2)+'\n90% accuracy мақсаты: '+('жетті' if metrics[1]['accuracy']>=.9 else 'жетпеді')+'\n',encoding='utf-8')

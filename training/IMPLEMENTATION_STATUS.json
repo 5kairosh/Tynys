@@ -7,11 +7,14 @@
   },
   "ood": {
     "available": true,
-    "validation_count": 952,
-    "feature_dimension": 1280,
-    "threshold": 26.340902898169077,
-    "percentile": 95,
-    "non_xray_validated": false
+    "method": "train_validation_mahalanobis_v2",
+    "reference_train_count": 3801,
+    "calibration_validation_count": 952,
+    "threshold": 38.25761417386084,
+    "target_acceptance": 0.95,
+    "parameter_id": "2401a7df566f",
+    "non_xray_validated": false,
+    "formal_coverage_guarantee": false
   },
   "external_validation": {
     "completed": true,
@@ -188,7 +191,7 @@
   },
   "assessment_guard": {
     "implemented": true,
-    "policy": "ood_guard_v1",
+    "policy": "ood_guard_v2",
     "clinically_validated": false,
     "coverage_evaluated": true,
     "selective_risk_evaluated": true,
@@ -201,12 +204,13 @@
       "TXT",
       "PDF"
     ],
-    "remote_deployment_verified": true,
+    "remote_deployment_verified": false,
     "deployed_source_commit": "eed3b495a684a09a883235ed4d152b82bc3ed999",
     "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39125943690",
     "ci_status": "success",
     "evaluation_artifact": "site/model/selective_evaluation.json",
-    "error_reduction_demonstrated": false
+    "error_reduction_demonstrated": false,
+    "model_and_classifier_threshold_changed": false
   },
   "image_quality": {
     "implemented": true,
@@ -250,23 +254,19 @@
   "selective_evaluation": {
     "implemented": true,
     "measured": true,
-    "policy": "ood_guard_v1",
+    "policy": "ood_guard_v2",
     "cohorts": {
       "internal_test": {
-        "count": 618,
-        "accepted": 39,
-        "withheld": 579,
-        "coverage": 0.06310679611650485,
-        "accepted_errors": 6,
-        "accepted_accuracy": 0.8461538461538461
+        "accepted": 598,
+        "total": 618,
+        "coverage": 0.9676375404530745,
+        "accepted_errors": 66
       },
       "external_openi": {
-        "count": 200,
-        "accepted": 0,
-        "withheld": 200,
-        "coverage": 0.0,
-        "accepted_errors": 0,
-        "accepted_accuracy": null
+        "accepted": 32,
+        "total": 200,
+        "coverage": 0.16,
+        "accepted_errors": 20
       }
     },
     "thresholds_changed": false,
@@ -279,9 +279,35 @@
       "browser_passed": 21
     },
     "evidence": "training/selective_evidence/verification.json",
-    "remote_deployment_verified": true,
+    "remote_deployment_verified": false,
     "deployed_source_commit": "a4d1fe74662e32a7a89d2b2f2e5f76a0daa6d275",
     "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39414009947",
     "ci_status": "success"
+  },
+  "ood_stage5": {
+    "implemented": true,
+    "fit_completed": true,
+    "reference_count": 3801,
+    "calibration_count": 952,
+    "cohorts": {
+      "internal_test": {
+        "accepted": 598,
+        "total": 618,
+        "coverage": 0.9676375404530745,
+        "accepted_errors": 66
+      },
+      "external_openi": {
+        "accepted": 32,
+        "total": 200,
+        "coverage": 0.16,
+        "accepted_errors": 20
+      }
+    },
+    "test_or_external_used_to_fit": false,
+    "evaluation_cohorts_previously_inspected": true,
+    "pytest_passed": 135,
+    "browser_passed": 24,
+    "remote_verified": false,
+    "documentation": "training/OOD_STAGE5_KZ.txt"
   }
 }

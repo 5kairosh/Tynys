@@ -11,6 +11,15 @@ def main():
     model=ROOT/'site/model'
     config=json.loads((model/'model_config.json').read_text(encoding='utf-8'))
     calibration=json.loads((ROOT/'training/calibration_report.json').read_text(encoding='utf-8'))
+    ood_fit=json.loads((ROOT/'training/ood_stage5/fit_report.json').read_text(encoding='utf-8'))
+    assert ood_fit['parameter_sha256']==hashlib.sha256((model/'ood_params.npz').read_bytes()).hexdigest()
+    calibration['ood'].update(ood_fit)
+    selective=json.loads((model/'selective_evaluation.json').read_text(encoding='utf-8'))
+    assert selective['bindings']['ood_parameters']==ood_fit['parameter_sha256']
+    ood_summary=(f"ood_guard_v2: reference train {ood_fit['reference_count']}, cutoff validation {ood_fit['calibration_count']}; "
+        f"95% target, rank {ood_fit['quantile_rank']}, cutoff {ood_fit['threshold']:.8f}.\n"
+        + '\n'.join(f"{name}: accepted {v['accepted']['count']}/{v['baseline']['count']}; errors {v['accepted']['errors']}/{v['accepted']['count']}." for name,v in selective['cohorts'].items())
+        + '\nҚамту артуы accuracy артуы емес. Бұрын қаралған жиындар; клиникалық/формалды coverage кепілдігі жоқ. training/OOD_STAGE5_KZ.txt.')
     external=json.loads((model/'external_validation.json').read_text(encoding='utf-8'))
     paired=json.loads((model/'mcnemar.json').read_text(encoding='utf-8'))
     with (model/'test_metrics.csv').open() as stream:
@@ -137,13 +146,13 @@ Grad-CAM reconstructed_score raw sigmoid-пен тексеріледі, кали
 Калибрлеу клиникалық сенімділікті дәлелдемейді.
 
 OOD — ПАРАМЕТРЛЕРІ ДАЙЫН
-Validation: 952, белгілер: 1280, shrinkage covariance.
-Махаланобис қашықтығының 95-процентиль шегі: {calibration['ood']['threshold']:.8f}.
+Train reference және бөлек validation cutoff; 1280 белгі, shrinkage covariance.
+{ood_summary}
 site/model/ood_params.npz модель fingerprint-іне байланған.
-ood_guard_v1: OOD ауытқуы не тексеру қолжетімсіз болғанда сайт, тарих және TXT/PDF
+ood_guard_v2: OOD ауытқуы не тексеру қолжетімсіз болғанда сайт, тарих және TXT/PDF
 «Сенімді бағалау мүмкін емес» күйін көрсетеді. Баллдар техникалық нәтиже ретінде қалады.
-Ереженің test/OpenI қамтуы мен қателігі өлшенді: training/SELECTIVE_EVALUATION_KZ.txt.
-Клиникалық сапасы расталмаған; ішкі қамту 39/618, OpenI қамту 0/200.
+Ереженің қазіргі test/OpenI қайта тексеруі: training/OOD_STAGE5_KZ.txt.
+Клиникалық сапасы расталмаған. Қазіргі есепте барлық топтың бөлімі/алымы көрсетілген.
 Non-X-ray деректерінде арнайы валидация жасалған жоқ. Бұл рентген екенін растайтын детектор емес.
 
 СЫРТҚЫ OPENI, 200 СУРЕТ — ҚАЗІРГІ КОНФИГУРАЦИЯ
@@ -177,7 +186,8 @@ site/.venv/Scripts/python -m pytest site/tests training/tests -q
 docker build -t tynys .
 docker run --rm -p 127.0.0.1:7860:7860 tynys
 {docker_text}
-Интернетке жарияланған жоқ.
+Codespaces демонстрациясы: https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/
+Орта тоқтағанда сайт тоқтайды. Hugging Face-қа жарияланбаған.
 Hugging Face Docker Space үшін түбірдегі README.md және Dockerfile дайын.
 
 {multi_text}
@@ -230,13 +240,14 @@ MeSH белгілері клиникалық gold standard емес, проек�
 Сапа бойынша эталон белгілер жоқ. Клиникалық сапа және анатомиялық қиылу расталмайды.
 Толық сипаттама: training/QUALITY_CHECK_KZ.txt.
 
-Validation-ның 1280 белгісі, shrinkage covariance, 95-процентиль шегі {calibration['ood']['threshold']:.8f}.
+Train reference / бөлек validation cutoff, 1280 белгі.
+{ood_summary}
 Параметрлер дайын, non-X-ray сапасы бөлек бағаланған жоқ.
-ood_guard_v1: OOD ауытқуы не тексеру қолжетімсіз болғанда сайт, тарих және TXT/PDF
+ood_guard_v2: OOD ауытқуы не тексеру қолжетімсіз болғанда сайт, тарих және TXT/PDF
 «Сенімді бағалау мүмкін емес» күйін көрсетеді. Баллдар техникалық нәтиже ретінде қалады.
-Ереженің test/OpenI қамтуы мен қателігі өлшенді: training/SELECTIVE_EVALUATION_KZ.txt.
-Клиникалық сапасы расталмаған; ішкі қамту 39/618, OpenI қамту 0/200.
-Модель мен шектер өзгермеген. Бұрынғы метрикалар бастапқы екі санатты болжауға
+Ереженің қазіргі test/OpenI қайта тексеруі: training/OOD_STAGE5_KZ.txt.
+Клиникалық сапасы расталмаған. Test/OpenI бұрын қаралған.
+Модель мен классификация шегі өзгермеген. Бұрынғы метрикалар бастапқы екі санатты болжауға
 қатысты. Жаңа ереженің жеке есебі site/model/selective_evaluation.json ішінде.
 Grad-CAM 7×7 картадан жуық аймақты көрсетеді, зақым шекарасын анықтамайды.
 Калибрлеу клиникалық ықтималдықты дәлелдемейді. NORMAL барлық ауруды жоққа шығармайды.
@@ -270,8 +281,8 @@ OpenI: CC BY-NC-ND 4.0. Суреттер архивке/репозиторийг
 
 Educational binary NORMAL/PNEUMONIA classifier. Calibration is fitted on all 952 SHA-verified
 validation images. T(MobileNetV2)={config['calibration']['T']:.8f}, threshold={config['threshold']:.3f}.
-Current internal and external results are listed above. OOD parameters are fitted on validation
-features but non-X-ray detection performance is unvalidated. No clinical approval is claimed.
+Current internal and external results are listed above. OOD reference geometry is fitted on train; its cutoff is calibrated on separate validation.
+Non-X-ray detection performance is unvalidated. No clinical approval is claimed.
 '''
     (ROOT/'MODEL_CARD.md').write_text(card,encoding='utf-8')
     status=json.loads((ROOT/'training/IMPLEMENTATION_STATUS.json').read_text(encoding='utf-8'))

@@ -88,7 +88,8 @@ class Engine:
                 self.tf, self.model, self.config, self.metrics = tf, model, config, metrics
                 self.fingerprint = hashlib.sha256((MODEL_DIR / "pneumonia_mobilenetv2.keras").read_bytes()).hexdigest()[:12]
                 self.error = None
-                self.ood.load(MODEL_DIR/"ood_params.npz", self.fingerprint)
+                self.ood.load(MODEL_DIR/"ood_params.npz", self.fingerprint,
+                              hashlib.sha256((MODEL_DIR/'model_config.json').read_bytes()).hexdigest())
                 try:
                     cnn_path = MODEL_DIR/'cnn_best.keras'
                     cnn_rows = [r for r in metrics if r['model'] == 'CNN']

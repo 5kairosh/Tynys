@@ -18,9 +18,38 @@
     }
   ],
   "ood": {
+    "schema": 2,
+    "method": "train_validation_mahalanobis_v2",
+    "reference_split": "train",
+    "reference_count": 3801,
+    "calibration_split": "validation",
+    "calibration_count": 952,
+    "target_acceptance": 0.95,
+    "quantile_rank": 906,
+    "model_sha256": "ea584b998a454d973acbbb676fa5e951fce1a79d6d615f2d6b07b40d57760172",
+    "config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
+    "protocol_sha256": "a5165f6c9c180aa9119e5da2d66ba5c923fb3e842fe4046eb5949fd00be7ba88",
+    "train_manifest_sha256": "7e66edd802538e3ee1f8393d5f6e733a6efcb1b5b9de87c1387fb1ff180efd7e",
+    "validation_manifest_sha256": "89fabc56d594e82ee26c6eaf3bc4b73e7a22d14df621a2c90cbe3abfdf7268d3",
+    "covariance_shrinkage": 0.1,
+    "test_or_external_used_to_fit": false,
+    "clinical_or_formal_coverage_guarantee": false,
+    "threshold": 38.25761417386084,
+    "parameter_sha256": "2401a7df566ff246360d94c745f60d551887f246fc276dadc051088bbd621c2c",
+    "calibration_accepted": 906,
+    "calibration_flagged": 46,
+    "classifier_config_sha256_unchanged": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
+    "validation_distance_percentiles": {
+      "0": 18.767898408702866,
+      "0.5": 27.80669804086449,
+      "0.9": 35.48995167283818,
+      "0.95": 38.204685534528714,
+      "0.99": 43.04010466771687,
+      "1": 51.21738373670628
+    },
+    "published": true,
     "validation_count": 952,
     "feature_dimension": 1280,
-    "threshold": 26.340902898169077,
     "percentile": 95,
     "non_xray_validated": false
   },
@@ -72,5 +101,13 @@
     },
     "config_sha256": "5e0683ca004efbcb5976468f4ad31cf1935acb5736a722f4385b4266b2bec797"
   },
-  "provenance": "Original Oct13 models and SHA-verified validation. Archived raw test scores evaluated once after fitting."
+  "provenance": "Original Oct13 models and SHA-verified validation. Archived raw test scores evaluated once after fitting.",
+  "ood_stage4_historical": {
+    "validation_count": 952,
+    "feature_dimension": 1280,
+    "threshold": 26.340902898169077,
+    "percentile": 95,
+    "non_xray_validated": false
+  },
+  "ood_provenance": "Stage 5: train-only reference geometry and separate validation cutoff; classifier calibration above unchanged."
 }

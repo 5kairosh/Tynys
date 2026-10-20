@@ -6,7 +6,7 @@ classes/scores available for inspection, but withhold a headline classification
 when the distribution check flags the input or cannot be completed.
 """
 
-POLICY = 'ood_guard_v1'
+POLICY = 'ood_guard_v2'
 REVIEW_TITLE = 'Сенімді бағалау мүмкін емес'
 OOD_SHIFT = ('Сурет модель тексерілген деректерден ерекшеленеді (OOD). '
              'Рентген суреттерінде де осындай ескерту шығуы мүмкін. '
@@ -25,7 +25,7 @@ def assess_input(check):
         'status': 'classified' if allowed else 'review_required',
         'reason': 'within_reference' if allowed else 'ood_shift' if complete else 'ood_unavailable',
         'title': 'Модель классификациясы' if allowed else REVIEW_TITLE,
-        'message': ('OOD бойынша validation үлестірімінен айқын ауытқу табылмады. '
+        'message': ('OOD бойынша train үлестірімінен айқын ауытқу табылмады; шек бөлек validation-да бапталған. '
                     'Бұл рентгеннің жарамдылығын немесе болжамның дұрыстығын растамайды.')
                    if allowed else OOD_SHIFT if complete else OOD_UNAVAILABLE,
         'policy': POLICY,

@@ -38,7 +38,7 @@ MeSH белгілері клиникалық gold standard емес, проек�
 
 ## OOD және түсіндірме
 
-Validation-ның 1280 белгісі, shrinkage covariance, 95-процентиль шегі 26.34090290.
+Train 3801-ден reference covariance; бөлек validation 952-ден cutoff 38.25761417; 1280 белгі.
 Параметрлер дайын, non-X-ray сапасы бөлек бағаланған жоқ. OOD ауытқуы болса не тексерілмесе, сайт санат бойынша қорытынды бермейді.
 Grad-CAM 7×7 картадан жуық аймақты көрсетеді, зақым шекарасын анықтамайды.
 Калибрлеу клиникалық ықтималдықты дәлелдемейді. NORMAL барлық ауруды жоққа шығармайды.
@@ -148,8 +148,8 @@ External selective accuracy is undefined. This audit does not demonstrate error 
 
 Educational binary NORMAL/PNEUMONIA classifier. Calibration is fitted on all 952 SHA-verified
 validation images. T(MobileNetV2)=0.97995943, threshold=0.745.
-Current internal and external results are listed above. OOD parameters are fitted on validation
-features but non-X-ray detection performance is unvalidated. No clinical approval is claimed.
+Current internal and external results are listed above. OOD reference geometry is fitted on train; its cutoff is calibrated on separate validation.
+Non-X-ray detection performance is unvalidated. No clinical approval is claimed.
 
 ## 4-КЕЗЕҢ — САҚТЫҚ ЕРЕЖЕСІНІҢ НАҚТЫ ҚАМТУЫ МЕН ҚАТЕЛІГІ
 Сайттың «Зерттеу нәтижесі» бөліміне ішкі test 618 / сыртқы OpenI 200 жеке
@@ -157,3 +157,14 @@ features but non-X-ray detection performance is unvalidated. No clinical approva
 қатесі 6/39 (15,38%); OpenI 0/200, сондықтан таңдамалы accuracy есептелмейді.
 Қателікті азайту расталған жоқ. Модель мен шектер өзгермеді.
 Әдіс, шектеу, қайта орындау: training/SELECTIVE_EVALUATION_KZ.txt.
+
+## 5-КЕЗЕҢ — ҚАЗІРГІ OOD ЕРЕЖЕСІ (2026-10-20)
+OOD geometry: train 3801; cutoff: бөлек validation 952, алдын ала 95% target.
+OOD шегі 38,25761417386084. Классификация шегі 0,745, модель/T өзгермеді.
+Ішкі test қамтуы 39/618 → 598/618 (96,76%), тоқтатылғаны 579 → 20.
+Қабылданған топ accuracy 88,96%; барлық test accuracy 89,16% өзгерген жоқ.
+OpenI қамтуы 0 → 32/200; сол 32 суреттің 20-сы қате. OOD-тан өту дұрыс
+классификацияға кепіл емес. Қалған 168 сыртқы сурет тоқтатылды.
+Test/OpenI бұрын қаралған; жаңа тәуелсіз клиникалық тексеру деп саналмайды.
+Сипаттама/қайта орындау: training/OOD_STAGE5_KZ.txt.
+Сайт ескі тарихқа «OOD ережесі жаңарған» ескертуін береді; ескі санат өзгертілмейді.

@@ -54,7 +54,7 @@ function clearSelection(){activeHistoryId=null;selected=[];if(previewUrl)URL.rev
 $('remove-image').addEventListener('click',()=>{if(busy||historyWorking)return;clearSelection();renderHistory();updateButton();});
 
 function assessmentFor(r){
-  if(r.assessment?.policy==='ood_guard_v1'&&['classified','review_required'].includes(r.assessment.status))return r.assessment;
+  if(['ood_guard_v1','ood_guard_v2'].includes(r.assessment?.policy)&&['classified','review_required'].includes(r.assessment.status))return r.assessment;
   return {status:'review_required',title:'Сенімді бағалау мүмкін емес',message:'Бағалау күйі алынбады. Санат бойынша қорытынды берілмейді. Сайтты жаңартып, қайта талдаңыз.',notice:'Төмендегі модель баллдары тек техникалық нәтиже.'};
 }
 const needsReview=r=>assessmentFor(r).status==='review_required';
@@ -83,7 +83,7 @@ function showAttention(r){
   const check=r.xray_check;
   $('xray-warning').hidden=false;
   $('xray-warning').classList.toggle('flagged',needsReview(r));
-  $('xray-warning').textContent=check?.available?(check.is_xray===false?'Сурет модель тексерілген деректерден ерекшеленеді (OOD). Рентген суреттерінде де осындай ескерту шығуы мүмкін; болжамды сақтықпен бағалаңыз.':'OOD: validation үлестірімінен айқын ауытқу табылмады. Бұл рентген екенін дәлелдемейді.'):(check?.message||'OOD тексеруі қолжетімсіз.');
+  $('xray-warning').textContent=check?.available?((check.is_xray===false?'Сурет белгілері reference үлестірімінен ерекшеленеді (OOD). Басқа дереккөзден алынған нақты рентген де осылай белгіленуі мүмкін.':'OOD: reference үлестірімінен айқын ауытқу табылмады. Бұл рентген екенін немесе болжамның дұрыстығын растамайды.')+(Number.isFinite(check.distance)&&Number.isFinite(check.threshold)?` Қашықтық: ${decimal(check.distance,2)}; OOD шегі: ${decimal(check.threshold,2)}.`:'')):(check?.message||'OOD тексеруі қолжетімсіз.');
   showComparison(r);
   const explanation=r.explanation;
   $('attention-tools').hidden=!explanation?.available;
@@ -138,7 +138,7 @@ $('download-result').addEventListener('click',()=>{
   const lines=['TYNYS — РЕНТГЕНДІ КЛАССИФИКАЦИЯЛАУ',new Date().toLocaleString('kk-KZ',{timeZone:'Asia/Qyzylorda'}),''];
   for(const r of results){
     const explanation=explainResult(r);
-    lines.push(`Файл: ${r.filename}`,`Нәтиже: ${resultLabel(r)}`,`${needsReview(r)?'Техникалық модель санаты (қорытынды емес)':'Модель санаты'}: ${r.model_class}`,`Пневмония санатының баллы: ${r.pneumonia_score}`,`Шешім шегі: ${r.threshold}`,`Модель ID: ${r.model_id}`,`Калибрлеу: ${r.calibration?'T='+r.calibration.T:'қолданылмаған'}`,assessmentFor(r).message,'',
+    lines.push(`Файл: ${r.filename}`,`Нәтиже: ${resultLabel(r)}`,`${needsReview(r)?'Техникалық модель санаты (қорытынды емес)':'Модель санаты'}: ${r.model_class}`,`Пневмония санатының баллы: ${r.pneumonia_score}`,`Шешім шегі: ${r.threshold}`,`Модель ID: ${r.model_id}`,`Калибрлеу: ${r.calibration?'T='+r.calibration.T:'қолданылмаған'}`,`OOD ережесі: ${r.assessment?.policy||'белгісіз'}`,`OOD параметр ID: ${r.xray_check?.parameter_id||'сақталмаған'}`,`OOD қашықтығы: ${r.xray_check?.distance??'есептелмеді'}; OOD шегі: ${r.xray_check?.threshold??'жоқ'}`,assessmentFor(r).message,'',
       explanation.title,explanation.reason,'',
       'Модель баллды қалай есептейді?',explanation.method,'',
       'Бұл нәтиже нені білдіреді?',explanation.meaning,'',
@@ -273,7 +273,9 @@ function openHistoryEntry(id){
   results=[entry.result];activeHistoryId=id;
   showResult(entry.result);renderHistory();updateButton();
   const changed=status?.model_id&&status.model_id!==entry.result.model_id;
-  $('history-feedback').textContent=`${entry.file.name}: бұрынғы нәтиже ашылды. Қайта есептеу жасалған жоқ.`+(changed?' Сервердегі модель өзгерген: бұл — бұрынғы модель нәтижесі.':'');
+  const policyChanged=status?.assessment_policy?.name&&status.assessment_policy.name!==entry.result.assessment?.policy;
+  const parametersChanged=status?.xray_check?.parameter_id&&status.xray_check.parameter_id!==entry.result.xray_check?.parameter_id;
+  $('history-feedback').textContent=`${entry.file.name}: бұрынғы нәтиже ашылды. Қайта есептеу жасалған жоқ.`+(changed?' Сервердегі модель өзгерген: бұл — бұрынғы модель нәтижесі.':'')+(policyChanged||parametersChanged?' OOD ережесі жаңарған: сақталған нәтиже бұрынғы ережеге қатысты. Қазіргі ережемен тексеру үшін «Суретті талдау» басыңыз.':'');
   $('analysis-title').scrollIntoView({behavior:'smooth',block:'start'});
 }
 async function removeHistoryEntry(id){

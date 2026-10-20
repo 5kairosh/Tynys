@@ -10,6 +10,8 @@ function renderSelectiveEvaluation(report){
   const state=document.getElementById('selective-status');
   const download=document.getElementById('selective-download');
   const finding=document.getElementById('selective-finding');
+  const calibration=document.getElementById('ood-calibration-detail');
+  calibration.hidden=true;
   cards.replaceChildren();selectiveReport=null;download.disabled=true;finding.hidden=true;
   if(!report?.available){state.textContent=report?.message||'Қамту/қателік есебі қолжетімсіз. Суретті талдау бөлек жұмыс істейді.';return;}
   const pct=value=>value===null?'Есептелмейді':(value*100).toFixed(2).replace('.',',')+'%';
@@ -21,6 +23,8 @@ function renderSelectiveEvaluation(report){
       const value=report.cohorts[key],all=value.baseline,accepted=value.accepted,withheld=value.withheld;
       const card=element('article','','audit-card');card.dataset.cohort=key;
       card.append(element('h4',title),element('p',`${all.count} сурет · NORMAL ${all.normal} · PNEUMONIA ${all.pneumonia}`,'audit-count'));
+      const before=report.comparison_to_stage4?.cohorts?.[key];
+      if(before)card.append(element('p',`Қамту: бұрын ${pct(before.coverage)} (${before.accepted.count}/${all.count}) → қазір ${pct(value.coverage)}.`,'audit-change'));
       const headline=element('div','','audit-coverage');headline.append(element('strong',pct(value.coverage)),element('span',`Қамту: ${accepted.count} / ${all.count} суретке қорытынды берілді`));card.append(headline);
       const bar=element('div','','audit-bar');bar.setAttribute('role','img');bar.setAttribute('aria-label',`Қорытынды берілді: ${accepted.count}; берілмеді: ${withheld.count}`);
       const filled=element('span','');filled.style.width=(value.coverage*100)+'%';bar.append(filled);card.append(bar);
@@ -46,9 +50,14 @@ function renderSelectiveEvaluation(report){
       table.append(body);details.append(table,element('p',`Тоқтатылған ${withheld.count} суретке модельдің техникалық санатын қолданғанда ${withheld.errors} қате болар еді. Бұл суреттерге сайт қорытынды бермейді.`),element('p',description));card.append(details);cards.append(card);
     }
     state.textContent=`Бекітілген ереже: ${report.policy}. Жіктеу шегі ${Number(report.classification_threshold).toFixed(3).replace('.',',')}; шектер осы тесттерде таңдалған жоқ.`;
+    if(report.ood_calibration){
+      const c=report.ood_calibration;
+      calibration.textContent=`OOD үлгісі: ${c.reference_count} train суреті. Шек: бөлек ${c.calibration_count} validation суреті, алдын ала бекітілген ${pct(c.target_acceptance)} қабылдау мақсаты. Бұл мақсат медициналық дәлдік немесе өзге дереккөздегі қамту кепілдігі емес. Test/OpenI бұрын да қаралған; бұл — сол жиындарды қайта тексеру.`;
+      calibration.hidden=false;
+    }
     const internal=report.cohorts.internal_test,external=report.cohorts.external_openi;
     if(internal.coverage<.1||external.accepted.count===0||internal.accepted.error_rate>=internal.baseline.error_rate){
-      finding.textContent=`Шектеу анықталды: ішкі тестте ${internal.accepted.count} / ${internal.baseline.count}, сыртқы OpenI-де ${external.accepted.count} / ${external.baseline.count} суретке ғана қорытынды берілді. Осы аудит қателіктің азайғанын растамайды. Ережені жақсарту үшін бөлек development деректері керек; test және OpenI шекті таңдауға қолданылмайды.`;
+      finding.textContent=`Шектеу анықталды: ішкі тестте ${internal.accepted.count} / ${internal.baseline.count}, сыртқы OpenI-де ${external.accepted.count} / ${external.baseline.count} суретке қорытынды берілді. Қамтудың артуы классификация дәлдігінің артуы емес. Қабылданған топ қатесін бөлек қараңыз; сыртқы деректердегі клиникалық сенімділік расталмаған.`;
       finding.hidden=false;
     }
     selectiveReport=report;download.disabled=false;

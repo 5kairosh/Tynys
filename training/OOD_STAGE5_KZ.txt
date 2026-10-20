@@ -1,0 +1,86 @@
+TYNYS — 5-КЕЗЕҢ: OOD-ты TRAIN/VALIDATION АРҚЫЛЫ ҚАЙТА БАПТАУ
+Күні: 2026-10-20. Қазіргі саясат: ood_guard_v2.
+
+ТҮЗЕТІЛГЕН СЕБЕП
+Бұрын mean/covariance және шек бір validation жиынында есептелді.
+1280 өлшемді белгілер және 952 fitting суреті кезінде сол fitting жиынындағы
+қашықтыққа қарап қойылған шек басқа суреттерді жаппай тоқтатты.
+Түзету: геометрия тек train 3801 суретінде, шек бөлек validation 952 суретінде.
+Shrinkage коэффициенті бұрынғыдай 0,1. Hyperparameter search немесе test/OpenI-ге
+қарап шекті көтеру жасалған жоқ. Алдын ала бекітілген протокол: training/ood_stage5/protocol.json.
+Протокол da93ca1 commit-інде жаңа тексеру нәтижелерін есептемей тұрып сақталды.
+
+МАТЕМАТИКАЛЫҚ ЕРЕЖЕ
+f(x) — MobileNetV2 соңғы spatial feature картасының 1280 GAP белгісі.
+mu = mean(f(train)); C = 0.9*sample_covariance(train, ddof=1) + 0.1*trace(cov)/1280*I.
+s(x) = sqrt((f(x)-mu)^T * inverse(C) * (f(x)-mu)).
+Validation қашықтықтары өсу ретімен сұрыпталады.
+k = ceil((952+1)*0.95) = 906; cutoff = s_validation[k].
+Жаңа OOD cutoff: 38.25761417386084. Бастапқы cutoff: 26,340902898169077.
+Validation қабылданғаны: 906/952 (95,17%); тоқтатылғаны: 46/952.
+Бұл calibration жиынының сипаттамасы; тәуелсіз нәтиже немесе 95% клиникалық дәлдік емес.
+Within-reference: s(x)<=cutoff. Олай болмаса немесе тексеру сәтсіз болса,
+санат бойынша қорытынды берілмейді; техникалық балл қолжетімді.
+
+САҚТАЛҒАН НӘРСЕЛЕР
+CNN/MobileNetV2 .keras байттары өзгермеген. Классификация шегі 0,745 және
+T(MobileNetV2)=0,9799594303292329 өзгермеді. RGB → float32 → resize_with_pad 224×224
+және модельдің ішкі preprocessing-і сақталды. Екі класс, Grad-CAM, ensemble,
+сапа эвристикасы және файл валидациясы сақталды.
+model_config.json SHA256: 51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174.
+OOD NPZ SHA256: 2401a7df566ff246360d94c745f60d551887f246fc276dadc051088bbd621c2c.
+Барлық 4753 train+validation суреті байт SHA-мен расталды; surrogate топ/байт қиылысы жоқ.
+
+ҚАЙТА ТЕКСЕРУ НӘТИЖЕЛЕРІ (БҰРЫН ҚАРАЛҒАН ЖИЫНДАР)
+Ішкі test 618: қорытынды 39/618 (6,31%) → 598/618 (96,76%).
+Тоқтатылғаны 579 → 20. Қазіргі accepted қатесі 66/598 (11,04%), accuracy 88,96%.
+Accepted TN177 / FP52 / FN14 / TP355. Қорытынды берілмеген топта 20 сурет (19 дұрыс,
+1 қате техникалық бинарлы болжам). Мұны диагностикалық қауіпсіздік дәлелі деп қарастыруға болмайды.
+Бастапқы барлық test accuracy 89,16%, 67/618 қате — өзгерген жоқ.
+
+Сыртқы OpenI 200: қорытынды 0/200 → 32/200 (16%). Қалған 168 сурет тоқтатылды.
+Accepted TN9 / FP20 / FN0 / TP3: accuracy 37,5%, қате 20/32 (62,5%).
+Қамту артты, бірақ қателікті сүзу/сыртқы диагностикалық сапа жақсарды деуге болмайды.
+OpenI барлық суретіне мәжбүрлі бинарлы болжам accuracy 55% — өзгермеген.
+Бұл сыртқы дереккөзде classifier әлі нашар жалпылайды. Оны осы шекті көтерумен
+жасыруға болмайды; бөлек деректер мен жаңа тәуелсіз бағалау қажет.
+
+ШЕКТЕУЛЕР
+Test/OpenI 4-кезеңде қаралған: бұл қайта тексеру, жаңа confirmatory holdout емес.
+Модельдің fine-tuning таңдауы үшін де validation пайдаланылған, surrogate топтар
+ресми longitudinal пациент ID емес. Формалды conformal coverage кепілдігі жарияланбайды.
+OpenI MeSH report-level әлсіз белгілер, gold standard емес; іріктеме шағын.
+OOD X-ray/non-X-ray танитын модель емес: шынайы рентген басқа үлестірімге жатуы мүмкін.
+Алты синтетикалық бақылау (қара/ақ фон, RGB noise, қызыл, gradient, checkerboard)
+барлығы тоқтатылды; бұл non-X-ray clinical validation емес және параметр таңдауға қолданылмады.
+NORMAL басқа ауруларды жоққа шығармайды. Жоба клиникалық пайдалануға мақұлданбаған.
+
+САЙТТА НЕ ӨЗГЕРДІ
+/api/status.xray_check: method, parameter_id, reference/calibration count, target, threshold.
+/api/predict.xray_check: нақты distance/cutoff, within_reference және compatibility is_xray.
+is_xray атауы рентген түпнұсқалығын дәлелдемейді; жаңа өріс — within_reference.
+Ескі NPZ schema (metadata жоқ), басқа model/config, NaN, қисық precision жүктелмейді.
+Сайтта бұрын/қазір қамтуы, бөлек calibration рөлдері мен шектеулер ашық көрсетіледі.
+TXT-де саясат/параметр ID және OOD distance/cutoff жазылады.
+Ескі тарих қайта есептелмейді: бұрынғы ood_guard_v1 нәтижесі сол күйі қалады,
+сервердегі OOD өзгерсе ескерту шығады. Қазіргі нәтижені алу үшін қайта талдау керек.
+Colab OOD ұяшығы/экспорт және prepare_validation_artifacts.py жаңа train/validation
+әдісіне ауыстырылды. Colab-та қайта үйрету орындалған жоқ; source синтаксисі тексерілді.
+
+ҚАЙТА ОРЫНДАУ
+site/.venv/Scripts/python training/download_validation.py --split train --workers 8
+site/.venv/Scripts/python training/download_validation.py --split validation
+site/.venv/Scripts/python training/calibrate_ood.py --publish
+site/.venv/Scripts/python training/evaluate_selective.py
+site/.venv/Scripts/python -m pytest site/tests training/tests -q
+Соңғы evaluate_selective.py үшін бұрын бекітілген test618/OpenI200 кэштері керек.
+Қайта үйрету қажет емес. Сурет/feature кэші Git/ZIP-ке кірмейді; тек сандық есептер кіреді.
+training/ood_stage5/baseline_stage4 — тарихи салыстыру. Қазіргі толық есеп:
+site/model/selective_evaluation.json; fitting дәлелі: training/ood_stage5/fit_report.json.
+Жергілікті тест: 135 pytest, 24 Chromium/IndexedDB, нақты API-мен 3 parity case.
+
+ӘДІСТЕМЕЛІК ДЕРЕККӨЗДЕР
+Shrinkage: https://scikit-learn.org/stable/modules/generated/sklearn.covariance.shrunk_covariance.html
+Order-statistic calibration түсіндірмесі: https://arxiv.org/abs/2107.07511
+Осы жобада validation reuse/patient grouping шектеуіне байланысты формалды
+қамту кепілдігі қолданылмайды; жоғарыдағы формула тек cutoff таңдау тәртібін бекітеді.
