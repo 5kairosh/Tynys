@@ -114,10 +114,11 @@
     "configured": true,
     "remote_run": true,
     "repo_url": "https://github.com/5kairosh/Tynys",
-    "run_id": 38745485393,
-    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/38745485393",
+    "run_id": 39414009947,
+    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39414009947",
     "status": "success",
-    "checked_at": "2026-10-15T13:48:59.263575+00:00"
+    "checked_at": "2026-10-20T11:25:26.231931+00:00",
+    "source_commit": "a4d1fe74662e32a7a89d2b2f2e5f76a0daa6d275"
   },
   "tests": {
     "local_passed": 56
@@ -189,8 +190,8 @@
     "implemented": true,
     "policy": "ood_guard_v1",
     "clinically_validated": false,
-    "coverage_evaluated": false,
-    "selective_risk_evaluated": false,
+    "coverage_evaluated": true,
+    "selective_risk_evaluated": true,
     "model_and_thresholds_changed": false,
     "local_tests": 65,
     "tested_surfaces": [
@@ -203,7 +204,9 @@
     "remote_deployment_verified": true,
     "deployed_source_commit": "eed3b495a684a09a883235ed4d152b82bc3ed999",
     "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39125943690",
-    "ci_status": "success"
+    "ci_status": "success",
+    "evaluation_artifact": "site/model/selective_evaluation.json",
+    "error_reduction_demonstrated": false
   },
   "image_quality": {
     "implemented": true,
@@ -275,6 +278,10 @@
       "pytest_passed": 109,
       "browser_passed": 21
     },
-    "evidence": "training/selective_evidence/verification.json"
+    "evidence": "training/selective_evidence/verification.json",
+    "remote_deployment_verified": true,
+    "deployed_source_commit": "a4d1fe74662e32a7a89d2b2f2e5f76a0daa6d275",
+    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39414009947",
+    "ci_status": "success"
   }
 }

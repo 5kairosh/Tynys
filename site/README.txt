@@ -118,3 +118,17 @@ Training кэші мен OpenI суреттері таратылатын арх�
 қатесі 6/39 (15,38%); OpenI 0/200, сондықтан таңдамалы accuracy есептелмейді.
 Қателікті азайту расталған жоқ. Модель мен шектер өзгермеді.
 Әдіс, шектеу, қайта орындау: training/SELECTIVE_EVALUATION_KZ.txt.
+
+2026-10-20 — 4-кезеңді онлайн тексеру
+Сайт: https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/
+GitHub CI сәтті: https://github.com/5kairosh/Tynys/actions/runs/39414009947
+Тексерілген код: a4d1fe74662e32a7a89d2b2f2e5f76a0daa6d275
+Жергілікті 109 pytest және 21 Chromium/IndexedDB тесті өтті; CI-де сол командалар
+екі бөлек job ретінде сәтті аяқталды. Дәлел: training/selective_evidence/ci.json.
+Ашық сайтта PNG және CR DICOM HTTP 200; CT DICOM және жалған JPG HTTP 400;
+екі файл PDF есебі HTTP 200, 2 бет. JSON жүктеу /api/status есебімен дәл сәйкес.
+Браузерде жаңа бөлім және нақты модель талдауы тексерілді; console error жоқ.
+Codespace-та git жоқ: commit-тен 15 файл SHA-мен тексеріліп көшірілді, Git HEAD
+жаңартылды деп есептелмейді. Қолданыстағы уақытша Codespaces шектеулері сақталады.
+Презентацияның тарихи нұсқасы өзгертілмеді; 4-кезең нәтижелері осы құжат пен
+training/SELECTIVE_EVALUATION_KZ.txt ішінде. Docker image бұл кезеңде қайта жиналған жоқ.

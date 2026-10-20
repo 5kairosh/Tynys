@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T11:17:26.620482+00:00",
+  "checked_at": "2026-10-20T11:26:52.135606+00:00",
   "stage": 4,
   "policy": "ood_guard_v1",
   "scope": "Fixed-policy descriptive held-out audit; no clinical reliability/error reduction claim",
@@ -24,8 +24,28 @@
     "parity_evidence": "training/selective_evidence/live_parity.json",
     "screenshot": "training/selective_evidence/ui_local.jpg"
   },
-  "remote_verified": false,
+  "remote_verified": true,
   "model_weights_changed": false,
   "config_bytes_changed": false,
-  "thresholds_changed": false
+  "thresholds_changed": false,
+  "deployment": {
+    "source_commit": "a4d1fe74662e32a7a89d2b2f2e5f76a0daa6d275",
+    "method": "Exact SHA-verified immutable GitHub files, 15 files; remote Git HEAD is not advanced",
+    "public_url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/",
+    "api_evidence": "training/selective_evidence/public_api.json",
+    "port_visibility": "Public restored after Codespace resume",
+    "browser_synthetic_png": true,
+    "test_record_removed": true,
+    "preexisting_history_consent_preserved": true,
+    "browser_console_errors": 0,
+    "screenshot": "training/selective_evidence/ui_online.jpg",
+    "new_server_tracebacks": 0
+  },
+  "ci": {
+    "run_id": 39414009947,
+    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39414009947",
+    "source_commit": "a4d1fe74662e32a7a89d2b2f2e5f76a0daa6d275",
+    "status": "success",
+    "checked_at": "2026-10-20T11:25:26.231931+00:00"
+  }
 }

@@ -1,0 +1,33 @@
+{
+  "public_url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/",
+  "status_ready": true,
+  "audit_available": true,
+  "downloaded_json_matches_status": true,
+  "cases": [
+    {
+      "name": "synthetic.png",
+      "http_status": 200,
+      "assessment": "review_required",
+      "comparison_available": true,
+      "gradcam_available": true
+    },
+    {
+      "name": "synthetic-cr.dcm",
+      "http_status": 200,
+      "assessment": "review_required",
+      "comparison_available": true,
+      "gradcam_available": true
+    },
+    {
+      "name": "ct.dcm",
+      "http_status": 400
+    },
+    {
+      "name": "text.jpg",
+      "http_status": 400
+    }
+  ],
+  "report_http": 200,
+  "report_pages": 2,
+  "medical_uploads_used": false
+}

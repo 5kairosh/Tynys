@@ -76,3 +76,7 @@ CI қашықта өтті (ubuntu-latest, Python 3.11, 56 тест).
 қатесі 6/39 (15,38%); OpenI 0/200, сондықтан таңдамалы accuracy есептелмейді.
 Қателікті азайту расталған жоқ. Модель мен шектер өзгермеді.
 Әдіс, шектеу, қайта орындау: training/SELECTIVE_EVALUATION_KZ.txt.
+
+4-кезеңнің тексерілген коды: `a4d1fe74662e32a7a89d2b2f2e5f76a0daa6d275`. [CI сәтті](https://github.com/5kairosh/Tynys/actions/runs/39414009947) (екі job). Жергілікті: 109 pytest + 21 Chromium/IndexedDB тесті.
+
+Ашық сайтта PNG/CR DICOM талдауы, екі беттік PDF және дәл сәйкес JSON есеп тексерілді. Дәлелдер: `training/selective_evidence/`. Docker осы кезеңде қайта жиналмады; презентация тарихи нұсқасында қалды.
