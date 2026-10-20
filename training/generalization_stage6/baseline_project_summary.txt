@@ -1,0 +1,132 @@
+Tynys — калибрленген ағымдағы binary нәтижелер
+{
+  "calibration": {
+    "method": "temperature",
+    "T": 0.9799594303292329
+  },
+  "model_calibrations": {
+    "MobileNetV2": {
+      "method": "temperature",
+      "T": 0.9799594303292329
+    },
+    "CNN": {
+      "method": "temperature",
+      "T": 0.6820277027003551
+    }
+  },
+  "ensemble": {
+    "weights": {
+      "CNN": 0.001005948939264576,
+      "MobileNetV2": 0.9989940510607355
+    },
+    "threshold": 0.745,
+    "validation_count": 952,
+    "selection": "validation NLL, weights bounded [0.001,0.999]; recall>=0.90 then specificity then F1",
+    "model_ids": {
+      "CNN": "19f707027db4",
+      "MobileNetV2": "ea584b998a45"
+    }
+  },
+  "internal_test": [
+    {
+      "model": "CNN",
+      "threshold": "0.47500000000000003",
+      "accuracy": "0.7152103559870551",
+      "precision": "0.7080867850098619",
+      "recall": "0.9276485788113695",
+      "specificity": "0.3593073593073593",
+      "f1": "0.8031319910514542",
+      "roc_auc": "0.8211349374140072",
+      "average_precision": "0.8929576990291581",
+      "TN": "83",
+      "FP": "148",
+      "FN": "28",
+      "TP": "359"
+    },
+    {
+      "model": "MobileNetV2",
+      "threshold": "0.745",
+      "accuracy": "0.8915857605177994",
+      "precision": "0.8773584905660378",
+      "recall": "0.9612403100775194",
+      "specificity": "0.7748917748917749",
+      "f1": "0.9173859432799013",
+      "roc_auc": "0.9580746557490744",
+      "average_precision": "0.9682350864220023",
+      "TN": "179",
+      "FP": "52",
+      "FN": "15",
+      "TP": "372"
+    },
+    {
+      "model": "Ensemble",
+      "threshold": "0.745",
+      "accuracy": "0.8915857605177994",
+      "precision": "0.8773584905660378",
+      "recall": "0.9612403100775194",
+      "specificity": "0.7748917748917749",
+      "f1": "0.9173859432799013",
+      "roc_auc": "0.9582760047876326",
+      "average_precision": "0.9695154176089966",
+      "TN": "179",
+      "FP": "52",
+      "FN": "15",
+      "TP": "372"
+    }
+  ],
+  "external_200": [
+    {
+      "model": "CNN",
+      "threshold": 0.47500000000000003,
+      "accuracy": 0.215,
+      "precision": 0.20304568527918782,
+      "recall": 1.0,
+      "specificity": 0.01875,
+      "f1": 0.33755274261603374,
+      "roc_auc": 0.47062499999999996,
+      "average_precision": 0.1812919620494526,
+      "TN": 3,
+      "FP": 157,
+      "FN": 0,
+      "TP": 40,
+      "cohort": "external",
+      "count": 200
+    },
+    {
+      "model": "MobileNetV2",
+      "threshold": 0.745,
+      "accuracy": 0.55,
+      "precision": 0.23958333333333334,
+      "recall": 0.575,
+      "specificity": 0.54375,
+      "f1": 0.3382352941176471,
+      "roc_auc": 0.54421875,
+      "average_precision": 0.2402071891445132,
+      "TN": 87,
+      "FP": 73,
+      "FN": 17,
+      "TP": 23,
+      "cohort": "external",
+      "count": 200
+    },
+    {
+      "model": "Ensemble",
+      "threshold": 0.745,
+      "accuracy": 0.55,
+      "precision": 0.23958333333333334,
+      "recall": 0.575,
+      "specificity": 0.54375,
+      "f1": 0.3382352941176471,
+      "roc_auc": 0.5440625,
+      "average_precision": 0.2401527968329583,
+      "TN": 87,
+      "FP": 73,
+      "FN": 17,
+      "TP": 23,
+      "cohort": "external",
+      "count": 200
+    }
+  ]
+}
+Multi-label: сайттан бөлек, training/outputs/multilabel/experiment_report.json.
+Медициналық диагноз емес.
