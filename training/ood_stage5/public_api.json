@@ -1,0 +1,118 @@
+{
+  "checked_at": "2026-10-20T19:07:55.309228+00:00",
+  "url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/",
+  "source_commit": "02af52e1e8e909cdb041ef64d08e1d4e094cf2a7",
+  "status_http": 200,
+  "status": {
+    "ready": true,
+    "comparison_ready": true,
+    "assessment_policy": {
+      "name": "ood_guard_v2",
+      "clinically_validated": false
+    },
+    "xray_check": {
+      "available": true,
+      "message": null,
+      "parameter_id": "2401a7df566f",
+      "method": "train_validation_mahalanobis_v2",
+      "reference_count": 3801,
+      "calibration_count": 952,
+      "target_acceptance": 0.95,
+      "threshold": 38.25761417386084,
+      "notice": "Train үлестіріміне ұқсастық; шек бөлек validation-да бапталған. Рентген екенін немесе болжамның дұрыстығын дәлелдемейді."
+    },
+    "dicom": {
+      "available": true,
+      "message": null
+    },
+    "mcnemar": {
+      "available": true,
+      "method": "exact McNemar (two-sided binomial)",
+      "n": 618,
+      "cnn_only_correct": 19,
+      "mobilenet_only_correct": 128,
+      "p_value": 4.832382023295393e-21,
+      "alpha": 0.05,
+      "significant": true,
+      "notice": "Жұптық тест, осы ішкі test жиынына қатысты. Пациент суреттері тәуелсіз болмауы мүмкін.",
+      "model_ids": {
+        "CNN": "19f707027db4",
+        "MobileNetV2": "ea584b998a45"
+      },
+      "config_sha256": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174"
+    },
+    "calibration": {
+      "method": "temperature",
+      "T": 0.9799594303292329
+    }
+  },
+  "prediction_checks": [
+    {
+      "fixture": "synthetic.png",
+      "http": 200,
+      "assessment": {
+        "status": "review_required",
+        "reason": "ood_shift",
+        "title": "Сенімді бағалау мүмкін емес",
+        "message": "Сурет модель тексерілген деректерден ерекшеленеді (OOD). Рентген суреттерінде де осындай ескерту шығуы мүмкін. Санат бойынша қорытынды берілмейді; төмендегі баллдар тек техникалық нәтиже.",
+        "policy": "ood_guard_v2",
+        "clinically_validated": false,
+        "notice": "Бұл — OOD-қа сүйенетін сақтық ережесі. Ішкі және шағын сыртқы жиындағы өлшемдер клиникалық сенімділікті растамайды."
+      },
+      "xray_check": {
+        "available": true,
+        "is_xray": false,
+        "within_reference": false,
+        "distance": 118.20938935634112,
+        "threshold": 38.25761417386084,
+        "parameter_id": "2401a7df566f",
+        "method": "train_validation_mahalanobis_v2",
+        "notice": "within_reference (is_xray — ескі API атауы) — үлестірімге ұқсастық. Нақты рентген де басқа дереккөзден болса ауытқуы мүмкін; бұл X-ray детекторы емес."
+      },
+      "quality_available": true,
+      "comparison_available": true,
+      "explanation_available": true
+    },
+    {
+      "fixture": "synthetic-cr.dcm",
+      "http": 200,
+      "assessment": {
+        "status": "review_required",
+        "reason": "ood_shift",
+        "title": "Сенімді бағалау мүмкін емес",
+        "message": "Сурет модель тексерілген деректерден ерекшеленеді (OOD). Рентген суреттерінде де осындай ескерту шығуы мүмкін. Санат бойынша қорытынды берілмейді; төмендегі баллдар тек техникалық нәтиже.",
+        "policy": "ood_guard_v2",
+        "clinically_validated": false,
+        "notice": "Бұл — OOD-қа сүйенетін сақтық ережесі. Ішкі және шағын сыртқы жиындағы өлшемдер клиникалық сенімділікті растамайды."
+      },
+      "xray_check": {
+        "available": true,
+        "is_xray": false,
+        "within_reference": false,
+        "distance": 79.9918930172437,
+        "threshold": 38.25761417386084,
+        "parameter_id": "2401a7df566f",
+        "method": "train_validation_mahalanobis_v2",
+        "notice": "within_reference (is_xray — ескі API атауы) — үлестірімге ұқсастық. Нақты рентген де басқа дереккөзден болса ауытқуы мүмкін; бұл X-ray детекторы емес."
+      },
+      "quality_available": true,
+      "comparison_available": true,
+      "explanation_available": true
+    },
+    {
+      "fixture": "synthetic-ct.dcm",
+      "http": 400
+    },
+    {
+      "fixture": "text.jpg",
+      "http": 400
+    }
+  ],
+  "pdf": {
+    "http": 200,
+    "magic": "%PDF",
+    "pages": 2
+  },
+  "fixture_notice": "Only generated synthetic pixels/DICOM were sent to public endpoint. Real Kaggle parity examples were checked locally. No user history changed.",
+  "static_html_source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6"
+}

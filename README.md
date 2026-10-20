@@ -56,7 +56,7 @@ Docker: build/run тексерілді (image tynys, Server 29.8.1). Image 3.28G
 
 [![CI](https://github.com/5kairosh/Tynys/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/5kairosh/Tynys/actions/workflows/ci.yml)
 
-CI қашықта өтті (ubuntu-latest, Python 3.11, 56 тест).
+Бастапқы CI: ubuntu-latest, Python 3.11, 56 тест. Қазіргі тексеру: 135 pytest + 24 Chromium; 5-кезең жазбасы төменде.
 [Расталған run](https://github.com/5kairosh/Tynys/actions/runs/38745485393).
 Дәлелдер: `training/ci_evidence/success_run.json`, `pytest_success.txt`.
 
@@ -91,3 +91,25 @@ OpenI қамтуы 0 → 32/200; сол 32 суреттің 20-сы қате. OO
 Test/OpenI бұрын қаралған; жаңа тәуелсіз клиникалық тексеру деп саналмайды.
 Сипаттама/қайта орындау: training/OOD_STAGE5_KZ.txt.
 Сайт ескі тарихқа «OOD ережесі жаңарған» ескертуін береді; ескі санат өзгертілмейді.
+
+## 5-кезеңнің онлайн тексеруі (2026-10-21)
+
+2026-10-21 — 5-КЕЗЕҢДІ ОНЛАЙН ТЕКСЕРУ
+Сайт: https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/
+GitHub CI сәтті: https://github.com/5kairosh/Tynys/actions/runs/39481020833
+Тексерілген код: 3d9bb94472aba45b99b32eb5b851805c97a396b6; OOD runtime: 02af52e1e8e909cdb041ef64d08e1d4e094cf2a7.
+Жергілікті 135 pytest + 24 Chromium/IndexedDB тесті өтті. Кэш түзетілгеннен кейін
+24 браузер тесті қайта сәтті өтті (31,87 с); GitHub CI-де екі job да success.
+Ашық сервер: synthetic PNG және CR DICOM — HTTP 200; CT DICOM және жалған JPG — 400;
+екі файл PDF — HTTP 200, %PDF, 2 бет. Жүктелген JSON /api/status есебімен дәл сәйкес.
+Нақты Kaggle рентгендері жергілікті API/браузерде тексерілді; ашық серверге тек
+синтетикалық сынақтар жіберілді. Қолданыстағы пайдаланушы тарихы өзгертілмеді.
+Браузер енді нұсқаланған CSS/JS алады: ескі кэш жаңа OOD панелін жасырып қалмайды.
+Codespace-қа 18 файл SHA256-мен тексеріліп орнатылды; index.html кэш түзетуімен
+жаңартылды. Codespace-та git жоқ, Git HEAD жаңарды деп есептелмейді.
+Дәлелдер: training/ood_stage5/verification.json, deployment.json, public_api.json,
+ci.json, ui_online.jpg. Ескі кезеңдердің жазбалары — тарихи нәтижелер.
+Ішкі тест тоқтатуы 579→20; сыртқы OpenI-де 32/200 ғана өтті, оның 20-сы қате.
+Бұл түзету классификация дәлдігі немесе клиникалық қауіпсіздік артты деген сөз емес.
+Docker осы кезеңде қайта жиналмады. Презентация тарихи нұсқасында қалды.
+Codespaces тоқтаса, сайт та тоқтайды; тәулік бойы жұмыс істеу кепілдігі жоқ.

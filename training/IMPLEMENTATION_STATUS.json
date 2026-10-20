@@ -117,14 +117,16 @@
     "configured": true,
     "remote_run": true,
     "repo_url": "https://github.com/5kairosh/Tynys",
-    "run_id": 39414009947,
-    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39414009947",
+    "run_id": 39481020833,
+    "run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
     "status": "success",
-    "checked_at": "2026-10-20T11:25:26.231931+00:00",
-    "source_commit": "a4d1fe74662e32a7a89d2b2f2e5f76a0daa6d275"
+    "checked_at": "2026-10-20T19:12:38.994887+00:00",
+    "source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6"
   },
   "tests": {
-    "local_passed": 56
+    "local_passed": 135,
+    "browser_passed": 24,
+    "stage5_evidence": "training/ood_stage5/verification.json"
   },
   "ensemble": {
     "fitted": true,
@@ -195,8 +197,7 @@
     "clinically_validated": false,
     "coverage_evaluated": true,
     "selective_risk_evaluated": true,
-    "model_and_thresholds_changed": false,
-    "local_tests": 65,
+    "local_tests": 135,
     "tested_surfaces": [
       "API",
       "web",
@@ -204,13 +205,14 @@
       "TXT",
       "PDF"
     ],
-    "remote_deployment_verified": false,
-    "deployed_source_commit": "eed3b495a684a09a883235ed4d152b82bc3ed999",
-    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39125943690",
+    "remote_deployment_verified": true,
+    "deployed_source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6",
+    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
     "ci_status": "success",
     "evaluation_artifact": "site/model/selective_evaluation.json",
     "error_reduction_demonstrated": false,
-    "model_and_classifier_threshold_changed": false
+    "model_and_classifier_threshold_changed": false,
+    "ood_parameters_changed": true
   },
   "image_quality": {
     "implemented": true,
@@ -269,20 +271,24 @@
         "accepted_errors": 20
       }
     },
-    "thresholds_changed": false,
     "error_reduction_demonstrated": false,
     "clinically_validated": false,
     "report": "site/model/selective_evaluation.json",
-    "documentation": "training/SELECTIVE_EVALUATION_KZ.txt",
+    "documentation": "training/OOD_STAGE5_KZ.txt",
     "local_tests": {
-      "pytest_passed": 109,
-      "browser_passed": 21
+      "pytest_passed": 135,
+      "browser_passed": 24
     },
-    "evidence": "training/selective_evidence/verification.json",
-    "remote_deployment_verified": false,
-    "deployed_source_commit": "a4d1fe74662e32a7a89d2b2f2e5f76a0daa6d275",
-    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39414009947",
-    "ci_status": "success"
+    "evidence": "training/ood_stage5/verification.json",
+    "remote_deployment_verified": true,
+    "deployed_source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6",
+    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
+    "ci_status": "success",
+    "model_and_classifier_threshold_changed": false,
+    "ood_parameters_changed": true,
+    "classifier_threshold_changed": false,
+    "ood_threshold_changed": true,
+    "historical_stage4_documentation": "training/SELECTIVE_EVALUATION_KZ.txt"
   },
   "ood_stage5": {
     "implemented": true,
@@ -307,7 +313,12 @@
     "evaluation_cohorts_previously_inspected": true,
     "pytest_passed": 135,
     "browser_passed": 24,
-    "remote_verified": false,
-    "documentation": "training/OOD_STAGE5_KZ.txt"
+    "remote_verified": true,
+    "documentation": "training/OOD_STAGE5_KZ.txt",
+    "checked_at": "2026-10-20T19:12:38.994887+00:00",
+    "source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6",
+    "ci_status": "success",
+    "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
+    "evidence": "training/ood_stage5/verification.json"
   }
 }

@@ -1,0 +1,23 @@
+{
+  "id": 39481020833,
+  "head_sha": "3d9bb94472aba45b99b32eb5b851805c97a396b6",
+  "html_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-10-20T19:09:26Z",
+  "updated_at": "2026-10-20T19:10:54Z",
+  "jobs": [
+    {
+      "name": "pytest",
+      "conclusion": "success",
+      "html_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833/job/118829293344"
+    },
+    {
+      "name": "browser-history",
+      "conclusion": "success",
+      "html_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833/job/118829293843"
+    }
+  ],
+  "checked_at": "2026-10-20T19:11:49.158495+00:00",
+  "note": "Both jobs verified via GitHub API. Local full suite: 135 pytest and 24 Chromium. After asset URL change 24 Chromium tests repeated successfully (31.87 seconds); remote workflow runs same suites."
+}

@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T18:57:27.163813+00:00",
+  "checked_at": "2026-10-20T19:12:38.994887+00:00",
   "stage": 5,
   "policy": "ood_guard_v2",
   "protocol_commit": "da93ca1",
@@ -12,7 +12,11 @@
   "browser_tests": {
     "passed": 24,
     "seconds": 37.57,
-    "runtime": "Chromium and real IndexedDB; regression suite stubs inference"
+    "runtime": "Chromium and real IndexedDB; regression suite stubs inference",
+    "after_asset_cache_fix": {
+      "passed": 24,
+      "seconds": 31.87
+    }
   },
   "live_local": {
     "port": 7867,
@@ -33,6 +37,22 @@
   "ood_parameters_changed": true,
   "test_or_external_used_to_fit": false,
   "evaluation_cohorts_previously_inspected": true,
-  "remote_verified": false,
-  "ci_verified": false
+  "remote_verified": true,
+  "ci_verified": true,
+  "source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6",
+  "ci_run_url": "https://github.com/5kairosh/Tynys/actions/runs/39481020833",
+  "deployment_evidence": "training/ood_stage5/deployment.json",
+  "public_api_evidence": "training/ood_stage5/public_api.json",
+  "live_public": {
+    "synthetic_png_http": 200,
+    "cr_dicom_http": 200,
+    "ct_dicom_http": 400,
+    "fake_jpg_http": 400,
+    "pdf_pages": 2,
+    "json_download_matches_api": true,
+    "console_errors": 0,
+    "screenshot": "training/ood_stage5/ui_online.jpg",
+    "real_images_tested_locally_only": true,
+    "existing_user_history_changed": false
+  }
 }

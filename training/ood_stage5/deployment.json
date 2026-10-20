@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-10-20T19:12:38.994887+00:00",
+  "url": "https://effective-space-winner-q74xxqj555vj39qq9-7860.app.github.dev/",
+  "runtime_source_commit": "02af52e1e8e909cdb041ef64d08e1d4e094cf2a7",
+  "static_html_source_commit": "3d9bb94472aba45b99b32eb5b851805c97a396b6",
+  "deployment_method": "18 immutable revision files downloaded and SHA256 checked in Codespaces; HTML subsequently updated from asset cache fix commit. Codespace has no git; its Git HEAD was not advanced.",
+  "file_sha256": {
+    "site/app.py": "eb17e44a6d1c6e3d2392a55869f8010be1d7a814ce6fc97443342085a7416e78",
+    "site/assessment.py": "6eed10b0e38ec008d233aacba5566d3412838991a7f47f49be30ac89e7232b54",
+    "site/ood.py": "74d8a7fc571083376e7f21b0d3440a4d7ff5b9f1643c01f12e705061b4cdc630",
+    "site/model/ood_params.npz": "2401a7df566ff246360d94c745f60d551887f246fc276dadc051088bbd621c2c",
+    "site/model/selective_evaluation.json": "af940c14a5a11d8defa23fe5d318c7f3cd50bb69a0fdd21d0ae31f0b73ecb7ed",
+    "site/static/app.js": "f300ffd0648fb6573542da787acd4b2ceb467803f0d6bf1171c37807578ea67e",
+    "site/static/index.html": "14fc0b5c98e58b3360dc58a53d464aaa9e989a68cca07c904f17aca2c80ece40",
+    "site/static/style.css": "a70cc4d437bf1a735a3aa832cbaaea0c8e2c525cdd67dae2d92adb6671c5ec2c",
+    "site/static/selective-evaluation.js": "6d4df8481d0bc4397bc7429e26a066ecb6697ba0b552a31f5e0efd1d9822001e",
+    "README.md": "65363fd489be6b16c203f9b76bcf4c109101ee78a5dbe7f07f170ef3f90f576e",
+    "README_KZ.txt": "ce633a3b215c84af6948743338563cd5ecbb82606b42452262089be6d1d6ed95",
+    "site/README.txt": "ce633a3b215c84af6948743338563cd5ecbb82606b42452262089be6d1d6ed95",
+    "MODEL_CARD.md": "6932641234a6e28bace8bd040eb3a8d0773c2403ab522f1dc7ffdc77d47bf02a",
+    "PROJECT_LIMITATIONS_KZ.txt": "d370b82606ef3cf5124871c06d2df51789f31ab5e91d93399845cef0f64c92b3",
+    "START_HERE_KZ.txt": "7bfe8ce6300dae39f125d5d7aa529b2dfc05af8aa9243b2f3d21fbfa0102756d",
+    "training/OOD_STAGE5_KZ.txt": "21a5e0971f90ecde857f66941a8bac02217a48c9524ab50e3c2fe5fecbb1ab64",
+    "training/ood_stage5/fit_report.json": "79f208d6510c676bf1c180c6210b26cc1e317ae095c021a7798f13efc8264b3c",
+    "training/ood_stage5/protocol.json": "a5165f6c9c180aa9119e5da2d66ba5c923fb3e842fe4046eb5949fd00be7ba88"
+  },
+  "public_static_sha256": {
+    "site/static/app.js": "f300ffd0648fb6573542da787acd4b2ceb467803f0d6bf1171c37807578ea67e",
+    "site/static/index.html": "14fc0b5c98e58b3360dc58a53d464aaa9e989a68cca07c904f17aca2c80ece40",
+    "site/static/style.css": "a70cc4d437bf1a735a3aa832cbaaea0c8e2c525cdd67dae2d92adb6671c5ec2c",
+    "site/static/selective-evaluation.js": "6d4df8481d0bc4397bc7429e26a066ecb6697ba0b552a31f5e0efd1d9822001e"
+  },
+  "config_sha256_unchanged": "51a036ca9928678488ecfd24daac578f2a437d519a90e1b340639599b4892174",
+  "ready": true,
+  "comparison_ready": true,
+  "parameter_id": "2401a7df566f",
+  "audit_available": true,
+  "browser_json_equals_api": true,
+  "browser_console_errors": 0,
+  "screenshot": "training/ood_stage5/ui_online.jpg",
+  "user_history_mutated": false,
+  "codespaces_always_on": false
+}
