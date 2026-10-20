@@ -1,0 +1,27 @@
+{
+  "eligible_patients": 9188,
+  "eligible_class_counts": [
+    6888,
+    2300
+  ],
+  "exclusions": {
+    "non_normal_other_finding": 12788,
+    "missing_or_ambiguous_calculated_label": 316
+  },
+  "source": "https://s3.amazonaws.com/east1.public.rsna.org/AI/2018/pneumonia-challenge-dataset-adjudicated-kaggle_2018.zip",
+  "archive_size": 3978753654,
+  "downloaded_images": 2400,
+  "counts": {
+    "train": 1600,
+    "validation": 400,
+    "holdout": 400
+  },
+  "one_image_per_verified_nih_patient": true,
+  "sha256_overlap_prior_cohorts": 0,
+  "label_definition": "Calculated radiologist Normal versus Lung Opacity suspicious for pneumonia. Other abnormalities and ambiguous labels excluded. This is a radiographic proxy, not confirmed clinical pneumonia.",
+  "annotation_sha256": "f8f5c54bae158fc0e2f019af979471803151a5922463ff3a378d7734e01b18fb",
+  "mapping_sha256": "803ce79e3bc9c66d3631738e91e62e1175730e98ad1415e8dc4d6292ba10bf27",
+  "image_conversion": "Existing site.dicom_input.dicom_to_png, then same model preprocessing",
+  "attribution": "NIH Clinical Center; Wang et al., CVPR 2017. RSNA-STR; Shih et al., Radiology AI 2019, doi:10.1148/ryai.2019180041.",
+  "terms_url": "https://www.rsna.org/artificial-intelligence/ai-image-challenge/rsna-pneumonia-detection-challenge-2018"
+}

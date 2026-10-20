@@ -117,7 +117,11 @@ def download_images(splits, workers):
                        for info in archive.infolist() if not info.is_dir()]
         index = {'archive_size': remote.size, 'entries': entries}
         index_path.write_text(json.dumps(index), encoding='utf-8')
-    entries = {Path(row['filename']).stem: row for row in index['entries']}
+    # The official RSNA ZIP uses DICOM SOP UIDs, whereas Kaggle uses UUIDs.
+    # Resolve through the publisher's mapping, never by directory order.
+    by_instance = {Path(row['filename']).stem: row for row in index['entries']}
+    entries = {row['subset_img_id']: by_instance[row['SOPInstanceUID']]
+               for row in metadata(MAPPING)}
     sys.path.insert(0, str(ROOT / 'site'))
     from dicom_input import dicom_to_png
     image_dir = CACHE / 'images'; image_dir.mkdir(exist_ok=True)
