@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "stage": "6B",
+  "reason": "6A improved RSNA/OpenI but failed prespecified Kaggle noninferiority (balanced accuracy drop 0.04636). Gate is not relaxed; 6A is not deployed.",
+  "design_informed_by_previously_inspected_results": true,
+  "frozen_before_router_fitting_and_new_confirmation_predictions": true,
+  "seed": 20261021,
+  "development": "Same 5401 train / 1352 validation, no holdout or OpenI data in fitting",
+  "experts": "Keep original Kaggle Dense head and frozen 6A selected RSNA-adapted Dense head; do not re-fit either expert",
+  "router": "Train standardized L2 logistic regression C=0.001, max_iter=2000 on training source domain (Kaggle=0, RSNA=1), weighted equally over four source/class strata. Fold scaler into Dense. RSNA branch when logit>=0, else original branch. No router hyperparameter/threshold search.",
+  "output": "Selected expert calibrated logit minus logit(selected expert decision threshold), sigmoid; common decision threshold=0.5. One additional temperature T in [0.2,5] fitted on balanced development-validation NLL preserves operating decisions.",
+  "interpretation": "Router predicts similarity to two development sources, not patient age, acquisition institution, anatomy, clinical diagnosis or reliability.",
+  "new_confirmation": "200 Normal + 200 Lung Opacity, original NIH patients distinct from every 6A train/validation/holdout patient. Take next 200 per class from the original frozen deterministic pools. No repeated splitting/search after inference.",
+  "previous_rsna_holdout": "6A's 400 are now a previously inspected diagnostic cohort, not fresh confirmation for 6B.",
+  "promotion_gate": "Same numerical gate as 6A, with new RSNA confirmation replacing RSNA primary holdout: >=5pp accuracy and balanced-accuracy gain, sensitivity>=0.80, specificity>=0.70, positive lower paired-bootstrap 95% bound. Kaggle balanced-accuracy drop<=2pp and sensitivity>=0.90. Old OpenI gains>=5pp accuracy and balanced accuracy and sensitivity>=0.60. Old cohorts explicitly descriptive.",
+  "failed_gate": "Keep production unchanged; do not relax thresholds or fit another router to revealed confirmation labels.",
+  "ood_if_promoted": "Keep prespecified train-reference / separate-validation Mahalanobis with shrinkage0.1 and target0.95, now include RSNA development only (5401/1352). Never fit OOD with either RSNA confirmation cohort, internal test or OpenI.",
+  "clinical_validation": false
+}
