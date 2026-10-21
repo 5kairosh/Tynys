@@ -10,6 +10,17 @@ pinned: false
 
 # Tynys
 
+## Public website
+
+[Open Tynys](https://kairosh--tynys.us-east.modal.run/)
+
+Deployed to Modal on 2026-10-21. The public API was verified with PNG/JPG,
+CR DICOM, Grad-CAM, three-model comparison, OOD, and a two-page PDF report.
+The deployment is independent of the local computer and uses automatic cold starts.
+This cardless Starter account currently has a $1 free usage cap; no payment
+method was added. Quota exhaustion can interrupt access, so this is not an
+unlimited availability guarantee. [Deployment guide](deployment/README_MODAL_KZ.txt).
+
 Stage 8 (2026-10-21): optional password-encrypted browser history, manual and
 five-minute idle locks, and suppression of late predictions/PDFs after locking.
 Legacy history is preserved until the user elects protection. Passwords and keys

@@ -6,3 +6,5 @@ training/artifacts/
 training/outputs/multilabel/private/
 *.log
 **/node_modules/
+.deploy-venv/
+.modal.toml

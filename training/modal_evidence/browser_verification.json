@@ -1,0 +1,18 @@
+{
+  "url": "https://kairosh--tynys.us-east.modal.run/",
+  "checked_at": "2026-10-21T12:02:23.837605+00:00",
+  "input": "public Kaggle example and synthetic DICOM",
+  "browser_upload": true,
+  "score_display": "0,998",
+  "model_comparison": true,
+  "gradcam_download": true,
+  "txt_download": true,
+  "pdf_download": true,
+  "batch_upload": true,
+  "batch_pdf_pages": 2,
+  "session_history_restore": true,
+  "existing_user_history_modified": false,
+  "pytest_passed": 131,
+  "browser_regression_passed": 48,
+  "browser_regression_failures": 0
+}

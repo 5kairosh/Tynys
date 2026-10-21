@@ -1,0 +1,82 @@
+{
+  "provider": "Modal",
+  "configured": true,
+  "built": true,
+  "deployed": true,
+  "public_url": "https://kairosh--tynys.us-east.modal.run/",
+  "console_url": "https://modal.com/apps/kairosh/main/deployed/tynys",
+  "run_verified": true,
+  "checked_at": "2026-10-21T11:55:24.257727+00:00",
+  "profile": "tynys-deploy",
+  "sdk_version": "1.6.2",
+  "model_id": "a79fe71a67fc",
+  "min_containers": 0,
+  "max_containers": 1,
+  "memory_mib": 2048,
+  "cpu": 1,
+  "cardless_usage_cap_usd": 1,
+  "payment_method_added": false,
+  "unlimited_free_availability": false,
+  "local_computer_required": false,
+  "cold_start_expected": true,
+  "site_pytest_passed": 131,
+  "public_checks": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/static/app.js",
+      "status": 200
+    },
+    {
+      "path": "/static/style.css",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "file": "demo.png",
+      "status": 200,
+      "elapsed_s": 2.69,
+      "comparison": true,
+      "gradcam": true,
+      "ood": true
+    },
+    {
+      "file": "large.jpg",
+      "status": 200,
+      "elapsed_s": 4.55,
+      "comparison": true,
+      "gradcam": true,
+      "ood": true
+    },
+    {
+      "file": "demo.dcm",
+      "status": 200,
+      "elapsed_s": 1.97,
+      "comparison": true,
+      "gradcam": true,
+      "ood": true
+    },
+    {
+      "file": "ct.dcm",
+      "status": 400,
+      "elapsed_s": 0.81
+    },
+    {
+      "file": "bad.jpg",
+      "status": 400,
+      "elapsed_s": 0.92
+    },
+    {
+      "report": 200,
+      "pages": 2
+    }
+  ],
+  "browser_tests_passed": 48,
+  "browser_ui_verified": true,
+  "batch_pdf_pages": 2
+}
