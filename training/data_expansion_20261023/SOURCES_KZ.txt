@@ -1,0 +1,12 @@
+RSNA-STR 2018 / NIH Clinical Center
+https://www.rsna.org/artificial-intelligence/ai-image-challenge/rsna-pneumonia-detection-challenge-2018
+Shih et al., Radiology AI 2019, doi:10.1148/ryai.2019180041.
+
+PadChest / Hospital San Juan de Alicante, Spain
+https://bimcv.cipf.es/bimcv-projects/padchest/
+Bustos et al., Medical Image Analysis 66 (2020), 101797; doi:10.1016/j.media.2020.101797.
+Research use only; raw images, reports and patient metadata are not redistributed.
+https://bimcv.cipf.es/bimcv-projects/padchest/padchest-dataset-research-use-agreement/
+
+VinDr-CXR is NOT included: it requires PhysioNet credentialing and a signed DUA.
+https://physionet.org/content/vindr-cxr/1.0.0/

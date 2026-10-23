@@ -1,0 +1,1335 @@
+{
+  "frozen_at": "2026-10-23T17:44:37.943383+00:00",
+  "training_code_sha256": "3cb59badc1c61cc19907ef34afe454b32c6b9da48467d0566679d3640838b56e",
+  "protocol_sha256": "4ba2b09b9a252523dd8c45e8cdf71909cf68087b0ca5312515bc8d112b0a04ac",
+  "backbone_sha256": "52076c923ca07a02e898f047d027d4fa617b4c028acb14f87601c928f1d34919",
+  "source_model_sha256": "a79fe71a67fc4e100a5cbde8624fb9286e663bd59e4beb74984810b3f2ba4e43",
+  "source_config_sha256": "63c6e98cc7713993778fb8b44430a8ebb6b334bac66be5ec0f815ea45f63eb4c",
+  "candidate_sha256": "d3948da5db517d01ea6034a2ea7e546033e26ea4fd091dbdefa49c9a2122148c",
+  "candidate_path": "training/cache/data_expansion_20261023/candidate.keras",
+  "selected_C": 0.01,
+  "selected_expert_threshold": 0.5,
+  "validation_feasible": true,
+  "temperature": 1.2198120350130899,
+  "threshold": 0.5,
+  "validation_weighted_nll": 0.1901924180110458,
+  "train_count": 6601,
+  "validation_count": 1552,
+  "validation": {
+    "kaggle": {
+      "count": 952,
+      "normal": 270,
+      "positive": 682,
+      "accuracy": 0.9359243697478992,
+      "balanced_accuracy": 0.9541598783534267,
+      "sensitivity": 0.9120234604105572,
+      "specificity": 0.9962962962962963,
+      "precision": 0.9983948635634029,
+      "f1": 0.9532567049808429,
+      "roc_auc": 0.9979091995221028,
+      "average_precision": 0.9991777236573139,
+      "TN": 269,
+      "FP": 1,
+      "FN": 60,
+      "TP": 622,
+      "errors": 61,
+      "threshold": 0.5
+    },
+    "rsna": {
+      "count": 600,
+      "normal": 300,
+      "positive": 300,
+      "accuracy": 0.9033333333333333,
+      "balanced_accuracy": 0.9033333333333333,
+      "sensitivity": 0.9066666666666666,
+      "specificity": 0.9,
+      "precision": 0.9006622516556292,
+      "f1": 0.9036544850498339,
+      "roc_auc": 0.9544444444444444,
+      "average_precision": 0.9568669748583828,
+      "TN": 270,
+      "FP": 30,
+      "FN": 28,
+      "TP": 272,
+      "errors": 58,
+      "threshold": 0.5
+    }
+  },
+  "selection_candidates": [
+    {
+      "C": 0.001,
+      "expert_threshold": 0.25,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.96,
+        "specificity": 0.7633333333333333,
+        "balanced_accuracy": 0.8616666666666666
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.275,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9566666666666667,
+        "specificity": 0.78,
+        "balanced_accuracy": 0.8683333333333334
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.3,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9466666666666667,
+        "specificity": 0.8,
+        "balanced_accuracy": 0.8733333333333333
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.325,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.94,
+        "specificity": 0.8266666666666667,
+        "balanced_accuracy": 0.8833333333333333
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.35,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9333333333333333,
+        "specificity": 0.85,
+        "balanced_accuracy": 0.8916666666666666
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.375,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9333333333333333,
+        "specificity": 0.8566666666666667,
+        "balanced_accuracy": 0.895
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.4,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9233333333333333,
+        "specificity": 0.8633333333333333,
+        "balanced_accuracy": 0.8933333333333333
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.425,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9166666666666666,
+        "specificity": 0.88,
+        "balanced_accuracy": 0.8983333333333333
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.45,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9066666666666666,
+        "specificity": 0.8866666666666667,
+        "balanced_accuracy": 0.8966666666666667
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.475,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9033333333333333,
+        "specificity": 0.8933333333333333,
+        "balanced_accuracy": 0.8983333333333333
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.5,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8966666666666666,
+        "specificity": 0.9,
+        "balanced_accuracy": 0.8983333333333333
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.525,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8866666666666667,
+        "specificity": 0.9066666666666666,
+        "balanced_accuracy": 0.8966666666666667
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.55,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8666666666666667,
+        "specificity": 0.9133333333333333,
+        "balanced_accuracy": 0.89
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.575,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8666666666666667,
+        "specificity": 0.9266666666666666,
+        "balanced_accuracy": 0.8966666666666667
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.6,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8566666666666667,
+        "specificity": 0.9333333333333333,
+        "balanced_accuracy": 0.895
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.625,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8466666666666667,
+        "specificity": 0.94,
+        "balanced_accuracy": 0.8933333333333333
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.65,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8266666666666667,
+        "specificity": 0.94,
+        "balanced_accuracy": 0.8833333333333333
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.675,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8166666666666667,
+        "specificity": 0.95,
+        "balanced_accuracy": 0.8833333333333333
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.7,
+      "feasible": false,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.7966666666666666,
+        "specificity": 0.95,
+        "balanced_accuracy": 0.8733333333333333
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.725,
+      "feasible": false,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.7833333333333333,
+        "specificity": 0.95,
+        "balanced_accuracy": 0.8666666666666667
+      }
+    },
+    {
+      "C": 0.001,
+      "expert_threshold": 0.75,
+      "feasible": false,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.7466666666666667,
+        "specificity": 0.9533333333333334,
+        "balanced_accuracy": 0.8500000000000001
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.25,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9466666666666667,
+        "specificity": 0.7966666666666666,
+        "balanced_accuracy": 0.8716666666666666
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.275,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9466666666666667,
+        "specificity": 0.8266666666666667,
+        "balanced_accuracy": 0.8866666666666667
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.3,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.94,
+        "specificity": 0.8333333333333334,
+        "balanced_accuracy": 0.8866666666666667
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.325,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9333333333333333,
+        "specificity": 0.8433333333333334,
+        "balanced_accuracy": 0.8883333333333334
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.35,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.93,
+        "specificity": 0.85,
+        "balanced_accuracy": 0.89
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.375,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9266666666666666,
+        "specificity": 0.8633333333333333,
+        "balanced_accuracy": 0.895
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.4,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9266666666666666,
+        "specificity": 0.8766666666666667,
+        "balanced_accuracy": 0.9016666666666666
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.425,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.92,
+        "specificity": 0.88,
+        "balanced_accuracy": 0.9
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.45,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.92,
+        "specificity": 0.8833333333333333,
+        "balanced_accuracy": 0.9016666666666666
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.475,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9133333333333333,
+        "specificity": 0.8933333333333333,
+        "balanced_accuracy": 0.9033333333333333
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.5,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9066666666666666,
+        "specificity": 0.9,
+        "balanced_accuracy": 0.9033333333333333
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.525,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.89,
+        "specificity": 0.9,
+        "balanced_accuracy": 0.895
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.55,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.89,
+        "specificity": 0.9033333333333333,
+        "balanced_accuracy": 0.8966666666666667
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.575,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8866666666666667,
+        "specificity": 0.9066666666666666,
+        "balanced_accuracy": 0.8966666666666667
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.6,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8766666666666667,
+        "specificity": 0.9066666666666666,
+        "balanced_accuracy": 0.8916666666666666
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.625,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8633333333333333,
+        "specificity": 0.9133333333333333,
+        "balanced_accuracy": 0.8883333333333333
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.65,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8533333333333334,
+        "specificity": 0.9133333333333333,
+        "balanced_accuracy": 0.8833333333333333
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.675,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.85,
+        "specificity": 0.9166666666666666,
+        "balanced_accuracy": 0.8833333333333333
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.7,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.85,
+        "specificity": 0.92,
+        "balanced_accuracy": 0.885
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.725,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8366666666666667,
+        "specificity": 0.9233333333333333,
+        "balanced_accuracy": 0.88
+      }
+    },
+    {
+      "C": 0.01,
+      "expert_threshold": 0.75,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.82,
+        "specificity": 0.9266666666666666,
+        "balanced_accuracy": 0.8733333333333333
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.25,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.92,
+        "specificity": 0.8033333333333333,
+        "balanced_accuracy": 0.8616666666666667
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.275,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9166666666666666,
+        "specificity": 0.81,
+        "balanced_accuracy": 0.8633333333333333
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.3,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9166666666666666,
+        "specificity": 0.8133333333333334,
+        "balanced_accuracy": 0.865
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.325,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9133333333333333,
+        "specificity": 0.82,
+        "balanced_accuracy": 0.8666666666666667
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.35,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9066666666666666,
+        "specificity": 0.83,
+        "balanced_accuracy": 0.8683333333333333
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.375,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9066666666666666,
+        "specificity": 0.8366666666666667,
+        "balanced_accuracy": 0.8716666666666666
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.4,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9033333333333333,
+        "specificity": 0.8566666666666667,
+        "balanced_accuracy": 0.88
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.425,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.9,
+        "specificity": 0.86,
+        "balanced_accuracy": 0.88
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.45,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8966666666666666,
+        "specificity": 0.86,
+        "balanced_accuracy": 0.8783333333333333
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.475,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.89,
+        "specificity": 0.86,
+        "balanced_accuracy": 0.875
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.5,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8866666666666667,
+        "specificity": 0.86,
+        "balanced_accuracy": 0.8733333333333333
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.525,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8833333333333333,
+        "specificity": 0.8633333333333333,
+        "balanced_accuracy": 0.8733333333333333
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.55,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8833333333333333,
+        "specificity": 0.87,
+        "balanced_accuracy": 0.8766666666666667
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.575,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8766666666666667,
+        "specificity": 0.8766666666666667,
+        "balanced_accuracy": 0.8766666666666667
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.6,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8766666666666667,
+        "specificity": 0.8833333333333333,
+        "balanced_accuracy": 0.88
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.625,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8766666666666667,
+        "specificity": 0.8866666666666667,
+        "balanced_accuracy": 0.8816666666666667
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.65,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8733333333333333,
+        "specificity": 0.89,
+        "balanced_accuracy": 0.8816666666666666
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.675,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.87,
+        "specificity": 0.89,
+        "balanced_accuracy": 0.88
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.7,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8633333333333333,
+        "specificity": 0.8933333333333333,
+        "balanced_accuracy": 0.8783333333333333
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.725,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8466666666666667,
+        "specificity": 0.8966666666666666,
+        "balanced_accuracy": 0.8716666666666666
+      }
+    },
+    {
+      "C": 0.1,
+      "expert_threshold": 0.75,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8433333333333334,
+        "specificity": 0.8966666666666666,
+        "balanced_accuracy": 0.87
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.25,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8966666666666666,
+        "specificity": 0.7833333333333333,
+        "balanced_accuracy": 0.84
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.275,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8966666666666666,
+        "specificity": 0.7866666666666666,
+        "balanced_accuracy": 0.8416666666666666
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.3,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8933333333333333,
+        "specificity": 0.7866666666666666,
+        "balanced_accuracy": 0.84
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.325,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8933333333333333,
+        "specificity": 0.7866666666666666,
+        "balanced_accuracy": 0.84
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.35,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8933333333333333,
+        "specificity": 0.79,
+        "balanced_accuracy": 0.8416666666666667
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.375,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8933333333333333,
+        "specificity": 0.8,
+        "balanced_accuracy": 0.8466666666666667
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.4,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8933333333333333,
+        "specificity": 0.8066666666666666,
+        "balanced_accuracy": 0.85
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.425,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.89,
+        "specificity": 0.81,
+        "balanced_accuracy": 0.8500000000000001
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.45,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8866666666666667,
+        "specificity": 0.8133333333333334,
+        "balanced_accuracy": 0.8500000000000001
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.475,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8866666666666667,
+        "specificity": 0.8166666666666667,
+        "balanced_accuracy": 0.8516666666666667
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.5,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8866666666666667,
+        "specificity": 0.8166666666666667,
+        "balanced_accuracy": 0.8516666666666667
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.525,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8766666666666667,
+        "specificity": 0.82,
+        "balanced_accuracy": 0.8483333333333334
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.55,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8733333333333333,
+        "specificity": 0.82,
+        "balanced_accuracy": 0.8466666666666667
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.575,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8733333333333333,
+        "specificity": 0.8233333333333334,
+        "balanced_accuracy": 0.8483333333333334
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.6,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.87,
+        "specificity": 0.8233333333333334,
+        "balanced_accuracy": 0.8466666666666667
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.625,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8666666666666667,
+        "specificity": 0.8266666666666667,
+        "balanced_accuracy": 0.8466666666666667
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.65,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.86,
+        "specificity": 0.8333333333333334,
+        "balanced_accuracy": 0.8466666666666667
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.675,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8566666666666667,
+        "specificity": 0.84,
+        "balanced_accuracy": 0.8483333333333334
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.7,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8566666666666667,
+        "specificity": 0.85,
+        "balanced_accuracy": 0.8533333333333333
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.725,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.8566666666666667,
+        "specificity": 0.8566666666666667,
+        "balanced_accuracy": 0.8566666666666667
+      }
+    },
+    {
+      "C": 1.0,
+      "expert_threshold": 0.75,
+      "feasible": true,
+      "kaggle_validation": {
+        "sensitivity": 0.9120234604105572,
+        "specificity": 0.9962962962962963,
+        "balanced_accuracy": 0.9541598783534267
+      },
+      "rsna_validation": {
+        "sensitivity": 0.85,
+        "specificity": 0.86,
+        "balanced_accuracy": 0.855
+      }
+    }
+  ],
+  "manifests": {
+    "train": {
+      "kaggle": "7e66edd802538e3ee1f8393d5f6e733a6efcb1b5b9de87c1387fb1ff180efd7e",
+      "old_rsna": "7d82067cab028abdc7ee17dc4f40afc0214ecbe4d2fee9f0d0bed2ec55c745a6",
+      "new_rsna": "879e20b043e91a43eda7d88e00518f142f586e812be24eeb6b3c402ebc30b659"
+    },
+    "validation": {
+      "kaggle": "89fabc56d594e82ee26c6eaf3bc4b73e7a22d14df621a2c90cbe3abfdf7268d3",
+      "old_rsna": "7605d2d8d7a0f372615e9c481366f0f2e96e31eb91d8b9c446e89eb2f9c27d37",
+      "new_rsna": "91abc0144f47db821607b5025b1eca27b257a90e1f363edbf4a64b3c4d78d605"
+    }
+  },
+  "confirmation_manifest_sha256": "b1e68cb806ae22f73732b71edf41cf0188153fa0e63d99124f9a97c91ba6d4e7",
+  "evaluation_used_to_fit_or_select": false,
+  "production_model_changed": false
+}

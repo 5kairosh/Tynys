@@ -1,0 +1,24 @@
+{
+  "source": "PadChest official-linked public sample",
+  "archive_bytes": 174930109,
+  "sample_rows": 24,
+  "eligible_images": 7,
+  "class_counts": {
+    "0": 6,
+    "1": 1
+  },
+  "exclusions": {
+    "other_or_ambiguous": 9,
+    "non_frontal": 8
+  },
+  "method_label_counts": {
+    "RNN_model": 5,
+    "Physician": 2
+  },
+  "role": "external descriptive pilot only; never training or selection",
+  "license": "PadChest research use agreement; no raw data redistribution",
+  "terms_url": "https://bimcv.cipf.es/bimcv-projects/padchest/padchest-dataset-research-use-agreement/",
+  "metadata_sha256": "f29a5ca1cd37060c2b10873364b31f284b555de846729744c865a1350ab50f06",
+  "manifest_sha256": "61b477d3a8ac425eaf4b2794da34ad9d10bbb9fd5c85cd3164a68493fb394cfc",
+  "clinically_validated": false
+}

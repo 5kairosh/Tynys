@@ -144,6 +144,8 @@ def rank_candidate(y, logits, domains, c, threshold):
 def fit():
     ensure_unopened(OUT, 'fit')
     protocol = json.loads((OUT/'protocol.json').read_text())
+    if digest(MODEL)[:12] != protocol['baseline_model_id']:
+        raise ValueError('Production baseline no longer matches the frozen protocol.')
     features = Features(); tf = features.tf
     development = {}; manifests = {}
     for split in ('train', 'validation'):

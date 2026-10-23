@@ -1,0 +1,17 @@
+{
+  "new_images": 1800,
+  "new_unique_patients": 1800,
+  "counts": {
+    "train": 1200,
+    "validation": 200,
+    "confirmation": 400
+  },
+  "prior_patient_overlap": 0,
+  "prior_hash_overlap": 0,
+  "archive_size": 3978753654,
+  "existing_source_expansion_not_new_institution": true,
+  "new_training_total": 6601,
+  "new_validation_total": 1552,
+  "fresh_confirmation_count": 400,
+  "model_updated": false
+}

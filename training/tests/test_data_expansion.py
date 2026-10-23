@@ -1,5 +1,6 @@
 """New data cannot recycle exposed patients or turn other disease into NORMAL."""
 import copy
+import csv
 import json
 from pathlib import Path
 import sys
@@ -76,3 +77,28 @@ def test_high_old_accuracy_cannot_override_failed_fresh_confirmation():
     gates = promotion_gate(protocol, {'validation_feasible':True}, cohorts)
     assert not gates['fresh_accuracy_gain'] and not gates['fresh_paired_gain_lower_bound']
     assert not all(gates.values())
+
+
+def test_real_expansion_manifest_has_no_prior_or_cross_split_patient_leakage():
+    def read(path):
+        with path.open(encoding='utf-8-sig', newline='') as stream:
+            return list(csv.DictReader(stream))
+    directory = TRAINING/'data_expansion_20261023'
+    prior = [r for name in ('train','validation','holdout','holdout_confirmation')
+             for r in read(TRAINING/'generalization_stage6'/(name+'_manifest.csv'))]
+    old_groups = {r['patient_group'] for r in prior}
+    old_hashes = {r['sha256'] for r in prior}
+    for name in ('train','validation','test'):
+        old_hashes.update(r['sha256'] for r in read(TRAINING/'manifests'/(name+'_manifest.csv')))
+    old_hashes.update(r['sha256'] for r in read(TRAINING/'external_predictions.csv'))
+    rows = []
+    for split, expected in [('train',1200),('validation',200),('confirmation',400)]:
+        part = read(directory/(split+'_manifest.csv'))
+        assert len(part) == expected
+        assert sum(int(r['label'])==0 for r in part) == expected//2
+        assert sum(int(r['label'])==1 for r in part) == expected//2
+        assert all(r['split']==split and r['target'] in {'NORMAL','RSNA_LUNG_OPACITY'} for r in part)
+        rows.extend(part)
+    assert len(rows) == len({r['source_id'] for r in rows}) == len({r['patient_group'] for r in rows}) == len({r['sha256'] for r in rows}) == 1800
+    assert not old_groups & {r['patient_group'] for r in rows}
+    assert not old_hashes & {r['sha256'] for r in rows}
