@@ -1,0 +1,84 @@
+{
+  "checked_at": "2026-10-23T12:07:16.708512+00:00",
+  "python_tests": {
+    "command": "site/.venv/Scripts/python -m pytest site/tests training/tests -q --tb=short",
+    "passed": 186,
+    "failed": 0,
+    "warnings": 13
+  },
+  "chromium_tests": {
+    "command": "node --test history.test.cjs",
+    "passed": 54,
+    "failed": 0,
+    "inference_stubbed": true,
+    "timeout_and_stale_response_scenarios": true
+  },
+  "preprocessing": {
+    "reference": "actual decode_image function extracted from training/pneumonia_colab_full_kz.py",
+    "pixel_exact_cases": 7,
+    "rgb_float32_padded_resize": [
+      224,
+      224,
+      3
+    ],
+    "extra_server_normalization": false,
+    "saved_model_normalizations_verified": [
+      "MobileNetV2: 1/127.5, offset -1",
+      "CNN: 1/255, offset 0"
+    ]
+  },
+  "model_quality": {
+    "evaluated_images": 1218,
+    "fresh_forward_pass": true,
+    "previously_inspected_cohorts": true,
+    "model_id": "a79fe71a67fc",
+    "thresholds_tuned": false,
+    "retrained": false,
+    "clinically_validated": false,
+    "cohorts": {
+      "internal_test": {
+        "count": 618,
+        "accuracy": 0.889967637540453,
+        "recall": 0.9612403100775194,
+        "specificity": 0.7705627705627706,
+        "accepted_count": 608,
+        "accepted_accuracy": 0.8881578947368421,
+        "max_archived_score_delta": 2.220446049250313e-16
+      },
+      "external_openi": {
+        "count": 200,
+        "accuracy": 0.645,
+        "recall": 0.725,
+        "specificity": 0.625,
+        "accepted_count": 167,
+        "accepted_accuracy": 0.6826347305389222,
+        "max_archived_score_delta": 1.1102230246251565e-16
+      },
+      "rsna_confirmation": {
+        "count": 400,
+        "accuracy": 0.88,
+        "recall": 0.84,
+        "specificity": 0.92,
+        "accepted_count": 348,
+        "accepted_accuracy": 0.8706896551724138,
+        "max_archived_score_delta": 2.220446049250313e-16
+      }
+    }
+  },
+  "deployment": {
+    "platform": "Modal",
+    "deployed": true,
+    "url": "https://kairosh--tynys.us-east.modal.run/",
+    "api_evidence": "training/upload_reliability/public_http.json",
+    "frontend_cache_versions_refreshed": true
+  },
+  "limitations": [
+    "No clinical or prospective new-hospital validation.",
+    "No new model training, calibration or accuracy improvement claimed.",
+    "Browser deadline failures and stale responses tested with controlled transport faults, not a prolonged real hosting outage.",
+    "No Safari/mobile device matrix or new sustained-load benchmark.",
+    "DICOM smoke tests cover synthetic CR/DX/CT; all compressed transfer syntaxes were not tested.",
+    "No Docker rebuild in this change.",
+    "Modal free quota and cold-start constraints still apply."
+  ]
+}

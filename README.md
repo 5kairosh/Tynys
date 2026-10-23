@@ -10,6 +10,14 @@ pinned: false
 
 # Tynys
 
+Upload reliability update (2026-10-23): full server-side image validation,
+visible loading and manual retry, cancellation/revision guards when replacing
+an image, and pixel-exact parity with the training notebook preprocessing.
+186 Python tests, 54 Chromium tests, and 15 public HTTP checks passed.
+The fixed model was re-evaluated on 1,218 previously inspected holdout images;
+no accuracy improvement or clinical validation is claimed.
+[Verification and limitations](training/UPLOAD_RELIABILITY_KZ.txt).
+
 ## Public website
 
 [Open Tynys](https://kairosh--tynys.us-east.modal.run/)

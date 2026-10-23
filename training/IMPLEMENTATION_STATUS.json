@@ -565,5 +565,21 @@
     "browser_tests_passed": 48,
     "browser_ui_verified": true,
     "batch_pdf_pages": 2
+  },
+  "upload_reliability": {
+    "checked_at": "2026-10-23T12:07:16.708512+00:00",
+    "server_validation": true,
+    "invalid_uploads_skip_models": true,
+    "loading_indicator": true,
+    "manual_retry": true,
+    "stale_responses_suppressed": true,
+    "preprocessing_pixel_parity": true,
+    "python_tests_passed": 186,
+    "browser_tests_passed": 54,
+    "model_quality_recheck_count": 1218,
+    "deployed_url": "https://kairosh--tynys.us-east.modal.run/",
+    "evidence": "training/upload_reliability/verification.json",
+    "public_api_evidence": "training/upload_reliability/public_http.json",
+    "clinically_validated": false
   }
 }

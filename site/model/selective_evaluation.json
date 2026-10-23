@@ -10,7 +10,7 @@
     "assessment": "6eed10b0e38ec008d233aacba5566d3412838991a7f47f49be30ac89e7232b54",
     "ood_code": "74d8a7fc571083376e7f21b0d3440a4d7ff5b9f1643c01f12e705061b4cdc630",
     "calibration_code": "22d082c3f95a721ed11909121e216d5df77c55f2ccff6a775926488e346587a8",
-    "api_pipeline": "35fd47c9f812b6e5f44c9e6797db5d8651869d2baa62e79a2ce68af7108b98ca",
+    "api_pipeline": "754f2dfb65baac56db06155e0a133ee02e97bdb888d6dc991899b2ed55c8574f",
     "metrics_code": "4c7af53a8d065841fe8b1ed9357aeacfae339e090419600f98c5eaec5cc14567"
   },
   "classification_threshold": 0.5,

@@ -9,7 +9,9 @@ import math
 import threading
 import time
 import zipfile
+import warnings
 from contextlib import asynccontextmanager
+from dataclasses import dataclass
 from pathlib import Path
 
 from fastapi import FastAPI, File, HTTPException, Request, UploadFile
@@ -35,6 +37,62 @@ MODEL_DIR = ROOT / "model"
 IMAGE_LIMIT = 12 * 1024 * 1024
 MODEL_LIMIT = 150 * 1024 * 1024
 Image.MAX_IMAGE_PIXELS = 20_000_000
+
+
+@dataclass(frozen=True)
+class ValidatedImage:
+    data: bytes
+    width: int
+    height: int
+    is_dicom: bool
+
+
+def validate_upload(data, filename):
+    """Check bytes, format and full pixel decoding before any model call."""
+    suffix = Path(filename or '').suffix.lower()
+    formats = {'.jpg': 'JPEG', '.jpeg': 'JPEG', '.png': 'PNG', '.dcm': 'DICOM'}
+    if suffix not in formats:
+        raise HTTPException(400, 'Тек JPG, JPEG, PNG немесе CR/DX DICOM файлын таңдаңыз.')
+    if not data:
+        raise HTTPException(400, 'Файл бос. Басқа файл таңдаңыз.')
+    if len(data) > IMAGE_LIMIT:
+        raise HTTPException(413, 'Файл көлемі 12 МБ-тан аспауы керек.')
+    is_dicom = suffix == '.dcm'
+    image_data = dicom_to_png(data) if is_dicom else data
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter('error', Image.DecompressionBombWarning)
+            image = Image.open(io.BytesIO(image_data))
+        with image:
+            if image.format not in {'JPEG', 'PNG'}:
+                raise HTTPException(400, 'Файлдың нақты пішімі JPG немесе PNG емес.')
+            if not is_dicom and image.format != formats[suffix]:
+                raise HTTPException(400, 'Файл кеңейтімі оның нақты пішіміне сәйкес емес. Суретті дұрыс JPG немесе PNG пішімінде сақтаңыз.')
+            width, height = image.size
+            if width <= 0 or height <= 0 or width * height > 20_000_000:
+                raise HTTPException(400, 'Сурет тым үлкен. 20 мегапиксельге дейінгі сурет таңдаңыз.')
+            if getattr(image, 'n_frames', 1) != 1:
+                raise HTTPException(400, 'Қозғалмайтын, бір кадрлы JPG немесе PNG суретін таңдаңыз.')
+            image.verify()
+        # verify() checks structure but does not decode JPEG pixel data.
+        with Image.open(io.BytesIO(image_data)) as image:
+            image.load()
+    except (Image.DecompressionBombError, Image.DecompressionBombWarning) as exc:
+        raise HTTPException(400, 'Сурет тым үлкен. 20 мегапиксельге дейінгі сурет таңдаңыз.') from exc
+    except (UnidentifiedImageError, OSError, ValueError, SyntaxError, EOFError) as exc:
+        raise HTTPException(400, 'Суретті ашу мүмкін болмады: файл бүлінген немесе сурет емес. Дұрыс JPG, PNG не DICOM файлын таңдаңыз.') from exc
+    return ValidatedImage(image_data, width, height, is_dicom)
+
+
+def prepare_image(tf, data, image_size):
+    """Notebook decode_image(): RGB, float32, padded bilinear resize, 0..255."""
+    try:
+        image = tf.io.decode_image(data, channels=3, expand_animations=False)
+        image.set_shape([None, None, 3])
+        prepared = tf.image.resize_with_pad(tf.cast(image, tf.float32), *image_size)
+    except (tf.errors.InvalidArgumentError, ValueError) as exc:
+        raise HTTPException(400, 'Сурет пиксельдерін оқу мүмкін болмады. Суретті JPG немесе PNG пішімінде қайта сақтап, жүктеңіз.') from exc
+    return image, prepared
 
 
 def read_config(path):
@@ -225,30 +283,19 @@ class Engine:
                 "reconstructed_score": float(tf.sigmoid(logits)[0, 0]),
                 "notice": "Қызыл-сары аймақтар таңдалған санатқа оң ықпал еткен модель белсенділігін көрсетеді. Бұл ауру ошағы немесе оның шекарасы емес."}
 
-    def predict(self, data, filename):
+    def predict(self, data, filename, *, validated=None):
+        checked = validated if validated is not None else validate_upload(data, filename)
+        data, width, height, is_dicom = checked.data, checked.width, checked.height, checked.is_dicom
         if self.model is None:
             raise HTTPException(503, self.error or "Модель әлі дайын емес.")
-        is_dicom = Path(filename).suffix.lower() == '.dcm'
-        if is_dicom:
-            data = dicom_to_png(data)
-        try:
-            with Image.open(io.BytesIO(data)) as original:
-                if original.format not in {"JPEG", "PNG"}:
-                    raise ValueError("JPG немесе PNG суретін таңда.")
-                if original.width * original.height > 20_000_000:
-                    raise ValueError("Сурет тым үлкен. 20 мегапиксельге дейінгі файл таңда.")
-                width, height = original.size
-                original.verify()
-        except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError) as exc:
-            raise HTTPException(400, "Суретті оқу мүмкін емес. Дұрыс JPG немесе PNG файлын таңда.") from exc
+        # Decode failures are input errors (400), never model failures (422).
+        original_image, image = prepare_image(self.tf, data, self.config['image_size'])
         started = time.perf_counter()
         try:
             with self.lock:
                 tf = self.tf
                 # Exactly the notebook's decode_image: no EXIF rotation, no extra
                 # normalization. MobileNet Rescaling is already inside the model.
-                original_image = tf.io.decode_image(data, channels=3, expand_animations=False)
-                original_image.set_shape([None, None, 3])
                 try:
                     quality = check_image_quality(original_image.numpy())
                     if is_dicom:
@@ -256,7 +303,6 @@ class Engine:
                 except Exception:
                     logging.exception('Advisory image quality check unavailable')
                     quality = unavailable_quality()
-                image = tf.image.resize_with_pad(tf.cast(original_image, tf.float32), *self.config["image_size"])
                 raw_score = float(self.model(image[None, ...], training=False).numpy()[0, 0])
                 score = calibrate_score(raw_score, self.config.get("calibration"))
                 threshold = float(self.config["threshold"])
@@ -374,10 +420,12 @@ async def readiness():
 
 @app.post("/api/predict")
 async def predict(request: Request, file: UploadFile = File(...)):
-    if Path(file.filename or "").suffix.lower() not in {".jpg", ".jpeg", ".png", ".dcm"}:
-        raise HTTPException(400, "JPG, PNG немесе DICOM файлын таңда.")
-    data = await file.read(IMAGE_LIMIT + 1)
-    await file.close()
+    try:
+        if Path(file.filename or "").suffix.lower() not in {".jpg", ".jpeg", ".png", ".dcm"}:
+            raise HTTPException(400, "JPG, JPEG, PNG немесе DICOM файлын таңдаңыз.")
+        data = await file.read(IMAGE_LIMIT + 1)
+    finally:
+        await file.close()
     if not data:
         raise HTTPException(400, "Файл бос.")
     if len(data) > IMAGE_LIMIT:
@@ -411,9 +459,11 @@ async def report(request: Request, files: list[UploadFile] = File(...)):
 
     def generate():
         from pdf_report import make_report
+        # Reject the whole batch before any inference, including an invalid last file.
+        checked = [validate_upload(data, name) for data, name in inputs]
         items = []
-        for data,name in inputs:
-            result = engine.predict(data,name)
+        for (data,name), validated in zip(inputs, checked):
+            result = engine.predict(data,name,validated=validated)
             display = base64.b64decode(result['preview'].split(',',1)[1]) if result.get('preview') else data
             items.append((display,result))
         return make_report(items)

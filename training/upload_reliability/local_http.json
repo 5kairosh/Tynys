@@ -1,0 +1,94 @@
+{
+  "checked_at": "2026-10-23T11:59:35.281668+00:00",
+  "url": "http://127.0.0.1:7862",
+  "synthetic_inputs_only": true,
+  "private_images_uploaded": false,
+  "model_id": "a79fe71a67fc",
+  "threshold": 0.5,
+  "frontend_revision_guard": true,
+  "checks": [
+    {
+      "file": "valid.png",
+      "http_status": 200,
+      "comparison_models": 3,
+      "gradcam": true,
+      "ood": true
+    },
+    {
+      "file": "valid.jpg",
+      "http_status": 200,
+      "comparison_models": 3,
+      "gradcam": true,
+      "ood": true
+    },
+    {
+      "file": "cr.dcm",
+      "http_status": 200,
+      "comparison_models": 3,
+      "gradcam": true,
+      "ood": true
+    },
+    {
+      "file": "dx.dcm",
+      "http_status": 200,
+      "comparison_models": 3,
+      "gradcam": true,
+      "ood": true
+    },
+    {
+      "file": "ct.dcm",
+      "http_status": 400,
+      "message": "Тек CR немесе DX рентген DICOM қолданылады. CT/MR қолдау көрсетілмейді."
+    },
+    {
+      "file": "text.jpg",
+      "http_status": 400,
+      "message": "Суретті ашу мүмкін болмады: файл бүлінген немесе сурет емес. Дұрыс JPG, PNG не DICOM файлын таңдаңыз."
+    },
+    {
+      "file": "empty.png",
+      "http_status": 400,
+      "message": "Файл бос."
+    },
+    {
+      "file": "spoof.jpg",
+      "http_status": 400,
+      "message": "Файл кеңейтімі оның нақты пішіміне сәйкес емес. Суретті дұрыс JPG немесе PNG пішімінде сақтаңыз."
+    },
+    {
+      "file": "spoof.png",
+      "http_status": 400,
+      "message": "Файл кеңейтімі оның нақты пішіміне сәйкес емес. Суретті дұрыс JPG немесе PNG пішімінде сақтаңыз."
+    },
+    {
+      "file": "gif.png",
+      "http_status": 400,
+      "message": "Файлдың нақты пішімі JPG немесе PNG емес."
+    },
+    {
+      "file": "truncated.jpg",
+      "http_status": 400,
+      "message": "Суретті ашу мүмкін болмады: файл бүлінген немесе сурет емес. Дұрыс JPG, PNG не DICOM файлын таңдаңыз."
+    },
+    {
+      "file": "image.txt",
+      "http_status": 400,
+      "message": "JPG, JPEG, PNG немесе DICOM файлын таңдаңыз."
+    },
+    {
+      "file": "large.png",
+      "http_status": 413,
+      "message": "Файл көлемі 12 МБ-тан аспауы керек."
+    },
+    {
+      "endpoint": "/api/report",
+      "http_status": 200,
+      "pages": 2
+    },
+    {
+      "endpoint": "/api/report",
+      "invalid_last_file": true,
+      "http_status": 400
+    }
+  ]
+}

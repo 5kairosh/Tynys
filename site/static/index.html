@@ -5,11 +5,11 @@
   <meta name="description" content="Tynys — өкпе рентгендерін NORMAL және PNEUMONIA санаттарына жіктейтін TensorFlow оқу жобасы.">
   <title>Tynys — рентгенге жаңа көзқарас</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230c766c'/%3E%3Cpath d='M29 16h6v13h13v6H35v13h-6V35H16v-6h13z' fill='white'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="/static/style.css?v=f29684cedd3d">
+  <link rel="stylesheet" href="/static/style.css?v=6282ea65396c">
   <script src="/static/history-storage.js?v=541406ad974c" defer></script>
   <script src="/static/selective-evaluation.js?v=efd211ea4a5a" defer></script>
   <script src="/static/generalization-evaluation.js?v=106d8e4fa151" defer></script>
-  <script src="/static/app.js?v=1ce9d694fb0f" defer></script>
+  <script src="/static/app.js?v=16957a939ab7" defer></script>
 </head>
 <body>
 <div class="site-wrap">
@@ -52,6 +52,7 @@
           </label>
           <input id="image-input" type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png,.dcm" multiple class="visually-hidden">
           <div class="preview" id="preview" hidden><p id="dicom-placeholder" hidden>DICOM көрінісі талдаудан кейін көрсетіледі.</p><img id="preview-image" alt="Жүктелген рентген суреті"><button class="remove-image" id="remove-image" aria-label="Суретті өшіру">×</button></div>
+          <button id="replace-image" class="replace-image" type="button" hidden>Басқа сурет таңдау</button>
           <div id="attention-tools" class="attention-tools" hidden>
             <div class="attention-switch" role="group" aria-label="Рентген көрінісі"><button id="view-original" type="button" aria-pressed="false">Түпнұсқа</button><button id="view-attention" type="button" aria-pressed="true">Модель назары</button></div>
             <button id="download-attention" class="attention-download" type="button">Белгіленген сурет ↓</button>
@@ -67,7 +68,10 @@
             <p id="quality-notice" class="quality-notice"></p>
           </section>
           <div id="file-list" class="file-list"></div>
+          <div id="analysis-progress" class="analysis-progress" role="status" aria-live="polite" hidden><span class="analysis-spinner" aria-hidden="true"></span><span id="analysis-progress-text"></span></div>
           <button class="button primary analyze-button" id="analyze" disabled><span id="analyze-label">Суретті талдау</span><span id="analyze-arrow">↗</span></button>
+          <button id="retry-analysis" class="button secondary retry-analysis" type="button" hidden>Қайта көру</button>
+          <div class="error-message" id="error-message" role="alert" hidden></div>
           <p class="privacy-note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8V6a5 5 0 0 1 10 0v2M3 8h14v10H3z"/></svg>Талдаудан кейін сурет серверде сақталмайды.</p>
         </div>
         <div class="result-panel" id="result-panel" aria-live="polite">
@@ -109,7 +113,6 @@
         <ol id="history-list" class="history-list" aria-label="Тексерілген рентгендер"></ol>
         <p id="history-feedback" class="history-feedback" role="status" aria-live="polite"></p>
       </section>
-      <div class="error-message" id="error-message" role="alert" hidden></div>
     </section>
 
     <section class="method-section" id="about">

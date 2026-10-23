@@ -27,7 +27,10 @@ before(async()=>{
       if(req.url==='/api/predict'||req.url==='/api/report'){
         const chunks=[];for await(const chunk of req)chunks.push(chunk);const body=Buffer.concat(chunks);
         if(req.url==='/api/report'){reportCount++;reportBody=body;res.setHeader('Content-Type','application/pdf');res.end('%PDF-1.4\n%%EOF');return;}
-        predictCount++;res.setHeader('Content-Type','application/json');res.end(JSON.stringify(prediction(/filename="([^"]+)"/.exec(body.toString())?.[1]||'sample.png')));return;
+        predictCount++;res.setHeader('Content-Type','application/json');
+        const filename=/filename="([^"]+)"/.exec(body.toString())?.[1]||'sample.png';
+        if(filename==='stalled-body.png'){res.writeHead(200);res.write('{"filename":');return;}
+        res.end(JSON.stringify(prediction(filename)));return;
       }
       const name=req.url.split('?')[0]==='/'?'index.html':req.url.split('?')[0].replace(/^\/static\//,'');
       const target=path.resolve(STATIC,name);
@@ -58,6 +61,94 @@ test('default opt-out never persists image history',()=>contextTest(async(contex
   assert.equal(await page.locator('.history-saved').textContent(),'Тек осы бетте');
   await page.reload({waitUntil:'domcontentloaded'});await count(page,0);assert.equal((await context.cookies()).length,0);
   assert.equal(await page.evaluate(()=>localStorage.length),0);
+}));
+
+test('network failure stops the spinner and retries the same image only on click',()=>contextTest(async(context,page)=>{
+  await ready(page);let requests=0;
+  await page.route('**/api/predict',route=>{requests++;return requests===1?route.abort():route.fulfill({contentType:'application/json',body:JSON.stringify(prediction('retry.png'))});});
+  await page.locator('#image-input').setInputFiles({name:'retry.png',mimeType:'image/png',buffer:PNG});
+  await page.locator('#analyze').click();await page.locator('#retry-analysis').waitFor();
+  assert.equal(await page.locator('#analysis-progress').isVisible(),false);
+  assert.equal(await page.locator('#result-panel').getAttribute('aria-busy'),'false');
+  assert.equal(await page.locator('#result-content').isVisible(),false);
+  assert.equal(requests,1);assert.equal(await page.locator('#file-name').innerText(),'retry.png');
+  await page.locator('#retry-analysis').click();
+  await page.waitForFunction(()=>!document.body.classList.contains('busy')&&!document.getElementById('result-content').hidden);
+  assert.equal(requests,2);assert.equal(await page.locator('#retry-analysis').isVisible(),false);
+  await count(page,1);
+}));
+
+test('client validation clears the previous result and cannot resend the old file',()=>contextTest(async(context,page)=>{
+  await ready(page);await upload(page,'old.png');const before=predictCount;
+  await page.locator('#image-input').setInputFiles({name:'notes.txt',mimeType:'text/plain',buffer:Buffer.from('hello')});
+  assert.equal(await page.locator('#result-content').isVisible(),false);
+  assert.equal(await page.locator('#result-title').textContent(),'');
+  assert.equal(await page.locator('#preview').isVisible(),false);
+  assert.equal(await page.locator('#analyze').isEnabled(),false);
+  assert.match(await page.locator('#error-message').innerText(),/Тек JPG/);
+  assert.equal(predictCount,before);
+}));
+
+test('an invalid server response never reveals an earlier result or a retry action',()=>contextTest(async(context,page)=>{
+  await ready(page);await upload(page,'old.png');
+  await page.route('**/api/predict',route=>route.fulfill({status:400,contentType:'application/json',body:JSON.stringify({detail:'Суретті ашу мүмкін болмады: файл бүлінген.'})}));
+  await page.locator('#image-input').setInputFiles({name:'broken.jpg',mimeType:'image/jpeg',buffer:Buffer.from('not a picture')});
+  assert.equal(await page.locator('#result-title').textContent(),'');
+  await page.locator('#analyze').click();await page.locator('#error-message').waitFor();
+  await page.waitForFunction(()=>!document.body.classList.contains('busy'));
+  assert.equal(await page.locator('#result-content').isVisible(),false);
+  assert.equal(await page.locator('#retry-analysis').isVisible(),false);
+  assert.match(await page.locator('#error-message').innerText(),/файл бүлінген/);
+  await count(page,1);
+}));
+
+test('a late response cannot replace a newer selection or stop its loading state',()=>contextTest(async(context,page)=>{
+  // Simulate a transport that ignores abort, so revision guards must work too.
+  await page.addInitScript(()=>{const original=window.fetch;window.fetch=(url,options)=>original(url,url==='/api/predict'?{...options,signal:undefined}:options);});
+  await ready(page);let releaseA,releaseB,startedA,startedB;
+  const startA=new Promise(resolve=>startedA=resolve),startB=new Promise(resolve=>startedB=resolve);
+  await page.route('**/api/predict',async route=>{
+    const name=/filename="([^"]+)"/.exec(route.request().postDataBuffer().toString())?.[1];
+    const first=name==='first.png';
+    await new Promise(resolve=>{if(first){releaseA=resolve;startedA();}else{releaseB=resolve;startedB();}});
+    await route.fulfill({contentType:'application/json',body:JSON.stringify({...prediction(name),pneumonia_score:first?.91:.21})});
+  });
+  await page.locator('#image-input').setInputFiles({name:'first.png',mimeType:'image/png',buffer:PNG});
+  await page.locator('#analyze').click();await startA;
+  assert.equal(await page.locator('#analysis-progress').isVisible(),true);
+  assert.equal(await page.locator('#result-panel').getAttribute('aria-busy'),'true');
+  await page.locator('#image-input').setInputFiles({name:'second.png',mimeType:'image/png',buffer:PNG});
+  assert.equal(await page.locator('#analysis-progress').isVisible(),false);
+  assert.equal(await page.locator('#result-content').isVisible(),false);
+  await page.locator('#analyze').click();await startB;
+  const late=page.waitForResponse(response=>response.url().endsWith('/api/predict')&&response.request().postData()?.includes('first.png'));
+  releaseA();await late;await page.waitForFunction(()=>document.body.classList.contains('busy'));
+  assert.equal(await page.locator('#result-content').isVisible(),false);
+  assert.equal(await page.locator('#analysis-progress').isVisible(),true);
+  releaseB();await page.waitForFunction(()=>!document.body.classList.contains('busy')&&!document.getElementById('result-content').hidden);
+  assert.equal(await page.locator('#file-name').innerText(),'second.png');
+  assert.equal(await page.locator('#score-value').innerText(),'0,210');
+  await count(page,1);assert.equal(await page.locator('.history-item-content>strong').innerText(),'second.png');
+}));
+
+test('clearing a selected image cancels a request and suppresses its late answer',()=>contextTest(async(context,page)=>{
+  await ready(page);let release,started;const start=new Promise(resolve=>started=resolve);
+  await page.route('**/api/predict',async route=>{started();await new Promise(resolve=>release=resolve);await route.fulfill({contentType:'application/json',body:JSON.stringify(prediction('removed.png'))}).catch(()=>{});});
+  await page.locator('#image-input').setInputFiles({name:'removed.png',mimeType:'image/png',buffer:PNG});
+  await page.locator('#analyze').click();await start;await page.locator('#remove-image').click();release();
+  assert.equal(await page.locator('#result-content').isVisible(),false);
+  assert.equal(await page.locator('#analysis-progress').isVisible(),false);
+  assert.equal(await page.locator('#analyze').isEnabled(),false);await count(page,0);
+}));
+
+test('a response body that stalls after headers also times out with manual retry',()=>contextTest(async(context,page)=>{
+  await page.addInitScript(()=>{const timeout=AbortSignal.timeout.bind(AbortSignal);AbortSignal.timeout=ms=>timeout(ms===190000?150:ms);});
+  await ready(page);
+  await page.locator('#image-input').setInputFiles({name:'stalled-body.png',mimeType:'image/png',buffer:PNG});
+  await page.locator('#analyze').click();await page.locator('#retry-analysis').waitFor();
+  assert.match(await page.locator('#error-message').innerText(),/күту уақыты аяқталды/);
+  assert.equal(await page.locator('#analysis-progress').isVisible(),false);
+  assert.equal(await page.locator('#result-content').isVisible(),false);
 }));
 
 test('opt-in restores exact file, score, quality and OOD without inference',()=>contextTest(async(context,page)=>{

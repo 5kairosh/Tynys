@@ -1,6 +1,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 let selected=[], results=[], status=null, busy=false, previewUrl=null;
+let selectionRevision=0,analysisRequest=null,retryRevision=null;
 let analysisHistory=[], activeHistoryId=null;
 let historyReady=false,historyWorking=false,historyEnabled=false,historyGeneration=null,pendingHistorySync=false,historyDeletionPending=false;
 const historyStore=new TynysHistory.Store();
@@ -20,7 +21,11 @@ function error(message){$('error-message').textContent=message;$('error-message'
 function updateButton(){
   const locked=busy||historyWorking||!historyReady;
   $('analyze').disabled=locked||!selected.length||!status?.ready||status?.service?.accepting===false;
-  $('image-input').disabled=locked;
+  const selectionLocked=historyWorking||!historyReady||(busy&&!analysisRequest);
+  $('image-input').disabled=selectionLocked;
+  $('replace-image').disabled=selectionLocked;
+  $('remove-image').disabled=selectionLocked;
+  $('retry-analysis').disabled=locked||!selected.length;
   $('clear-history').disabled=locked||(!analysisHistory.length&&!historyEnabled&&!historyDeletionPending);
   $('save-history').disabled=locked;
   for(const id of ['protect-history','unlock-history','lock-history'])$(id).disabled=locked;
@@ -29,31 +34,39 @@ function updateButton(){
   for(const button of $('history-list').querySelectorAll('button'))button.disabled=locked;
   if(pendingHistorySync&&!locked){pendingHistorySync=false;queueMicrotask(()=>void syncHistory());}
 }
+function requestError(message,retryable=true){return Object.assign(new Error(message),{retryable});}
+function connectionFailure(e){
+  return requestError(e.name==='TimeoutError'||e.name==='AbortError'
+    ?'Жауапты күту уақыты аяқталды. Күту тоқтатылды. «Қайта көру» батырмасын басыңыз.'
+    :'Серверге қосылмады. Интернетті тексеріп, «Қайта көру» батырмасын басыңыз. Сурет автоматты түрде қайта жіберілмейді.');
+}
 async function apiResponse(url,options={}){
   let response;
   try{
     const seconds=url==='/api/report'?280:url==='/api/predict'?190:8;
     response=await fetch(url,{...options,signal:options.signal||AbortSignal.timeout(seconds*1000)});
   }catch(e){
-    if(e.name==='TimeoutError'||e.name==='AbortError')throw Error('Жауапты күту уақыты аяқталды. Нәтиже алынбады. Біраздан соң қайта басыңыз.');
-    throw Error('Серверге қосылмады. Интернетті және сервердің қосылғанын тексеріңіз. Сурет автоматты түрде қайта жіберілмейді.');
+    throw connectionFailure(e);
   }
   if(!response.ok){
     const data=await response.json().catch(()=>({}));
     const retry=Number(response.headers.get('Retry-After'));
     const message=typeof data.detail==='string'?data.detail:'Сұрауды орындау мүмкін болмады.';
-    throw Error(message+(retry>0&&retry<=300?` Қайта жіберу автоматты емес; ${retry} секунд күтіңіз.`:''));
+    throw requestError(message+(retry>0&&retry<=300?` Қайта жіберу автоматты емес; ${retry} секунд күтіңіз.`:''),[408,425,429,500,502,503,504].includes(response.status));
   }
   return response;
 }
 async function api(url,options){
   const response=await apiResponse(url,options);
-  try{return await response.json();}catch{throw Error('Серверден дұрыс жауап алынбады. Қосылымды тексеріңіз.');}
+  try{return await response.json();}catch(e){
+    if(e.name==='TimeoutError'||e.name==='AbortError'||e instanceof TypeError)throw connectionFailure(e);
+    throw requestError('Серверден дұрыс жауап алынбады. «Қайта көру» батырмасын басыңыз.');
+  }
 }
 function renderService(){
   const box=$('service-status');
   box.classList.toggle('service-offline',!status?.ready);
-  if(!status?.ready){box.textContent='Сервермен байланыс тексерілуде. Codespaces ұйқыға кетсе, жоба иесі оны қайта іске қосуы керек. Қосылым автоматты тексеріледі.';return;}
+  if(!status?.ready){box.textContent='Сервермен байланыс тексерілуде. Сервер оянып жатқанда алғашқы қосылу біраз уақыт алуы мүмкін. Қосылым автоматты тексеріледі.';return;}
   const service=status.service;
   box.textContent=service?.accepting===false?'Сервер бос емес. Кезек босағанда талдау батырмасы автоматты қосылады. Таңдалған сурет қайта жіберілмейді.':service?.active||service?.waiting?`Сервер жұмыс істеп тұр: ${service.active} талдау орындалуда, ${service.waiting} сұрау кезекте. Суреттер кезекпен өңделеді.`:'Сервер дайын. Суреттер кезекпен өңделеді; орын толса, қайта жіберу туралы хабарлама шығады.';
 }
@@ -65,28 +78,63 @@ async function loadStatus(){
   renderService();
   renderSelectiveEvaluation(status.selective_evaluation);
   void renderGeneralizationEvaluation(status);
-  if(connectionError&&status.ready){error('');connectionError=false;}
+  if(connectionError&&status.ready){if(retryRevision===null)error('');connectionError=false;}
 $('header-status').textContent=status.ready?(status.service?.accepting===false?'Сервер бос емес':'Модель дайын'):'Модель қолжетімсіз';$('status-dot').classList.toggle('ready',status.ready);if(!status.ready)error(status.message||'Модель қосылмаған.');const m=status.metrics?.find(x=>x.model==='MobileNetV2');const cnn=status.metrics?.find(x=>x.model==='CNN');const ensemble=status.metrics?.find(x=>x.model==='Ensemble');if(m){$('metric-accuracy').textContent=percent(m.accuracy);$('metric-recall').textContent=percent(m.recall);$('metric-count').textContent=Math.round(m.TN+m.FP+m.FN+m.TP);const body=$('metrics-table');body.replaceChildren();for(const [key,label,type] of [['accuracy','Accuracy','percent'],['precision','Precision','percent'],['recall','Recall / sensitivity','percent'],['specificity','Specificity','percent'],['f1','F1-score','decimal'],['roc_auc','ROC-AUC','decimal']]){const tr=document.createElement('tr');for(const value of [label,cnn?cnn[key]:null,m[key],status.ensemble?.available?ensemble?.[key]:null]){const td=document.createElement('td');td.textContent=typeof value==='string'?value:value==null?'—':type==='percent'?percent(value):decimal(value,4);tr.append(td);}body.append(tr);}}const external=status.external_validation;$('external-note').textContent=external?.available?`Сыртқы тексеру (OpenI, ${external.metrics.count} сурет): accuracy ${percent(external.metrics.accuracy)}, recall ${percent(external.metrics.recall)}. Ішкі тесттен бөлек. Топтау есеп ID-іне сүйенеді.`:(external?.message||'Сыртқы бағалау қолжетімсіз.');const paired=status.mcnemar;$('mcnemar-note').textContent=paired?.available?`Ішкі test: McNemar p=${Number(paired.p_value).toExponential(3)}, α=0,05. ${paired.significant?'Айырма статистикалық маңызды.':'Статистикалық маңыздылық анықталмады.'} Бұл осы тестке қатысты.`:(paired?.message||'McNemar нәтижесі қолжетімсіз.');if(status.config)$('research-threshold').textContent=decimal(status.config.threshold);updateButton();}catch(e){
     status=null;connectionError=true;renderService();
     void renderGeneralizationEvaluation(null);
     renderSelectiveEvaluation({available:false,message:'Серверге қосылмады. Бағалау есебі сервер қосылғанда қайта тексеріледі.'});
     $('header-status').textContent='Серверге қосылмады';
     $('status-dot').classList.remove('ready');
-    error('Серверге қосылмады. Интернетті және сервердің қосылғанын тексеріңіз. Codespaces ұйқыға кетсе, жоба иесі қайта іске қосуы керек. Қосылым автоматты түрде қайта тексеріледі.');
+    if(retryRevision===null)error('Серверге қосылмады. Интернетті және сервердің қосылғанын тексеріңіз. Қосылым автоматты түрде қайта тексеріледі.');
     updateButton();
   }finally{statusLoading=false;scheduleStatusCheck();}
 }
 window.addEventListener('online',()=>loadStatus());
 window.addEventListener('focus',()=>loadStatus());
-function resetResult(){$('empty-result').hidden=false;$('result-content').hidden=true;$('result-tag').textContent='КҮТУДЕ';$('attention-tools').hidden=true;$('attention-unavailable').hidden=true;$('comparison-panel').hidden=true;$('quality-panel').hidden=true;results=[];}
-function selectFiles(files){if(busy||historyWorking||!historyReady)return;error('');const list=Array.from(files);if(!list.length)return;if(list.length>10){error('Бір ретте 10 суретке дейін таңдаңыз.');return;}for(const f of list){if(!/\.(jpe?g|png|dcm)$/i.test(f.name)){error('Тек JPG, JPEG, PNG немесе DICOM таңдаңыз.');return;}if(f.size>12*1024*1024){error('Әр суреттің көлемі 12 МБ-тан аспауы керек.');return;}if(!f.size){error('Бос файлды жүктеу мүмкін емес.');return;}}selected=list;activeHistoryId=null;renderHistory();resetResult();if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(selected[0]);$('preview-image').src=previewUrl;const isDicom=/\.dcm$/i.test(selected[0].name);$('preview-image').hidden=isDicom;$('dicom-placeholder').hidden=!isDicom;$('preview').hidden=false;$('dropzone').hidden=true;$('file-info').hidden=false;$('file-name').textContent=selected[0].name;$('file-size').textContent=(selected[0].size/1024).toFixed(0)+' КБ'+(selected.length>1?` · ${selected.length} сурет таңдалды`:'');$('file-list').textContent=selected.length>1?selected.slice(1).map(f=>f.name).join(' · '):'';updateButton();}
+function analysisProgress(loading,label='Сурет талдануда…'){
+  $('analysis-progress').hidden=!loading;$('analysis-progress-text').textContent=loading?label:'';
+  $('result-panel').setAttribute('aria-busy',String(loading));
+  $('analyze-label').textContent=loading?label:'Суретті талдау';
+}
+function invalidateAnalysis(){
+  selectionRevision++;retryRevision=null;$('retry-analysis').hidden=true;
+  const previous=analysisRequest;analysisRequest=null;
+  if(previous){previous.controller.abort();busy=false;document.body.classList.remove('busy');}
+  analysisProgress(false);
+}
+function resetResult(){
+  $('empty-result').hidden=false;$('result-content').hidden=true;$('result-tag').textContent='КҮТУДЕ';
+  for(const id of ['attention-tools','attention-unavailable','comparison-panel','quality-panel'])$(id).hidden=true;
+  for(const id of ['result-title','result-category','result-explanation','score-value','result-time','result-model','routing-note','comparison-note','quality-summary','attention-caption'])$(id).textContent='';
+  for(const id of ['batch-results','comparison-table','quality-warnings'])$(id).replaceChildren();
+  $('score-fill').style.width='0%';results=[];
+}
+function selectFiles(files){
+  if((busy&&!analysisRequest)||historyWorking||!historyReady)return;
+  const list=Array.from(files);if(!list.length)return;
+  clearSelection();renderHistory();updateButton();
+  if(list.length>10){error('Бір ретте 10 суретке дейін таңдаңыз.');return;}
+  for(const f of list){
+    if(!/\.(jpe?g|png|dcm)$/i.test(f.name)){error('Тек JPG, JPEG, PNG немесе DICOM таңдаңыз.');return;}
+    if(f.size>12*1024*1024){error('Әр суреттің көлемі 12 МБ-тан аспауы керек.');return;}
+    if(!f.size){error('Бос файлды жүктеу мүмкін емес.');return;}
+  }
+  selected=list;previewUrl=URL.createObjectURL(selected[0]);$('preview-image').src=previewUrl;
+  $('preview-image').alt='Жүктелген рентген суреті';
+  const isDicom=/\.dcm$/i.test(selected[0].name);$('preview-image').hidden=isDicom;$('dicom-placeholder').hidden=!isDicom;
+  $('preview').hidden=false;$('dropzone').hidden=true;$('file-info').hidden=false;$('replace-image').hidden=false;
+  $('file-name').textContent=selected[0].name;
+  $('file-size').textContent=(selected[0].size/1024).toFixed(0)+' КБ'+(selected.length>1?` · ${selected.length} сурет таңдалды`:'');
+  $('file-list').textContent=selected.length>1?selected.slice(1).map(f=>f.name).join(' · '):'';updateButton();
+}
 $('image-input').addEventListener('change',e=>selectFiles(e.target.files));
 $('dropzone').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('image-input').click();}});
 for(const type of ['dragenter','dragover'])$('dropzone').addEventListener(type,e=>{e.preventDefault();$('dropzone').classList.add('dragging');});
 for(const type of ['dragleave','drop'])$('dropzone').addEventListener(type,e=>{e.preventDefault();$('dropzone').classList.remove('dragging');});
 $('dropzone').addEventListener('drop',e=>selectFiles(e.dataTransfer.files));
-function clearSelection(){activeHistoryId=null;selected=[];if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;$('preview-image').removeAttribute('src');$('preview').hidden=true;$('dropzone').hidden=false;$('file-info').hidden=true;$('file-list').textContent='';$('image-input').value='';resetResult();error('');}
-$('remove-image').addEventListener('click',()=>{if(busy||historyWorking)return;clearSelection();renderHistory();updateButton();});
+function clearSelection(){invalidateAnalysis();activeHistoryId=null;selected=[];if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;$('preview-image').removeAttribute('src');$('preview').hidden=true;$('replace-image').hidden=true;$('dropzone').hidden=false;$('file-info').hidden=true;$('file-name').textContent='';$('file-size').textContent='';$('file-list').textContent='';$('image-input').value='';resetResult();error('');}
+$('remove-image').addEventListener('click',()=>{if((busy&&!analysisRequest)||historyWorking)return;clearSelection();renderHistory();updateButton();});
+$('replace-image').addEventListener('click',()=>$('image-input').click());
 
 function assessmentFor(r){
   if(['ood_guard_v1','ood_guard_v2'].includes(r.assessment?.policy)&&['classified','review_required'].includes(r.assessment.status))return r.assessment;
@@ -167,23 +215,32 @@ $('download-attention').addEventListener('click',()=>{
   const a=document.createElement('a');a.href=url;a.download='tynys-gradcam.png';document.body.append(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
-$('analyze').addEventListener('click',async()=>{
-  if(busy||!selected.length)return;
+async function analyzeSelected(){
+  if(busy||historyWorking||!historyReady||!selected.length)return;
   const epoch=privacyEpoch,files=[...selected];
-  busy=true;document.body.classList.add('busy');error('');results=[];updateButton();$('result-tag').textContent='ТАЛДАУДА';
+  const request={revision:selectionRevision,controller:new AbortController()};
+  analysisRequest=request;retryRevision=null;$('retry-analysis').hidden=true;
+  const current=()=>analysisRequest===request&&request.revision===selectionRevision&&epoch===privacyEpoch;
+  busy=true;document.body.classList.add('busy');error('');resetResult();analysisProgress(true);updateButton();$('result-tag').textContent='ТАЛДАУДА';
   try{
     for(let i=0;i<files.length;i++){
-      $('analyze-label').textContent=files.length>1?`Талдауда: ${i+1} / ${files.length}`:'Сурет талдануда…';
+      if(!current())return;
+      analysisProgress(true,files.length>1?`Талдауда: ${i+1} / ${files.length}`:'Сурет талдануда…');
       const form=new FormData();form.append('file',files[i]);
-      const r=await api('/api/predict',{method:'POST',body:form});
-      if(epoch!==privacyEpoch)break;
+      const signal=AbortSignal.any([request.controller.signal,AbortSignal.timeout(190000)]);
+      const r=await api('/api/predict',{method:'POST',body:form,signal});
+      if(!current())return;
       results.push(r);await rememberResult(files[i],r);
-      if(epoch!==privacyEpoch)break;
+      if(!current())return;
       showResult(results[0]);
     }
-  }catch(e){if(epoch===privacyEpoch){error(e.message);if(results.length)showResult(results[0]);$('result-tag').textContent=results.length?'ІШІНАРА ДАЙЫН':'ҚАТЕ';}}
-  finally{busy=false;document.body.classList.remove('busy');$('analyze-label').textContent='Суретті талдау';updateButton();}
-});
+  }catch(e){if(current()){
+    error(e.message);if(results.length)showResult(results[0]);$('result-tag').textContent=results.length?'ІШІНАРА ДАЙЫН':'ҚАТЕ';
+    retryRevision=e.retryable?selectionRevision:null;$('retry-analysis').hidden=retryRevision===null;
+  }}finally{if(current()){analysisRequest=null;busy=false;document.body.classList.remove('busy');analysisProgress(false);updateButton();}}
+}
+$('analyze').addEventListener('click',analyzeSelected);
+$('retry-analysis').addEventListener('click',()=>{if(retryRevision===selectionRevision)void analyzeSelected();});
 $('download-result').addEventListener('click',()=>{
   if(!results.length)return;
   const lines=['TYNYS — РЕНТГЕНДІ КЛАССИФИКАЦИЯЛАУ',new Date().toLocaleString('kk-KZ',{timeZone:'Asia/Qyzylorda'}),''];

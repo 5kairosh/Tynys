@@ -1,0 +1,16 @@
+{
+  "url": "https://kairosh--tynys.us-east.modal.run/",
+  "checked_at": "2026-10-23T12:09:37.447Z",
+  "public_demo_only": true,
+  "previous_result_cleared_on_replacement": true,
+  "invalid_text_jpg_rejected_with_kazakh_message": true,
+  "current_result": {
+    "comparison": "Болжамдар сәйкес",
+    "errorHidden": true,
+    "file": "kaggle-demo.jpeg",
+    "loading": false,
+    "replaceVisible": true,
+    "result": "Пневмония санатына жіктелді",
+    "score": "0,998"
+  }
+}
