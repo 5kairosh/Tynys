@@ -1,6 +1,7 @@
 """New data cannot recycle exposed patients or turn other disease into NORMAL."""
 import copy
 import csv
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -102,3 +103,31 @@ def test_real_expansion_manifest_has_no_prior_or_cross_split_patient_leakage():
     assert len(rows) == len({r['source_id'] for r in rows}) == len({r['patient_group'] for r in rows}) == len({r['sha256'] for r in rows}) == 1800
     assert not old_groups & {r['patient_group'] for r in rows}
     assert not old_hashes & {r['sha256'] for r in rows}
+
+
+def test_published_experiment_cannot_hide_a_failed_gate_or_change_frozen_fit():
+    directory = TRAINING/'data_expansion_20261023'
+    protocol = json.loads((directory/'protocol.json').read_text())
+    fitted = json.loads((directory/'fit_report.json').read_text())
+    measured = json.loads((directory/'evaluation.json').read_text())
+    logical_sha = lambda path: hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
+    assert fitted['protocol_sha256'] == logical_sha(directory/'protocol.json')
+    assert measured['fit_report_sha256'] == logical_sha(directory/'fit_report.json')
+    assert fitted['training_code_sha256'] == logical_sha(TRAINING/'train_data_expansion.py')
+    assert fitted['evaluation_used_to_fit_or_select'] is False
+    assert measured['thresholds_tuned_on_evaluation'] is False
+    assert measured['clinically_validated'] is False
+    gates = promotion_gate(protocol, fitted, measured['cohorts'])
+    assert measured['promotion_gate'] == gates and measured['promotion_passed'] == all(gates.values())
+    for cohort, expected in [('new_rsna_confirmation',400), ('internal_test',618), ('external_openi',200)]:
+        with (directory/(cohort+'_predictions.csv')).open(encoding='utf-8-sig') as stream:
+            rows = list(csv.DictReader(stream))
+        assert len(rows) == len({r['sha256'] for r in rows}) == expected
+        for key in ('baseline','candidate'):
+            tn = sum(int(r['label'])==0 and int(r[key+'_prediction'])==0 for r in rows)
+            fp = sum(int(r['label'])==0 and int(r[key+'_prediction'])==1 for r in rows)
+            fn = sum(int(r['label'])==1 and int(r[key+'_prediction'])==0 for r in rows)
+            tp = sum(int(r['label'])==1 and int(r[key+'_prediction'])==1 for r in rows)
+            stats = measured['cohorts'][cohort][key]
+            assert [stats[k] for k in ('TN','FP','FN','TP')] == [tn,fp,fn,tp]
+            assert stats['accuracy'] == (tn+tp)/expected

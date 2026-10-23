@@ -581,5 +581,22 @@
     "evidence": "training/upload_reliability/verification.json",
     "public_api_evidence": "training/upload_reliability/public_http.json",
     "clinically_validated": false
+  },
+  "data_expansion": {
+    "checked_at": "2026-10-23T17:49:21.079665+00:00",
+    "added_unique_images": 1807,
+    "total_registered_unique_images": 10178,
+    "new_rsna_patients": 1800,
+    "padchest_pilot": 7,
+    "candidate_train": 6601,
+    "candidate_validation": 1552,
+    "candidate_id": "d3948da5db51",
+    "promotion_passed": false,
+    "production_model_unchanged": true,
+    "report": "training/data_expansion_20261023/evaluation.json",
+    "data_registry": "training/DATASET_REGISTRY.json",
+    "clinically_validated": false,
+    "python_tests_passed": 193,
+    "python_tests_failed": 0
   }
 }

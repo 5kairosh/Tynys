@@ -10,6 +10,14 @@ pinned: false
 
 # Tynys
 
+Data expansion experiment (2026-10-23): 1,800 new RSNA patients and a 7-image
+PadChest external pilot were added, bringing the registered research corpus to
+10,178 unique images. A candidate was fitted on 6,601 train / 1,552 validation
+images. It failed the frozen promotion gate (fresh RSNA accuracy 88.50% baseline
+versus 87.25% candidate), so the public model remains unchanged. No 100% accuracy
+or clinical reliability claim is made. [Results](training/DATA_EXPANSION_KZ.txt),
+[dataset registry](training/DATASET_REGISTRY.json).
+
 Upload reliability update (2026-10-23): full server-side image validation,
 visible loading and manual retry, cancellation/revision guards when replacing
 an image, and pixel-exact parity with the training notebook preprocessing.

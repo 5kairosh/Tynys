@@ -1,0 +1,50 @@
+{
+  "checked_at": "2026-10-23T17:49:21.079665+00:00",
+  "registered_unique_images": 10178,
+  "added_unique_images": 1807,
+  "datasets": {
+    "Kaggle": {
+      "total": 5371,
+      "development_train": 3801,
+      "development_validation": 952,
+      "evaluation": 618
+    },
+    "RSNA": {
+      "total": 4600,
+      "expanded_train": 2800,
+      "expanded_validation": 600,
+      "evaluation_across_frozen_experiments": 1200,
+      "radiographic_proxy_not_clinical_pneumonia": true
+    },
+    "OpenI": {
+      "total": 200,
+      "evaluation_only": true,
+      "weak_report_labels": true
+    },
+    "PadChest_sample": {
+      "total": 7,
+      "evaluation_pilot_only": true,
+      "normal": 6,
+      "pneumonia": 1,
+      "tiny_sample_not_reliability_proof": true
+    }
+  },
+  "expanded_candidate": {
+    "train": 6601,
+    "validation": 1552,
+    "model_id": "d3948da5db51",
+    "promoted": false,
+    "evaluation_images": 1225
+  },
+  "current_production": {
+    "model_id": "a79fe71a67fc",
+    "model_sha256": "a79fe71a67fc4e100a5cbde8624fb9286e663bd59e4beb74984810b3f2ba4e43",
+    "config_sha256": "63c6e98cc7713993778fb8b44430a8ebb6b334bac66be5ec0f815ea45f63eb4c",
+    "train": 5401,
+    "validation": 1352,
+    "unchanged": true,
+    "registered_data_expansion_is_not_automatically_used_by_production": true
+  },
+  "raw_images_reports_or_patient_metadata_redistributed": false,
+  "clinically_validated": false
+}
