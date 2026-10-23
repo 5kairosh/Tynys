@@ -101,6 +101,13 @@ def padchest_candidates(rows):
 
 def prepare_padchest():
     PAD.mkdir(parents=True, exist_ok=True)
+    report_path = OUT/'padchest_data_report.json'
+    manifest_path = PAD/'manifest.csv'
+    if report_path.exists() and manifest_path.exists():
+        report = json.loads(report_path.read_text())
+        cached = read_rows(manifest_path)
+        if sha(manifest_path) == report['manifest_sha256'] and all(sha(ROOT/r['path']) == r['sha256'] for r in cached):
+            return report
     remote = PadChestZip()
     with zipfile.ZipFile(remote) as archive:
         entries = {Path(info.filename).name: info for info in archive.infolist() if not info.is_dir()}

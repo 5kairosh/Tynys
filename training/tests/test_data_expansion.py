@@ -1,0 +1,78 @@
+"""New data cannot recycle exposed patients or turn other disease into NORMAL."""
+import copy
+import json
+from pathlib import Path
+import sys
+
+import pytest
+
+TRAINING = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(TRAINING))
+import expand_training_data as prepare
+from train_data_expansion import ensure_unopened, promotion_gate
+
+
+def row(name, labels, patient=None, view='PA'):
+    return {'ImageID': name, 'PatientID': patient or name, 'Projection': view, 'Labels': repr(labels)}
+
+
+def test_pilot_never_maps_other_abnormalities_to_normal_or_keeps_lateral():
+    records = [row('normal', ['normal']), row('positive', [' pneumonia', 'infiltrates']),
+        row('other', ['cardiomegaly']), row('ambiguous', ['normal', 'pneumonia']),
+        row('lateral', ['pneumonia'], view='L'), row('rib', ['normal'], view='COSTAL')]
+    selected, excluded = prepare.padchest_candidates(records)
+    assert {(r['ImageID'], label) for r,label in selected} == {('normal',0), ('positive',1)}
+    assert excluded == {'other_or_ambiguous':2, 'non_frontal':2}
+
+
+def test_pilot_one_image_per_patient_and_order_independent():
+    records = [row('study-a', ['normal'], 'same'), row('study-b', ['normal'], 'same'), row('other', ['pneumonia'])]
+    selected, _ = prepare.padchest_candidates(records)
+    reversed_selection, _ = prepare.padchest_candidates(list(reversed(records)))
+    assert selected == reversed_selection and len(selected) == 2
+    with pytest.raises(ValueError, match='grouping'):
+        prepare.padchest_candidates([{**records[0], 'PatientID':''}])
+
+
+def test_new_training_validation_confirmation_exclude_every_old_patient(monkeypatch):
+    candidates = [{'patient_group':f'nih:{label}-{i}', 'label':label, 'source_id':f'{label}-{i}'}
+                  for label in (0,1) for i in range(12)]
+    monkeypatch.setattr(prepare, 'metadata', lambda _: {})
+    monkeypatch.setattr(prepare, 'select_cohort', lambda *args: ({'all':candidates}, {}))
+    protocol = {'seed':42, 'rsna_selection':{'original_selection_seed':1, 'pool_per_class':12,
+        'new_counts_per_class':{'train':4, 'validation':2, 'confirmation':2}}}
+    previous = [{'patient_group':f'nih:{label}-{i}'} for label in (0,1) for i in range(3)]
+    splits = prepare.fresh_rsna(protocol, previous)
+    all_rows = [r for rows in splits.values() for r in rows]
+    assert len({r['patient_group'] for r in all_rows}) == len(all_rows) == 16
+    assert not {r['patient_group'] for r in all_rows} & {r['patient_group'] for r in previous}
+    for rows in splits.values():
+        assert sum(r['label']==0 for r in rows) == sum(r['label']==1 for r in rows)
+    assert prepare.fresh_rsna(protocol, previous) == splits
+    with pytest.raises(ValueError, match='Insufficient fresh'):
+        prepare.fresh_rsna(protocol, [{'patient_group':r['patient_group']} for r in candidates])
+
+
+def test_frozen_candidate_and_opened_confirmation_cannot_be_overwritten(tmp_path):
+    ensure_unopened(tmp_path, 'fit')
+    (tmp_path/'fit_report.json').write_text('{}')
+    with pytest.raises(ValueError, match='Fit already frozen'):
+        ensure_unopened(tmp_path, 'fit')
+    ensure_unopened(tmp_path, 'evaluate')
+    (tmp_path/'evaluation.json').write_text('{}')
+    for mode in ('fit','evaluate'):
+        with pytest.raises(ValueError, match='Confirmation already opened'):
+            ensure_unopened(tmp_path, mode)
+
+
+def test_high_old_accuracy_cannot_override_failed_fresh_confirmation():
+    protocol = json.loads((TRAINING/'data_expansion_20261023/protocol.json').read_text())
+    good = {'candidate':{'sensitivity':.99,'specificity':.99}, 'accuracy_gain':.05,
+            'balanced_accuracy_gain':.05, 'paired_accuracy_bootstrap':{'lower_95':.01}}
+    cohorts = {name:copy.deepcopy(good) for name in ('new_rsna_confirmation','internal_test','external_openi')}
+    assert all(promotion_gate(protocol, {'validation_feasible':True}, cohorts).values())
+    cohorts['new_rsna_confirmation']['accuracy_gain'] = 0
+    cohorts['new_rsna_confirmation']['paired_accuracy_bootstrap']['lower_95'] = -.02
+    gates = promotion_gate(protocol, {'validation_feasible':True}, cohorts)
+    assert not gates['fresh_accuracy_gain'] and not gates['fresh_paired_gain_lower_bound']
+    assert not all(gates.values())
